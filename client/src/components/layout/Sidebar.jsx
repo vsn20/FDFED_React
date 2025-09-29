@@ -12,6 +12,7 @@ const Sidebar = () => {
             <li><Link to="/owner/analytics">Analytics</Link></li>
             <li><Link to="/owner/employees">Employees</Link></li>
             <li><Link to="/owner/companies">Companies</Link></li>
+            <li><Link to='/owner/branches'>Branches</Link></li>
         </>
     );
 
