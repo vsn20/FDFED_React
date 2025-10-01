@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const Employee = require('../models/Employee');
+const Employee = require('../models/employees');
 const jwt = require('jsonwebtoken');
 
 // A simplified signup function for the demo.

@@ -19,9 +19,16 @@ app.use(express.json());
 
 // Mount routers
 app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/employees', require('./routes/employeeRoutes'));
 app.use('/api/companies', require('./routes/owner/companyRoutes'));
 app.use('/api/branches', require('./routes/owner/branchRoutes'));
+app.use('/api/employees', require('./routes/owner/employeeRoutes'));
+
+
+
+
+
+//salesman
+app.use('/api/salesman/profile', require('./routes/salesman/detailsRoutes'));
 
 const PORT = process.env.PORT || 5000;
 

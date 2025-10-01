@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '../../../api/api';
+import styles from './Branch.module.css'; // Import CSS module
 
 const AddBranch = ({ handleBack }) => {
     const [formData, setFormData] = useState({
@@ -25,33 +26,37 @@ const AddBranch = ({ handleBack }) => {
     };
 
     return (
-        <div>
+        <div className={styles.formContainer}>
             <h2>Add Branch</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <h3>Branch Information</h3>
-                    <div>
-                        <label>Branch Name</label>
-                        <input
-                            type="text"
-                            name="b_name"
-                            value={formData.b_name}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Address</label>
-                        <input
-                            type="text"
-                            name="address"
-                            value={formData.address}
-                            onChange={handleChange}
-                            required
-                        />
+            <form onSubmit={handleSubmit} className={styles.formWrapper}>
+                <div className={styles.formSection}>
+                    <h3 className={styles.sectionTitle}>Branch Information</h3>
+                    <div className={styles.fieldGroup}>
+                        <div>
+                            <label className={styles.fieldLabel}>Branch Name</label>
+                            <input
+                                type="text"
+                                name="b_name"
+                                value={formData.b_name}
+                                onChange={handleChange}
+                                required
+                                className={styles.fieldInput}
+                            />
+                        </div>
+                        <div>
+                            <label className={styles.fieldLabel}>Address</label>
+                            <input
+                                type="text"
+                                name="address"
+                                value={formData.address}
+                                onChange={handleChange}
+                                required
+                                className={styles.fieldInput}
+                            />
+                        </div>
                     </div>
                 </div>
-                <button type="submit">Submit Branch</button>
+                <button type="submit" className={styles.submitButton}>Submit Branch</button>
             </form>
         </div>
     );

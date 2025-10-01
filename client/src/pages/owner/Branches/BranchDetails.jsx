@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../../api/api';
+import styles from './Branch.module.css'; // Import CSS module
 
 const BranchDetails = ({ bid, handleBack }) => {
     const [formData, setFormData] = useState({
@@ -50,73 +51,81 @@ const BranchDetails = ({ bid, handleBack }) => {
     };
 
     if (notFound) {
-        return <div>Branch not found.</div>;
+        return <div className={styles.errorMessage}>Branch not found.</div>;
     }
 
     return (
-        <div>
+        <div className={styles.formContainer}>
             <h2>Edit Branch</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <h3>Branch Information</h3>
-                    <div>
-                        <label>Branch ID</label>
-                        <input
-                            type="text"
-                            name="bid"
-                            value={formData.bid}
-                            disabled
-                        />
-                    </div>
-                    <div>
-                        <label>Branch Name</label>
-                        <input
-                            type="text"
-                            name="b_name"
-                            value={formData.b_name}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label>Manager Name</label>
-                        <input
-                            type="text"
-                            name="manager_name"
-                            value={formData.manager_name}
-                            disabled
-                        />
-                    </div>
-                    <div>
-                        <label>Manager Email</label>
-                        <input
-                            type="text"
-                            name="manager_email"
-                            value={formData.manager_email}
-                            disabled
-                        />
-                    </div>
-                    <div>
-                        <label>Manager Phone</label>
-                        <input
-                            type="text"
-                            name="manager_ph_no"
-                            value={formData.manager_ph_no}
-                            disabled
-                        />
-                    </div>
-                    <div>
-                        <label>Address</label>
-                        <input
-                            type="text"
-                            name="address"
-                            value={formData.address}
-                            onChange={handleChange}
-                            required
-                        />
+            <form onSubmit={handleSubmit} className={styles.formWrapper}>
+                <div className={styles.formSection}>
+                    <h3 className={styles.sectionTitle}>Branch Information</h3>
+                    <div className={styles.fieldGroup}>
+                        <div>
+                            <label className={styles.fieldLabel}>Branch ID</label>
+                            <input
+                                type="text"
+                                name="bid"
+                                value={formData.bid}
+                                disabled
+                                className={`${styles.fieldInput} ${styles.disabledField}`}
+                            />
+                        </div>
+                        <div>
+                            <label className={styles.fieldLabel}>Branch Name</label>
+                            <input
+                                type="text"
+                                name="b_name"
+                                value={formData.b_name}
+                                onChange={handleChange}
+                                required
+                                className={styles.fieldInput}
+                            />
+                        </div>
+                        <div>
+                            <label className={styles.fieldLabel}>Manager Name</label>
+                            <input
+                                type="text"
+                                name="manager_name"
+                                value={formData.manager_name}
+                                disabled
+                                className={`${styles.fieldInput} ${styles.disabledField}`}
+                            />
+                        </div>
+                        <div>
+                            <label className={styles.fieldLabel}>Manager Email</label>
+                            <input
+                                type="text"
+                                name="manager_email"
+                                value={formData.manager_email}
+                                disabled
+                                className={`${styles.fieldInput} ${styles.disabledField}`}
+                            />
+                        </div>
+                        <div>
+                            <label className={styles.fieldLabel}>Manager Phone</label>
+                            <input
+                                type="text"
+                                name="manager_ph_no"
+                                value={formData.manager_ph_no}
+                                disabled
+                                className={`${styles.fieldInput} ${styles.disabledField}`}
+                            />
+                        </div>
+                        <div>
+                            <label className={styles.fieldLabel}>Address</label>
+                            <input
+                                type="text"
+                                name="address"
+                                value={formData.address}
+                                onChange={handleChange}
+                                required
+                                className={styles.fieldInput}
+                            />
+                        </div>
                     </div>
                 </div>
-                <button type="submit">Update Branch</button>
+                <button type="submit" className={styles.submitButton}>Update Branch</button>
             </form>
         </div>
     );

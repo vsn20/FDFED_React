@@ -10,6 +10,10 @@ const UserSchema = new mongoose.Schema({
         unique: true,
         ref: 'Employee' // This creates a reference to the Employee model
     },
+    emp_id: {
+        type: String,
+        trim: true // Made optional for companies
+    },
     password: {
         type: String,
         required: [true, 'Password is required'],
