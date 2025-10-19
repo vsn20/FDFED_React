@@ -16,7 +16,7 @@ const EmployeeSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["owner", "Salesmanager", "salesman"],
+    enum: ["owner", "Sales Manager", "Salesman"], // Updated to match frontend values
     required: true
   },
   bid: {
@@ -31,7 +31,8 @@ const EmployeeSchema = new mongoose.Schema({
   },
   phone_no: {
     type: String,
-    default: null
+    default: null,
+    match: [/^[0-9]{10}$/, "Phone number must be 10 digits"] // Added to enforce frontend pattern
   },
   hiredAt: {
     type: Date,
