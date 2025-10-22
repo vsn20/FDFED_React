@@ -7,7 +7,7 @@ const ProtectedRoute = ({ children, roles }) => {
     let location = useLocation();
 
     if (loading) {
-        return <div>Loading...</div>; // Or a spinner component
+        return <div>Loading...</div>; // Or a spinne component
     }
 
     if (!isAuthenticated) {
