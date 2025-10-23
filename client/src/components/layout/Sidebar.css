@@ -1,19 +1,20 @@
 .sidebar {
   width: 240px;
-  height: 95vh; /* smaller than 100% so it looks like a card */
+  height: calc(100vh - 60px); /* Stretch from below topbar to bottom of viewport */
   background: #1e2a3a; /* Dark navy */
   color: white;
   padding: 20px 15px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-
-  /* Rounded card look */
+  position: fixed; /* Fix to stay in place */
+  top: 60px; /* Align below topbar (adjust if topbar height changes) */
+  left: 0;
   border-radius: 16px;
-
-  /* Add spacing from edges */
-  margin: 20px;
+  margin: 20px 20px 20px 20px; /* Adjusted margin */
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 900; /* Below topbar but above content */
+  box-sizing: border-box;
 }
 
 .sidebar-title {
@@ -42,8 +43,12 @@
 }
 
 .sidebar-menu li:hover {
-  background: #34495e;
+  background: linear-gradient(90deg, #4b134f, #2c3e70, #3b3b3b, #1a5c2f); /* Blue to purple gradient for hover */
   transform: translateX(4px);
+}
+
+.sidebar-menu li.active {
+  background: linear-gradient(90deg, #4b134f, #2c3e70, #3b3b3b, #1a5c2f); /* Same gradient for active/clicked item */
 }
 
 .sidebar-menu li a {

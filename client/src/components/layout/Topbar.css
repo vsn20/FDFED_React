@@ -5,8 +5,13 @@
   padding: 12px 30px;
   background: linear-gradient(90deg, #4b134f, #2c3e70, #3b3b3b, #1a5c2f);
   color: white;
-  border-radius: 12px;
-  margin: 10px 20px;
+  border-radius: 0; /* Removed border-radius to make it flush with edges */
+  position: fixed; /* Fix to top */
+  top: 0;
+  left: 0;
+  width: 100%; /* Full width */
+  z-index: 1000; /* Ensure it stays above other elements */
+  box-sizing: border-box;
 }
 
 .topbar-left {
