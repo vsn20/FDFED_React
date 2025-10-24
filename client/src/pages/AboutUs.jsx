@@ -1,17 +1,40 @@
 import React from 'react';
-import './AboutUs.css'; // Corrected import to match CSS file name
+import './AboutUs.css'; // I corrected this from 'Aboutus.css' to match your filename
 
 const AboutUs = () => {
   return (
     <>
       <section id="AboutUs">
-        {/* ... (container, image-text-section, relationship-section) ... */}
-        {/* Keep all the existing sections above this line */}
+        <div className="container">
+          <h1>About Electroland</h1>
+          <p>
+            Welcome to Electroland, where innovation meets quality to transform your home. Since our founding in 2010, we’ve been dedicated to providing top-tier appliances that blend cutting-edge technology with timeless design. Our mission is simple: to enhance your lifestyle with reliable, efficient, and stylish solutions tailored to your needs.
+          </p>
+        </div>
+
+        <div className="image-text-section">
+          <img src="https://cdn.pixabay.com/photo/2017/03/22/17/39/kitchen-2165756_1280.jpg" alt="Our Team" />
+          <div className="text-content">
+            <h2>Our Journey</h2>
+            <p>
+              Electroland started as a small family business with a vision to revolutionize home appliances. Over the past decade, we’ve grown into a trusted name, serving thousands of households with our commitment to excellence. Our team of experts works tirelessly to design and curate products that make your daily life easier and more enjoyable.
+            </p>
+          </div>
+        </div>
+
+        <div className="image-text-section image-right">
+          <div className="text-content">
+            <h2>Our Values</h2>
+            <p>
+              At the heart of Electroland is a set of core values: integrity, innovation, and customer satisfaction. We believe in building lasting relationships with our customers by offering not just products, but experiences. Every appliance we sell reflects our dedication to quality and our promise to stand by you every step of the way.
+            </p>
+          </div>
+          <img src="/aboutusright.jpg" alt="Our Values" />
+        </div>
 
         <div className="relationship-section">
           <h2>Our Customer-Company Relationship</h2>
           <div className="relationship-grid">
-            {/* ... (All 4 relationship-card divs) ... */}
             <div className="relationship-card">
               <i className="fas fa-handshake"></i>
               <h3>Trust & Transparency</h3>
@@ -43,10 +66,9 @@ const AboutUs = () => {
           </div>
         </div>
 
-        {/* --- UPDATED TEAM SECTION --- */}
+        {/* --- ADDED TEAM SECTION --- */}
         <div className="team-section">
           <h2>Meet Our Team</h2>
-          {/* Replaced 'relationship-grid' with 'team-grid-container' */}
           <div className="team-grid-container">
             
             {/* --- Row 1 --- */}
@@ -82,6 +104,7 @@ const AboutUs = () => {
 
           </div>
         </div>
+        {/* --- END OF TEAM SECTION --- */}
 
       </section>
     </>
