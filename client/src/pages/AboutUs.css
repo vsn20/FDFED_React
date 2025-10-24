@@ -1,0 +1,262 @@
+/* AboutUs.css */
+
+/* Global body styles - consider moving to a global CSS if not component-specific */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    position: relative;
+    scroll-behavior: smooth;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Container for the main about section */
+.container {
+    max-width: 1450px;
+    margin: 40px auto;
+    padding: 40px 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.container h1 {
+    font-size: 2.5em;
+    color: #333;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.container h1:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(135deg, #2E8B57, #155217);
+    border-radius: 2px;
+}
+
+.container p {
+    font-size: 1.2em;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* Image-text sections */
+.image-text-section {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin: 40px auto;
+    max-width: 1450px;
+    padding: 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.image-text-section img {
+    width: 50%;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.text-content {
+    flex: 1;
+    text-align: left;
+}
+
+.text-content h2 {
+    font-size: 1.8em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.text-content p {
+    font-size: 1.1em;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Ensure the right image section is correctly ordered */
+.image-right .text-content {
+    order: 1;
+}
+
+.image-right img {
+    order: 2;
+}
+
+/* Relationship section */
+.relationship-section {
+    max-width: 1450px;
+    margin: 40px auto;
+    padding: 40px 20px;
+    background: white;
+    border-radius: 15px;
+    color: #333;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.relationship-section h2 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 40px;
+    position: relative;
+    padding-bottom: 15px;
+    color: #333;
+}
+
+.relationship-section h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(135deg, #2E8B57, #155217);
+    border-radius: 2px;
+}
+
+.relationship-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 0 20px;
+}
+
+.relationship-card {
+    text-align: center;
+    padding: 25px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.relationship-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.relationship-card i {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+    color: #2E8B57;
+}
+
+.relationship-card h3 {
+    font-size: 1.4em;
+    margin: 10px 0;
+    color: #333;
+}
+
+.relationship-card p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .container h1 {
+        font-size: 2em;
+    }
+
+    .container p {
+        font-size: 1em;
+    }
+
+    .image-text-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .image-text-section img {
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .text-content {
+        text-align: center;
+    }
+
+    .text-content h2 {
+        font-size: 1.5em;
+    }
+
+    .text-content p {
+        font-size: 1em;
+    }
+
+    .image-right .text-content,
+    .image-right img {
+        order: initial; /* Reset order on smaller screens */
+    }
+
+    .relationship-section h2 {
+        font-size: 2em;
+    }
+
+    .relationship-grid {
+        grid-template-columns: 1fr;
+        padding: 0 10px;
+    }
+
+    .relationship-card {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 450px) {
+    .container h1 {
+        font-size: 1.8em;
+    }
+
+    .container p {
+        font-size: 0.9em;
+    }
+
+    .image-text-section {
+        padding: 15px;
+    }
+
+    .text-content h2 {
+        font-size: 1.3em;
+    }
+
+    .text-content p {
+        font-size: 0.9em;
+    }
+
+    .relationship-section {
+        padding: 20px 15px;
+    }
+
+    .relationship-section h2 {
+        font-size: 1.8em;
+    }
+
+    .relationship-card h3 {
+        font-size: 1.2em;
+    }
+
+    .relationship-card p {
+        font-size: 1em;
+    }
+}

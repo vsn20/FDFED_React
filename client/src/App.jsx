@@ -9,6 +9,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
+import AboutUs from './pages/AboutUs'
 import OwnerAnalyticsPage from './pages/owner/OwnerAnalyticsPage';
 import EmployeesPage from './pages/owner/Employees/EmployeesPage';
 import ManagerAnalyticsPage from './pages/manager/ManagerAnalyticsPage';
@@ -47,7 +48,8 @@ function App() {
                     {/* Public Routes */}
                     <Route element={<PublicLayout />}>
                         <Route path="/" element={<HomePage />} />
-                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/login" element={<LoginPage />} /> 
+                        <Route path="/about-us" element={<AboutUs />} />
                     </Route>
 
                     {/* Redirect after login */}
@@ -77,5 +79,3 @@ function App() {
 }
 
 export default App;
-
-
