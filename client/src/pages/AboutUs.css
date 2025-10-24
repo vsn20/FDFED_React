@@ -259,4 +259,109 @@ body {
     .relationship-card p {
         font-size: 1em;
     }
+    /* Inside @media (max-width: 768px) { ... } */
+
+    .team-grid-container {
+        padding: 0 10px;
+    }
+
+    .team-row {
+        flex-direction: column; /* Stack cards vertically on mobile */
+        width: 100%;
+        gap: 20px; 
+    }
+
+    .team-card {
+        width: 100%; /* Make cards full-width on mobile */
+    }
+}
+
+
+/* Team Section */
+.team-section {
+    max-width: 1450px;
+    margin: 40px auto;
+    padding: 40px 20px;
+    background: white;
+    border-radius: 15px;
+    color: #333;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.team-section h2 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 40px;
+    position: relative;
+    padding-bottom: 15px;
+    color: #333;
+}
+
+.team-section h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(135deg, #2E8B57, #155217);
+    border-radius: 2px;
+}
+
+.team-card {
+    text-align: center;
+    padding: 25px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 300px;
+    box-sizing: border-box;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.team-card img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #2E8B57; /* Uses green from your existing theme */
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.team-card h3 {
+    font-size: 1.4em;
+    margin: 10px 0 5px 0;
+    color: #333;
+}
+
+.team-card p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #155217; /* Dark green from your theme */
+    font-style: italic;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* ... after .team-card p { ... } */
+
+.team-grid-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* This centers the rows */
+    gap: 30px; /* This is the space BETWEEN the rows */
+    padding: 0 20px;
+}
+
+.team-row {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: center; /* This centers the cards within the row */
+    gap: 30px; /* This is the space BETWEEN the cards */
 }
