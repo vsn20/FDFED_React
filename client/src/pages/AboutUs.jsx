@@ -80,7 +80,7 @@ const AboutUs = () => {
               
               <div className="team-card">
                 <img src="https://images.pexels.com/photos/837358/pexels-photo-837358.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Naman" />
-                <h3>Naman</h3>
+                <h3>Vuppala Sai Naman</h3>
               </div>
               
               <div className="team-card">
