@@ -1,6 +1,4 @@
 /* AboutUs.css */
-
-/* Global body styles - consider moving to a global CSS if not component-specific */
 body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
@@ -23,7 +21,6 @@ body {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     text-align: center;
 }
-
 .container h1 {
     font-size: 2.5em;
     color: #333;
@@ -31,7 +28,6 @@ body {
     position: relative;
     padding-bottom: 15px;
 }
-
 .container h1:after {
     content: '';
     position: absolute;
@@ -43,7 +39,6 @@ body {
     background: linear-gradient(135deg, #2E8B57, #155217);
     border-radius: 2px;
 }
-
 .container p {
     font-size: 1.2em;
     color: #555;
@@ -63,36 +58,31 @@ body {
     border-radius: 15px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
-
 .image-text-section img {
     width: 50%;
     height: auto;
     border-radius: 10px;
     object-fit: cover;
 }
-
 .text-content {
     flex: 1;
     text-align: left;
 }
-
 .text-content h2 {
     font-size: 1.8em;
     color: #333;
     margin-bottom: 15px;
 }
-
 .text-content p {
     font-size: 1.1em;
     color: #555;
     line-height: 1.6;
 }
 
-/* Ensure the right image section is correctly ordered */
+/* Right-aligned image */
 .image-right .text-content {
     order: 1;
 }
-
 .image-right img {
     order: 2;
 }
@@ -107,7 +97,6 @@ body {
     color: #333;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
-
 .relationship-section h2 {
     text-align: center;
     font-size: 2.5em;
@@ -116,7 +105,6 @@ body {
     padding-bottom: 15px;
     color: #333;
 }
-
 .relationship-section h2:after {
     content: '';
     position: absolute;
@@ -128,14 +116,12 @@ body {
     background: linear-gradient(135deg, #2E8B57, #155217);
     border-radius: 2px;
 }
-
 .relationship-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
     padding: 0 20px;
 }
-
 .relationship-card {
     text-align: center;
     padding: 25px;
@@ -143,29 +129,129 @@ body {
     background: linear-gradient(135deg, #f8f9fa, #e9ecef);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .relationship-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
-
 .relationship-card i {
     font-size: 2.5em;
     margin-bottom: 15px;
     color: #2E8B57;
 }
-
 .relationship-card h3 {
     font-size: 1.4em;
     margin: 10px 0;
     color: #333;
 }
-
 .relationship-card p {
     font-size: 1.1em;
     line-height: 1.6;
     color: #555;
 }
+
+/* Team Section */
+/* -------------------------------------------------
+   TEAM SECTION – centered rows
+   ------------------------------------------------- */
+.team-section {
+  max-width: 1450px;
+  margin: 40px auto;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 15px;
+  color: #333;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+.team-section h2 {
+  text-align: center;
+  font-size: 2.5em;
+  margin-bottom: 40px;
+  position: relative;
+  padding-bottom: 15px;
+  color: #333;
+}
+.team-section h2:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(135deg, #2E8B57, #155217);
+  border-radius: 2px;
+}
+
+/* Container that only adds vertical spacing */
+.team-grid-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;               /* space BETWEEN rows */
+  align-items: center;     /* keep rows centered on the page */
+}
+
+/* ---- ROWS ---- */
+.team-row {
+  display: grid;
+  gap: 30px;               /* space BETWEEN cards */
+  justify-content: center; /* <-- THIS CENTERS THE CARDS */
+}
+
+/* Desktop – fixed column count */
+@media (min-width: 769px) {
+  .team-row-2 { grid-template-columns: repeat(2, minmax(250px, 300px)); }
+  .team-row-3 { grid-template-columns: repeat(3, minmax(250px, 300px)); }
+}
+
+/* Mobile – always 1 column, still centered */
+@media (max-width: 768px) {
+  .team-row-2,
+  .team-row-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- CARD ---- */
+.team-card {
+  text-align: center;
+  padding: 25px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  transition: transform .3s ease, box-shadow .3s ease;
+  max-width: 300px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.team-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,.2);
+}
+.team-card img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #2E8B57;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,.1);
+}
+.team-card h3 {
+  font-size: 1.4em;
+  margin: 10px 0 5px;
+  color: #333;
+}
+.team-card p {
+  font-size: 1.1em;
+  line-height: 1.6;
+  color: #155217;
+  font-style: italic;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* -------------------------------------------------
+   (All the rest of your CSS – unchanged)
+   ------------------------------------------------- */
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
@@ -173,53 +259,45 @@ body {
         margin: 20px auto;
         padding: 20px;
     }
-
     .container h1 {
         font-size: 2em;
     }
-
     .container p {
         font-size: 1em;
     }
-
     .image-text-section {
         flex-direction: column;
         text-align: center;
     }
-
     .image-text-section img {
         width: 100%;
         max-width: 400px;
     }
-
     .text-content {
         text-align: center;
     }
-
     .text-content h2 {
         font-size: 1.5em;
     }
-
     .text-content p {
         font-size: 1em;
     }
-
     .image-right .text-content,
     .image-right img {
-        order: initial; /* Reset order on smaller screens */
+        order: initial;
     }
-
     .relationship-section h2 {
         font-size: 2em;
     }
-
     .relationship-grid {
         grid-template-columns: 1fr;
         padding: 0 10px;
     }
-
     .relationship-card {
         padding: 20px;
+    }
+    .team-section h2 {
+        font-size: 2em;
     }
 }
 
@@ -227,141 +305,34 @@ body {
     .container h1 {
         font-size: 1.8em;
     }
-
     .container p {
         font-size: 0.9em;
     }
-
     .image-text-section {
         padding: 15px;
     }
-
     .text-content h2 {
         font-size: 1.3em;
     }
-
     .text-content p {
         font-size: 0.9em;
     }
-
     .relationship-section {
         padding: 20px 15px;
     }
-
     .relationship-section h2 {
         font-size: 1.8em;
     }
-
     .relationship-card h3 {
         font-size: 1.2em;
     }
-
     .relationship-card p {
         font-size: 1em;
     }
-    /* Inside @media (max-width: 768px) { ... } */
-
-    .team-grid-container {
-        padding: 0 10px;
-    }
-
-    .team-row {
-        flex-direction: column; /* Stack cards vertically on mobile */
-        width: 100%;
-        gap: 20px; 
-    }
-
     .team-card {
-        width: 100%; /* Make cards full-width on mobile */
+        padding: 20px;
     }
-}
-
-
-/* Team Section */
-.team-section {
-    max-width: 1450px;
-    margin: 40px auto;
-    padding: 40px 20px;
-    background: white;
-    border-radius: 15px;
-    color: #333;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-}
-
-.team-section h2 {
-    text-align: center;
-    font-size: 2.5em;
-    margin-bottom: 40px;
-    position: relative;
-    padding-bottom: 15px;
-    color: #333;
-}
-
-.team-section h2:after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 4px;
-    background: linear-gradient(135deg, #2E8B57, #155217);
-    border-radius: 2px;
-}
-
-.team-card {
-    text-align: center;
-    padding: 25px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 300px;
-    box-sizing: border-box;
-}
-
-.team-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.team-card img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #2E8B57; /* Uses green from your existing theme */
-    margin-bottom: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.team-card h3 {
-    font-size: 1.4em;
-    margin: 10px 0 5px 0;
-    color: #333;
-}
-
-.team-card p {
-    font-size: 1.1em;
-    line-height: 1.6;
-    color: #155217; /* Dark green from your theme */
-    font-style: italic;
-    font-weight: 500;
-    margin: 0;
-}
-
-/* ... after .team-card p { ... } */
-
-.team-grid-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* This centers the rows */
-    gap: 30px; /* This is the space BETWEEN the rows */
-    padding: 0 20px;
-}
-
-.team-row {
-    display: flex;
-    flex-wrap: wrap; 
-    justify-content: center; /* This centers the cards within the row */
-    gap: 30px; /* This is the space BETWEEN the cards */
+    .team-card h3 {
+        font-size: 1.2em;
+    }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import './AboutUs.css'; // I corrected this from 'Aboutus.css' to match your filename
+import './AboutUs.css';
 
 const AboutUs = () => {
   return (
@@ -66,36 +66,29 @@ const AboutUs = () => {
           </div>
         </div>
 
-        {/* --- ADDED TEAM SECTION --- */}
+        {/* --- TEAM SECTION:*/}
         <div className="team-section">
-          <h2>Meet Our Team</h2>
+          <h2 >Meet Our Team</h2>
           <div className="team-grid-container">
-            
-            {/* --- Row 1 --- */}
-            <div className="team-row">
+            <div className="team-row team-row-2">
               <div className="team-card">
                 <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Sai Chand" />
                 <h3>Sai Chand</h3>
               </div>
-              
               <div className="team-card">
                 <img src="https://images.pexels.com/photos/837358/pexels-photo-837358.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Naman" />
                 <h3>Vuppala Sai Naman</h3>
               </div>
-              
+            </div>
+            <div className="team-row team-row-3">
               <div className="team-card">
                 <img src="https://images.pexels.com/photos/846741/pexels-photo-846741.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Hema Sai" />
                 <h3>Hema Sai</h3>
               </div>
-            </div>
-
-            {/* --- Row 2 --- */}
-            <div className="team-row">
               <div className="team-card">
                 <img src="https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Narayana" />
                 <h3>Narayana</h3>
               </div>
-              
               <div className="team-card">
                 <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Jahnavi" />
                 <h3>Jahnavi</h3>
@@ -104,7 +97,6 @@ const AboutUs = () => {
 
           </div>
         </div>
-        {/* --- END OF TEAM SECTION --- */}
 
       </section>
     </>
