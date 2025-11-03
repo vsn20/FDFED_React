@@ -1,0 +1,109 @@
+/* Form Container */
+.form-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  height: calc(100vh - 140px);
+  overflow-y: auto;
+}
+
+/* Form Title */
+.form-container h2 {
+  font-size: 24px;
+  color: #2d3436;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Form Element */
+.form-container form {
+  display: block;
+}
+
+/* Fieldset (Sections) */
+.form-container fieldset {
+  margin-bottom: 25px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+/* Legend (Section Title) */
+.form-container legend {
+  font-size: 18px;
+  color: #2d3436;
+  padding: 0 10px;
+}
+
+/* Flex Container for Fields */
+.form-container .field-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Individual Field Containers */
+.form-container .field-group > div {
+  flex: 1 1 30%;
+  min-width: 220px;
+}
+
+/* Labels */
+.form-container label {
+  display: block;
+  font-size: 14px;
+  color: #2d3436;
+  margin-bottom: 5px;
+}
+
+/* Inputs, Selects, and Textarea */
+.form-container input,
+.form-container select,
+.form-container textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+/* Textarea Specific */
+.form-container textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Error Message */
+.form-container #error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Submit Button */
+.form-container button {
+  display: block;
+  width: 150px;
+  margin: 20px auto 0;
+  padding: 12px;
+  background-color: #2d3436;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Forgot Password Link Container */
+.form-container .forgot-password {
+  text-align: center;
+  margin-top: 15px;
+}
+
+/* Forgot Password Link */
+.form-container .forgot-password a {
+  color: #2d3436;
+  text-decoration: none;
+  font-size: 14px;
+}
