@@ -1,10 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react'; // <-- useEffect is removed
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
 const LoginPage = () => {
     const authContext = useContext(AuthContext);
-    const { login, isAuthenticated } = authContext;
+    const { login } = authContext; // <-- isAuthenticated is removed
     const navigate = useNavigate();
 
     const [user, setUser] = useState({
@@ -14,11 +14,7 @@ const LoginPage = () => {
 
     const { userId, password } = user;
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/dashboard'); // If already logged in, redirect
-        }
-    }, [isAuthenticated, navigate]);
+    // FIX: The useEffect hook that was here is now REMOVED.
 
     const onChange = (e) => setUser({ ...user, [e.target.name]: e.target.value });
 

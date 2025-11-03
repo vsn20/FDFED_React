@@ -80,7 +80,7 @@ const AuthState = (props) => {
                 type: 'LOGIN_SUCCESS',
                 payload: res.data, // Expects { token, user }
             });
-            navigate('/dashboard'); // Redirect to central dashboard after login
+            navigate('/dashboard'); // <-- FIX: This line is added back
         } catch (err) {
             // In a real app, you would dispatch an action to show an error message
             console.error(err.response.data.message);

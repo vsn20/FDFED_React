@@ -1,15 +1,16 @@
-const User = require('../models/User');
+const User = require('../models/User'); // Your new User model
 const Employee = require('../models/employees');
 const jwt = require('jsonwebtoken');
 
-// A simplified signup function for the demo.
-// In a real app, you'd want more validation.
+// ... (signup function remains the same) ...
 exports.signup = async (req, res) => {
-    // This is just a placeholder route for now as requested.
     res.status(200).json({ success: true, message: "Signup route is available but not implemented for demo." });
 };
 
+
 exports.login = async (req, res) => {
+    // This 'userId' comes from the React form.
+    // Based on your new schema, the user will type "EMP002" here.
     const { userId, password } = req.body;
 
     if (!userId || !password) {
@@ -17,29 +18,34 @@ exports.login = async (req, res) => {
     }
 
     try {
-        // Find user by their employee ID
-        const user = await User.findOne({ userId });
+        // Find user by their login ID (which is 'userId' in your new schema)
+        const user = await User.findOne({ userId: userId });
         if (!user) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // IMPORTANT: In a real app, you MUST hash passwords.
-        // We are comparing plain text passwords only for this demo.
+        // Compare plain text passwords
         const isMatch = (password === user.password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // If credentials are correct, find the employee details to get their role
-        const employee = await Employee.findOne({ e_id: user.userId });
+        // *** THIS IS THE FIX ***
+        // Find the employee details using 'user.emp_id' from the User model
+        const employee = await Employee.findOne({ e_id: user.emp_id });
         if (!employee) {
             return res.status(404).json({ message: 'Employee profile not found for this user.' });
+        }
+
+        // Check the employee's status
+        if (employee.status === "resigned" || employee.status === "fired") {
+            return res.status(403).json({ message: 'Access denied: Employee is resigned or fired' });
         }
 
         // Create JWT Payload
         const payload = {
             user: {
-                id: user.userId,
+                id: user.userId, // This is the login ID (e.g., "EMP002")
                 role: employee.role,
                 name: employee.f_name
             }

@@ -13,7 +13,7 @@ exports.getEmployees = async (req, res) => {
 
 exports.addEmployee = async (req, res) => {
   try {
-    const {
+    let {
       f_name,
       last_name,
       role,
@@ -50,7 +50,9 @@ exports.addEmployee = async (req, res) => {
 
     const bidValue = bid === "null" ? null : bid;
 
-    if (role === "Sales Manager" && bidValue) {
+    if (role === "Sales Manager" && bidValue) 
+    {
+      role='manager';
       const branch = await Branch.findOne({ bid: bidValue });
       if (!branch) {
         return res.status(404).json({
@@ -64,6 +66,10 @@ exports.addEmployee = async (req, res) => {
           message: `Branch ${bidValue} already has a Sales Manager assigned`
         });
       }
+    }
+
+    if(role==='Salesman'){
+      role='salesman';
     }
 
     const newEmployee = new Employee({

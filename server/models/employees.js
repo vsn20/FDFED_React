@@ -16,7 +16,7 @@ const EmployeeSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["owner", "Sales Manager", "Salesman"], // Updated to match frontend values
+    enum: ["owner", "manager", "salesman"], // Updated to match frontend values
     required: true
   },
   bid: {
