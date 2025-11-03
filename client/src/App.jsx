@@ -18,6 +18,8 @@ import NotFoundPage from './pages/NotFoundPage';
 import CompanyPage from './pages/owner/CompanyPage';
 import BranchPage from './pages/owner/Branches/BranchPage';
 import Details from './pages/salesman/EmployeeDetails/Details';
+import CompanyLogin from './pages/CompanyLogin';
+import CompanyAnalytics from './pages/company/CompanyAnalytics';
 // A small component to handle the initial redirect after login
 const PostLoginRedirect = () => {
     const { user } = useContext(AuthContext);
@@ -34,6 +36,8 @@ const PostLoginRedirect = () => {
             return <Navigate to="/manager/analytics" />;
         case 'salesman':
             return <Navigate to="/salesman/analytics" />;
+        case 'company':
+            return <Navigate to="/company/analytics" />;
         default:
             return <Navigate to="/login" />;
     }
@@ -50,6 +54,7 @@ function App() {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/login" element={<LoginPage />} /> 
                         <Route path="/about-us" element={<AboutUs />} />
+                        <Route path="/companylogin" element={<CompanyLogin />} />
                     </Route>
 
                     {/* Redirect after login */}
@@ -68,6 +73,12 @@ function App() {
                         {/* Salesman Routes */}
                         <Route path="/salesman/analytics" element={<ProtectedRoute roles={['salesman']}><SalesmanAnalyticsPage /></ProtectedRoute>} />
                         <Route path='/salesman/profile' element={<ProtectedRoute roles={['salesman']}><Details/></ProtectedRoute>} />
+
+                        <Route path="/company/analytics" element={
+                            <ProtectedRoute roles={['company']}>
+                               <CompanyAnalytics/>
+                            </ProtectedRoute>
+                        } />
                     </Route>
 
                     {/* Not Found */}

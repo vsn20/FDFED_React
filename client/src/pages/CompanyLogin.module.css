@@ -1,0 +1,151 @@
+/* Styles copied directly from companylogin.ejs */
+.pageWrapper {
+    padding-top: 80px; /* From .content-wrapper */
+    background-color: #f4f4f4;
+    min-height: 100vh;
+}
+
+.mainContainer {
+    display: flex;
+    min-height: 80vh;
+    max-width: 1200px;
+    margin: 50px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: all 0.5s ease;
+}
+
+.imageSection {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+.order1 { order: 1; }
+.order2 { order: 2; }
+
+.imageSection img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.imageOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.authContainerWrapper {
+    flex: 1;
+    background: #fff;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.authContainer h2 {
+    color: #2C3E50;
+    margin-bottom: 30px;
+    font-size: 2em;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.authContainer h2:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(135deg, #34495E, #2C3E50);
+}
+
+.authContainer input {
+    width: 70%;
+    padding: 12px;
+    margin: 15px auto;
+    border: none;
+    border-radius: 25px;
+    background: #f5f6fa;
+    box-shadow: inset 4px 4px 8px #e0e1e5,
+                inset -4px -4px 8px #ffffff;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.authContainer input:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(52, 73, 94, 0.3);
+}
+
+.authContainer button {
+    width: 70%;
+    padding: 12px;
+    margin: 20px auto;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #34495E, #2C3E50);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+}
+
+.authContainer button:hover {
+    background: linear-gradient(to right, rgb(66, 32, 70), rgb(30, 26, 71), rgb(77, 38, 44), #155217, #2E8B57);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.linkContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.linkContainer a {
+    text-decoration: none;
+    color: #34495E;
+    font-size: 14px;
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+.linkContainer a:hover {
+    color: #2E8B57;
+}
+
+.errorMessage {
+    color: #e74c3c;
+    margin: 15px auto;
+    padding: 10px;
+    background: #ffebee;
+    border-radius: 5px;
+    width: 70%;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .mainContainer {
+        flex-direction: column;
+        margin: 20px;
+    }
+    .imageSection {
+        min-height: 300px;
+    }
+}

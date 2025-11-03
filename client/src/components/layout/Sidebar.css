@@ -65,3 +65,8 @@
 .sidebar-menu li a span {
   font-size: 18px;
 }
+
+.active{
+  font-weight: bold;
+  background-color: black;
+}

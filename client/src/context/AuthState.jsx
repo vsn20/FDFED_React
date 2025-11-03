@@ -88,6 +88,37 @@ const AuthState = (props) => {
         }
     };
 
+    const companyLogin = async (formData) => {
+        try {
+            const res = await api.post('/auth/company/login', formData);
+            dispatch({
+                type: 'LOGIN_SUCCESS',
+                payload: res.data, // Expects { token, user }
+            });
+            navigate('/dashboard'); // Redirect to central dashboard
+        } catch (err) {
+            console.error(err.response?.data?.message);
+            dispatch({ type: 'LOGIN_FAIL' });
+            throw err; // Re-throw error for the component to catch
+        }
+    };
+
+    // --- ADD THIS FUNCTION ---
+    const companySignup = async (formData) => {
+        try {
+            const res = await api.post('/auth/company/signup', formData);
+            dispatch({
+                type: 'LOGIN_SUCCESS',
+                payload: res.data, // Expects { token, user }
+            });
+            navigate('/dashboard'); // Redirect to central dashboard
+        } catch (err) {
+            console.error(err.response?.data?.message);
+            dispatch({ type: 'LOGIN_FAIL' });
+            throw err; // Re-throw error for the component to catch
+        }
+    };
+
     // Logout User
     const logout = () => {
         dispatch({ type: 'LOGOUT' });
@@ -103,6 +134,8 @@ const AuthState = (props) => {
                 user: state.user,
                 login,
                 logout,
+                companyLogin,
+                companySignup,
             }}
         >
             {props.children}

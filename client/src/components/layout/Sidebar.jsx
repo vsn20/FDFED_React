@@ -73,6 +73,16 @@ const Sidebar = () => {
         </>
     );
 
+     const companyLinks = (
+        <>
+            <li className={activeLink === "/company/analytics" ? "active" : ""}>
+                <Link to="/company/analytics" onClick={() => handleLinkClick("/salesman/analytics")}>
+                    <span>📊</span> Analytics
+                </Link>
+            </li>
+        </>
+    );
+
     return (
         <div className="sidebar">
             <h3 className="sidebar-title">
@@ -81,7 +91,7 @@ const Sidebar = () => {
             <ul className="sidebar-menu">
                 {user.role === 'owner' && ownerLinks}
                 {user.role === 'manager' && managerLinks}
-                {user.role === 'salesman' && salesmanLinks}
+                {user.role === 'salesman' ? salesmanLinks : companyLinks}
             </ul>
         </div>
     );

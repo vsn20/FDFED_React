@@ -1,19 +1,24 @@
 const mongoose = require('mongoose');
 
-// This schema is for authentication. It links a user's login credentials
-// to their employee profile.
 const UserSchema = new mongoose.Schema({
-    // We'll use the employee ID as the main user identifier for login
     userId: {
         type: String,
         required: [true, 'User ID is required'],
         unique: true,
-        ref: 'Employee' // This creates a reference to the Employee model
+        ref: 'Employee' 
     },
     emp_id: {
         type: String,
-        trim: true // Made optional for companies
+        trim: true,
+        default: null // Explicitly set default
     },
+    // --- ADD THIS FIELD ---
+    c_id: {
+        type: String,
+        trim: true,
+        default: null // This user is either an employee OR a company user
+    },
+    // -----------------------
     password: {
         type: String,
         required: [true, 'Password is required'],

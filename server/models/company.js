@@ -10,4 +10,4 @@ const companySchema = new mongoose.Schema({
     active: { type: String, enum: ["active", "inactive"], default: "active" }
 });
 
-module.exports = mongoose.model("Company", companySchema);
+module.exports = mongoose.models.Company||mongoose.model("Company", companySchema);

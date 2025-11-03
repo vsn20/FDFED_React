@@ -25,7 +25,7 @@ const PublicLayout = () => {
           <Link to="/our-branches" className={`nav-link ${activePage === 'our-branches' ? 'active' : ''}`}>Our Branches</Link>
           <Link to="/login" className={`nav-link ${activePage === 'customer' ? 'active' : ''}`}>Customer</Link>
           <Link to="/login" className={`nav-link ${activePage === 'employee' ? 'active' : ''}`}>Employee</Link>
-          <Link to="/login" className={`nav-link ${activePage === 'company' ? 'active' : ''}`}>Company</Link>
+          <Link to="/companylogin" className={`nav-link ${activePage === 'company' ? 'active' : ''}`}>Company</Link>
           <Link to="/contact-us" className={`nav-link ${activePage === 'contact-us' ? 'active' : ''}`}>Contact Us</Link>
         </div>
 

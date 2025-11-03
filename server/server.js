@@ -19,6 +19,7 @@ app.use(express.json());
 
 // Mount routers
 app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/auth/company', require('./routes/companyAuthRoutes'));
 app.use('/api/companies', require('./routes/owner/companyRoutes'));
 app.use('/api/branches', require('./routes/owner/branchRoutes'));
 app.use('/api/employees', require('./routes/owner/employeeRoutes'));
