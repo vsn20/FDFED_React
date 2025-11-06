@@ -145,6 +145,52 @@ const PublicLayout = () => {
       <main className="main-content">
         <Outlet />
       </main>
+
+      {/* FOOTER */}
+      <footer className="footer">
+        <div className="footer-top">
+          <div className="footer-logo-section">
+            <img src={logo} alt="ElectroLand" className="footer-logo" />
+            <p className="tagline">
+              Powering Your World, Direct from the Source
+            </p>
+          </div>
+          <div className="footer-links-section">
+            <div className="footer-column">
+              <h2 className="column-title">Information</h2>
+              <ul className="column-list">
+                <li><Link to="/">Home</Link></li>
+                <li><Link to="/about-us">About</Link></li>
+                <li><Link to="/contact-us">Contact</Link></li>
+              </ul>
+            </div>
+            <div className="footer-column">
+              <h2 className="column-title">Our Services</h2>
+              <ul className="column-list">
+                <li>Workday Extend Implementation</li>
+                <li>Workday HCM/Finance Implementation</li>
+                <li>Workday Integrations</li>
+                <li>Project Managed Services</li>
+                <li>Workday Payroll Services</li>
+                <li>Application Management Services</li>
+                <li>Staff Augmentation Services</li>
+                <li>Training & Support</li>
+              </ul>
+            </div>
+            <div className="footer-column">
+              <h2 className="column-title">Get in Touch</h2>
+              <div className="contact-info">
+                <p>Guntur, Andhra Pradesh</p>
+                <p>+91 234567890</p>
+                <p><a href="mailto:seshasaisachand.a23@iits.in">seshasaisachand.a23@iits.in</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p className="footer-bottom">
+          Copyright 2024 © <a href="https://electroland.com">ElectroLand</a>. All Rights Reserved.
+        </p>
+      </footer>
     </>
   );
 };
