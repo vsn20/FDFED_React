@@ -50,7 +50,7 @@ exports.addEmployee = async (req, res) => {
 
     const bidValue = bid === "null" ? null : bid;
 
-    if (role === "Sales Manager" && bidValue) 
+    if (role === "manager" && bidValue) 
     {
       role='manager';
       const branch = await Branch.findOne({ bid: bidValue });
@@ -68,7 +68,7 @@ exports.addEmployee = async (req, res) => {
       }
     }
 
-    if(role==='Salesman'){
+    if(role==='salesman'){
       role='salesman';
     }
 
@@ -95,7 +95,7 @@ exports.addEmployee = async (req, res) => {
 
     await newEmployee.save();
 
-    if (role === "Sales Manager" && bidValue) {
+    if (role === "manager" && bidValue) {
       await Branch.findOneAndUpdate(
         { bid: bidValue },
         {
@@ -144,11 +144,11 @@ exports.getSingleEmployee = async (req, res) => {
 exports.updateEmployee = async (req, res) => {
   try {
     const { e_id } = req.params;
-    const {
+    let {
       f_name,
       last_name,
-      role,
-      bid,
+      role, // This is the NEW role
+      bid, // This is the NEW bid
       email,
       phone_no,
       acno,
@@ -159,7 +159,7 @@ exports.updateEmployee = async (req, res) => {
       status
     } = req.body;
 
-    // Prevent assigning 'owner' role if not allowed
+    // Prevent assigning 'owner' role
     if (role === "owner") {
       return res.status(403).json({
         success: false,
@@ -167,34 +167,54 @@ exports.updateEmployee = async (req, res) => {
       });
     }
 
-    const bidValue = bid === "null" ? null : bid;
+    // --- START: LOGIC FIX ---
 
-    if (role === "Sales Manager" && bidValue) {
-      const branch = await Branch.findOne({ bid: bidValue });
+    // 1. Find the employee FIRST to get their original state
+    const employee = await Employee.findOne({ e_id });
+    if (!employee) {
+      return res.status(404).json({
+        success: false,
+        message: "Employee not found"
+      });
+    }
+
+    // 2. Store the original role and branch ID
+    const originalBid = employee.bid;
+    const originalRole = employee.role;
+
+    // 3. Determine the new values
+    const newBidValue = bid === "null" ? null : bid;
+    const newRole = role || originalRole; // Use new role, or keep original if not provided
+
+    // 4. Validate the NEW branch assignment (if they are a manager)
+    if (newRole === "manager" && newBidValue) {
+      const branch = await Branch.findOne({ bid: newBidValue });
       if (!branch) {
         return res.status(404).json({
           success: false,
-          message: `Branch ${bidValue} not found`
+          message: `Branch ${newBidValue} not found`
         });
       }
+      // Check if branch is already assigned to SOMEONE ELSE
       if (
         branch.manager_assigned &&
-        branch.manager_id.toString() !== (await Employee.findOne({ e_id }))._id.toString()
+        branch.manager_id.toString() !== employee._id.toString()
       ) {
         return res.status(400).json({
           success: false,
-          message: `Branch ${bidValue} already has a Sales Manager assigned`
+          message: `Branch ${newBidValue} already has a Sales Manager assigned`
         });
       }
     }
-
-    const employee = await Employee.findOneAndUpdate(
+    
+    // 5. Update the employee document with all new data
+    const updatedEmployee = await Employee.findOneAndUpdate(
       { e_id },
       {
         f_name,
         last_name,
-        role,
-        bid: bidValue,
+        role: newRole,
+        bid: newBidValue,
         email,
         phone_no: phone_no || null,
         acno,
@@ -209,27 +229,23 @@ exports.updateEmployee = async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    if (!employee) {
+    if (!updatedEmployee) {
+      // This check is technically redundant now but good practice
       return res.status(404).json({
         success: false,
-        message: "Employee not found"
+        message: "Employee not found during update"
       });
     }
 
-    if (role === "Sales Manager" && bidValue) {
+    // 6. Handle Branch (de-)assignment based on original and new state
+
+    // 6a. Clear the OLD branch if:
+    // - Employee WAS a manager
+    // - Employee WAS assigned to a branch
+    // - AND (Employee's branch changed OR Employee is no longer a manager)
+    if (originalRole === "manager" && originalBid && (originalBid !== newBidValue || newRole !== "manager")) {
       await Branch.findOneAndUpdate(
-        { bid: bidValue },
-        {
-          manager_id: employee._id,
-          manager_name: `${f_name} ${last_name}`,
-          manager_email: email,
-          manager_ph_no: phone_no || "N/A",
-          manager_assigned: true
-        }
-      );
-    } else if (employee.bid && (role !== "Sales Manager" || !bidValue)) {
-      await Branch.findOneAndUpdate(
-        { bid: employee.bid },
+        { bid: originalBid },
         {
           manager_id: null,
           manager_name: "Not Assigned",
@@ -240,11 +256,30 @@ exports.updateEmployee = async (req, res) => {
       );
     }
 
+    // 6b. Assign the NEW branch if:
+    // - Employee IS a manager
+    // - Employee IS assigned to a new branch
+    if (newRole === "manager" && newBidValue) {
+      await Branch.findOneAndUpdate(
+        { bid: newBidValue },
+        {
+          manager_id: updatedEmployee._id,
+          manager_name: `${f_name} ${last_name}`,
+          manager_email: email,
+          manager_ph_no: phone_no || "N/A",
+          manager_assigned: true
+        }
+      );
+    }
+
+    // --- END: LOGIC FIX ---
+
     res.json({
       success: true,
       message: "Employee updated successfully",
-      employee
+      employee: updatedEmployee
     });
+
   } catch (err) {
     console.error(err.message);
     if (err.name === "ValidationError") {

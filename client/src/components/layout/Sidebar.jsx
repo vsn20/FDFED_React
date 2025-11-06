@@ -76,7 +76,7 @@ const Sidebar = () => {
      const companyLinks = (
         <>
             <li className={activeLink === "/company/analytics" ? "active" : ""}>
-                <Link to="/company/analytics" onClick={() => handleLinkClick("/salesman/analytics")}>
+                <Link to="/company/analytics" onClick={() => handleLinkClick("/company/analytics")}>
                     <span>📊</span> Analytics
                 </Link>
             </li>
@@ -91,7 +91,8 @@ const Sidebar = () => {
             <ul className="sidebar-menu">
                 {user.role === 'owner' && ownerLinks}
                 {user.role === 'manager' && managerLinks}
-                {user.role === 'salesman' ? salesmanLinks : companyLinks}
+                {user.role === 'salesman' && salesmanLinks}
+                {user.role === 'company' && companyLinks}
             </ul>
         </div>
     );

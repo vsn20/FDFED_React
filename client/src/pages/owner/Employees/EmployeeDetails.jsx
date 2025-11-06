@@ -3,8 +3,9 @@ import api from '../../../api/api';
 import styles from './Employee.module.css'; // Import CSS module
 
 const EmployeeDetails = ({ e_id, handleBack }) => {
-    const [employee, setEmployee] = useState(null);
-    const [branches, setBranches] = useState([]);
+    const [employee, setEmployee] = useState(null); // Stores the original employee data
+    const [branches, setBranches] = useState([]); // Stores the master list of all branches
+    const [filteredBranches, setFilteredBranches] = useState([]); // NEW: For the dynamic dropdown
     const [formData, setFormData] = useState({
         f_name: '',
         last_name: '',
@@ -19,18 +20,20 @@ const EmployeeDetails = ({ e_id, handleBack }) => {
         address: '',
         status: ''
     });
+    const [error, setError] = useState(''); // NEW: For validation errors
     const [notFound, setNotFound] = useState(false);
 
+    // 1. Fetch employee and branch data on mount
     useEffect(() => {
         const fetchEmployee = async () => {
             try {
                 const res = await api.get(`/employees/${e_id}`);
-                setEmployee(res.data);
+                setEmployee(res.data); // Store original data
                 setFormData({
                     f_name: res.data.f_name,
                     last_name: res.data.last_name,
                     role: res.data.role,
-                    bid: res.data.bid || 'null',
+                    bid: res.data.bid || 'null', // Set initial form state
                     email: res.data.email,
                     phone_no: res.data.phone_no || '',
                     acno: res.data.acno,
@@ -48,21 +51,52 @@ const EmployeeDetails = ({ e_id, handleBack }) => {
         const fetchBranches = async () => {
             try {
                 const res = await api.get('/branches');
-                setBranches(res.data);
+                setBranches(res.data); // Set master branch list
             } catch (err) {
                 console.error("Error fetching branches:", err);
+                setError("Failed to load branches");
             }
         };
         fetchEmployee();
         fetchBranches();
     }, [e_id]);
 
+    // 2. NEW: This useEffect filters the branch list based on role
+    // This logic is now adapted for the "edit" component
+    useEffect(() => {
+        // Wait until branches and employee data are loaded
+        if (!branches.length || !employee) {
+            return;
+        }
+
+        const originalBid = employee.bid; // Get the employee's original branch
+
+        if (formData.role === 'manager') {
+            const filtered = branches.filter(branch => 
+                !branch.manager_assigned || branch.bid === originalBid
+            );
+            setFilteredBranches(filtered);
+        } else {
+            setFilteredBranches(branches);
+        }
+    }, [formData.role, branches, employee]); 
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        setError(''); 
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(''); // Clear previous errors
+
+        // 3. NEW: Added salary validation from your addemployee.ejs
+        const salaryValue = parseFloat(formData.base_salary);
+        if (isNaN(salaryValue) || salaryValue <= 0) {
+            setError('Monthly salary must be a number greater than 0.');
+            return;
+        }
+
         try {
             await api.put(`/employees/${e_id}`, {
                 ...formData,
@@ -71,7 +105,7 @@ const EmployeeDetails = ({ e_id, handleBack }) => {
             handleBack();
         } catch (err) {
             console.error("Error updating employee:", err);
-            alert(err.response?.data?.message || "Error updating employee");
+            setError(err.response?.data?.message || "Error updating employee");
         }
     };
 
@@ -86,10 +120,14 @@ const EmployeeDetails = ({ e_id, handleBack }) => {
     return (
         <div className={styles.formContainer}>
             <h2>Edit Employee Details</h2>
+            {/* NEW: Display the error message */}
+            {error && <div className={styles.errorMessage}>{error}</div>}
             <form onSubmit={handleSubmit} className={styles.formWrapper}>
+                {/* ... (Personal Details section) ... */}
                 <div className={styles.formSection}>
                     <h3 className={styles.sectionTitle}>Personal Details</h3>
                     <div className={styles.fieldGroup}>
+                        {/* ... (First Name, Last Name fields) ... */}
                         <div>
                             <label className={styles.fieldLabel}>First Name</label>
                             <input
@@ -117,21 +155,23 @@ const EmployeeDetails = ({ e_id, handleBack }) => {
                         <div>
                             <label className={styles.fieldLabel}>Role</label>
                             <select name="role" value={formData.role} onChange={handleChange} required className={styles.fieldInput}>
-                                <option value="Sales Manager">Sales Manager</option>
-                                <option value="Salesman">Salesman</option>
+                                <option value="manager">Sales Manager</option>
+                                <option value="salesman">Salesman</option>
                             </select>
                         </div>
                         <div>
                             <label className={styles.fieldLabel}>Branch</label>
+                            {/* 4. MODIFIED: This dropdown now maps over 'filteredBranches' state */}
                             <select name="bid" value={formData.bid} onChange={handleChange} className={styles.fieldInput}>
                                 <option value="null">Not Assigned</option>
-                                {branches.map((branch) => (
+                                {filteredBranches.map((branch) => (
                                     <option key={branch._id} value={branch.bid}>
                                         {branch.bid} - {branch.b_name}
                                     </option>
                                 ))}
                             </select>
                         </div>
+                        {/* ... (Email, Phone Number fields) ... */}
                         <div>
                             <label className={styles.fieldLabel}>Email</label>
                             <input
@@ -158,10 +198,13 @@ const EmployeeDetails = ({ e_id, handleBack }) => {
                         </div>
                     </div>
                 </div>
+
+                {/* ... (Account and Salaries section) ... */}
                 <div className={styles.formSection}>
                     <h3 className={styles.sectionTitle}>Account and Salaries</h3>
                     <div className={styles.fieldGroup}>
-                        <div>
+                         {/* ... (Account, IFSC, Bank, Salary, Address fields) ... */}
+                         <div>
                             <label className={styles.fieldLabel}>Account Number</label>
                             <input
                                 type="text"
@@ -223,6 +266,8 @@ const EmployeeDetails = ({ e_id, handleBack }) => {
                         </div>
                     </div>
                 </div>
+                
+                {/* ... (Status section) ... */}
                 <div className={styles.formSection}>
                     <h3 className={styles.sectionTitle}>Status</h3>
                     <div className={styles.fieldGroup}>

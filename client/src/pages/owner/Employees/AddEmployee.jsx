@@ -39,7 +39,7 @@ const AddEmployee = ({ handleBack }) => {
   // It filters the branch list whenever the 'role' or main 'branches' list changes.
   useEffect(() => {
     // This logic is from your updateBranchDropdown function
-    if (formData.role === 'Sales Manager') {
+    if (formData.role === 'manager') {
       // If role is Sales Manager, only show branches that are not assigned
       const unassignedBranches = branches.filter(branch => !branch.manager_assigned);
       setFilteredBranches(unassignedBranches);
@@ -119,8 +119,8 @@ const AddEmployee = ({ handleBack }) => {
               <select name="role" value={formData.role} onChange={handleChange} required className={styles.fieldInput}>
                 <option value="">Select role</option>
                 {/* FIX 2: Removed "owner" role to match controller logic */}
-                <option value="Sales Manager">Sales Manager</option>
-                <option value="Salesman">Salesman</option>
+                <option value="manager">Sales Manager</option>
+                <option value="salesman">Salesman</option>
               </select>
             </div>
             <div>
