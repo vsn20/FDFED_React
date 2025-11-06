@@ -1,0 +1,189 @@
+/* Main container for the branches page content */
+.contentArea {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  flex: 1;
+  /* Note: You may want to remove height/overflow 
+    if the component's parent already handles this.
+  */
+  height: calc(100vh - 90px); 
+  overflow-y: auto;
+}
+
+/* Hide scrollbar */
+.contentArea::-webkit-scrollbar {
+  display: none;
+}
+.contentArea {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Page Title */
+.title {
+  color: #2d3436;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  font-weight: 600;
+  position: relative;
+  display: inline-block;
+}
+
+/* Title underline */
+.title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 4px;
+  background: linear-gradient(to right, #ff7e5f, #feb47b);
+  border-radius: 2px;
+}
+
+/* Error Message */
+.errorMessage {
+  color: #e63946;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* Loading Text */
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #636e72;
+}
+
+/* Grid for holding branch cards */
+.branchesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  padding: 10px;
+}
+
+/* Individual Branch Card */
+.branchCard {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.branchCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Top border effect on card */
+.branchCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(to right, #ff7e5f, #feb47b);
+  transition: height 0.3s ease;
+}
+
+.branchCard:hover::before {
+  height: 10px;
+}
+
+/* Card Title (Branch Name) */
+.cardTitle {
+  color: #2d3436;
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Card Title Icon */
+.cardTitle::before {
+  content: '🏢';
+  font-size: 1.5rem;
+}
+
+/* Container for branch info (manager, email, etc.) */
+.branchInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.95rem;
+  color: #4a5568;
+}
+
+/* Individual info item (e.g., "Manager: ...") */
+.infoItem {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* The label part (e.g., "Manager:") */
+.infoItem span {
+  font-weight: 500;
+  color: #2d3436;
+}
+
+/* --- Media Queries --- */
+
+@media (max-width: 768px) {
+  .contentArea {
+    padding: 15px;
+    height: auto; /* Better for mobile */
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .branchesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .branchCard {
+    padding: 15px;
+  }
+
+  .cardTitle {
+    font-size: 1.2rem;
+  }
+
+  .branchInfo {
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .branchesGrid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .cardTitle {
+    font-size: 1.3rem;
+  }
+
+  .branchInfo {
+    font-size: 0.92rem;
+  }
+}

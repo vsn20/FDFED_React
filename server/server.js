@@ -26,7 +26,7 @@ app.use('/api/employees', require('./routes/owner/employeeRoutes'));
 
 
 
-
+app.use('/api/our-branches', require('./routes/publicroutes'));
 
 //salesman
 app.use('/api/salesman/profile', require('./routes/salesman/detailsRoutes'));

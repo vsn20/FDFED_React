@@ -20,6 +20,7 @@ import BranchPage from './pages/owner/Branches/BranchPage';
 import Details from './pages/salesman/EmployeeDetails/Details';
 import CompanyLogin from './pages/CompanyLogin';
 import CompanyAnalytics from './pages/company/CompanyAnalytics';
+import OurBranches from './pages/OurBranches';
 // A small component to handle the initial redirect after login
 const PostLoginRedirect = () => {
     const { user } = useContext(AuthContext);
@@ -53,6 +54,7 @@ function App() {
                     <Route element={<PublicLayout />}>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/login" element={<LoginPage />} /> 
+                        <Route path="/our-branches" element={<OurBranches />} />
                         <Route path="/about-us" element={<AboutUs />} />
                         <Route path="/companylogin" element={<CompanyLogin />} />
                     </Route>
