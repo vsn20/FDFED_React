@@ -52,7 +52,8 @@
   text-decoration: none;
   padding: 0.5rem 0;
   position: relative;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, background 0.3s ease;
+  background: transparent !important;
 }
 .nav-link::after {
   content: '';
@@ -70,39 +71,8 @@
 }
 .nav-link:hover,
 .nav-link.active {
-  color: #FFD700;
-}
-
-/* RIGHT ACTIONS */
-.right-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-.search-btn {
-  background: none;
-  border: none;
-  color: rgba(255, 255, 255, 0.7);
-  cursor: pointer;
-  padding: 0.5rem;
-}
-.search-btn:hover {
-  color: white;
-}
-.login-btn {
-  background: #FFD700;
-  color: white;
-  padding: 0.5rem 1.5rem;
-  border-radius: 9999px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-.login-btn:hover {
-  background: #e03570;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 64, 129, 0.4);
+  color: #FFD700 !important;
+  background: transparent !important;
 }
 
 /* MOBILE TOGGLE */
@@ -149,25 +119,41 @@
   border-radius: 9999px;
   text-align: center;
   font-weight: 500;
+  position: relative;
+  background: transparent !important;
+  transition: color 0.3s ease, background 0.3s ease;
 }
-.mobile-menu a:hover {
-  background: rgba(255, 64, 129, 0.2);
+.mobile-menu a::after {
+  content: '';
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: #FFD700;
+  transition: width 0.3s ease;
+  border-radius: 1px;
 }
-.login-btn.mobile {
-  background: #ff4081;
-  margin-top: 0.5rem;
+.mobile-menu a:hover,
+.mobile-menu a.active {
+  color: #FFD700 !important;
+  background: rgba(255, 215, 0, 0.15) !important;
+}
+.mobile-menu a:hover::after,
+.mobile-menu a.active::after {
+  width: 60%;
 }
 
 /* MAIN CONTENT */
 .main-content {
-  padding-top: 7rem; /* Space for fixed navbar */
+  padding-top: 7rem;
   min-height: 100vh;
 }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-  .nav-links-center,
-  .right-actions {
+  .nav-links-center {
     display: none;
   }
   .mobile-toggle {
@@ -176,4 +162,15 @@
   .navbar-fixed {
     padding: 0.75rem 1rem;
   }
+}
+
+/* GUARANTEE NO BACKGROUND */
+.nav-link,
+.mobile-menu a {
+  background: transparent !important;
+}
+.nav-link.active,
+.mobile-menu a.active {
+  background: transparent !important;
+  color: #FFD700 !important;
 }
