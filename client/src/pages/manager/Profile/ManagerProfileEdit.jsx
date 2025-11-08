@@ -1,8 +1,8 @@
-// Updated pages/manager/Profile/ManagerProfileEdit.jsx (Add Branch ID field)
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../api/api';
-import styles from '../Employees/Details.module.css'; // Reuse styles
+import styles from '../Employees/Details.module.css'; 
 
 const ManagerProfileEdit = () => {
     const navigate = useNavigate();

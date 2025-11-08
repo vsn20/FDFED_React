@@ -21,7 +21,10 @@ import Details from './pages/salesman/EmployeeDetails/Details';
 import CompanyLogin from './pages/CompanyLogin';
 import CompanyAnalytics from './pages/company/CompanyAnalytics';
 import OurBranches from './pages/OurBranches';
-// A small component to handle the initial redirect after login
+import ManagerEmployeesPage from './pages/manager/Employees/ManagerEmployeesPage';
+import ManagerEmployeeDetails from './pages/manager/Employees/ManagerEmployeeDetails';
+import ManagerProfileEdit from './pages/manager/Profile/ManagerProfileEdit';
+
 const PostLoginRedirect = () => {
     const { user } = useContext(AuthContext);
 
@@ -71,7 +74,9 @@ function App() {
                         <Route path="/owner/branches" element={<ProtectedRoute roles={['owner']}><BranchPage /></ProtectedRoute>} />
                         {/* Manager Routes */}
                         <Route path="/manager/analytics" element={<ProtectedRoute roles={['manager']}><ManagerAnalyticsPage /></ProtectedRoute>} />
-
+                        <Route path="/manager/employees" element={<ProtectedRoute roles={['manager']}><ManagerEmployeesPage /></ProtectedRoute>} /> 
+                        <Route path="/manager/employees/:e_id" element={<ProtectedRoute roles={['manager']}><ManagerEmployeeDetails /></ProtectedRoute>} />
+                        <Route path="/manager/profile" element={<ProtectedRoute roles={['manager']}><ManagerProfileEdit /></ProtectedRoute>} />
                         {/* Salesman Routes */}
                         <Route path="/salesman/analytics" element={<ProtectedRoute roles={['salesman']}><SalesmanAnalyticsPage /></ProtectedRoute>} />
                         <Route path='/salesman/profile' element={<ProtectedRoute roles={['salesman']}><Details/></ProtectedRoute>} />

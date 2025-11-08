@@ -24,7 +24,8 @@ app.use('/api/companies', require('./routes/owner/companyRoutes'));
 app.use('/api/branches', require('./routes/owner/branchRoutes'));
 app.use('/api/employees', require('./routes/owner/employeeRoutes'));
 
-
+// Manager routes
+app.use('/api/manager/employees', require('./routes/manager/employeeRoutes'));
 
 app.use('/api/our-branches', require('./routes/publicroutes'));
 
