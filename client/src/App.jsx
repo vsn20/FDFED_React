@@ -19,11 +19,13 @@ import CompanyPage from './pages/owner/CompanyPage';
 import BranchPage from './pages/owner/Branches/BranchPage';
 import Details from './pages/salesman/EmployeeDetails/Details';
 import CompanyLogin from './pages/CompanyLogin';
+import companyproducts from './pages/company/products/companyproducts';
 import CompanyAnalytics from './pages/company/CompanyAnalytics';
 import OurBranches from './pages/OurBranches';
 import ManagerEmployeesPage from './pages/manager/Employees/ManagerEmployeesPage';
 import ManagerEmployeeDetails from './pages/manager/Employees/ManagerEmployeeDetails';
 import ManagerProfileEdit from './pages/manager/Profile/ManagerProfileEdit';
+import CompanyProducts from './pages/company/products/companyproducts';
 
 const PostLoginRedirect = () => {
     const { user } = useContext(AuthContext);
@@ -84,6 +86,11 @@ function App() {
                         <Route path="/company/analytics" element={
                             <ProtectedRoute roles={['company']}>
                                <CompanyAnalytics/>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/company/products" element={
+                            <ProtectedRoute roles={['company']}>
+                                 <CompanyProducts/>
                             </ProtectedRoute>
                         } />
                     </Route>
