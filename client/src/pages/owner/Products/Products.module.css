@@ -1,0 +1,282 @@
+/* Products.module.css */
+.container {
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.contentArea {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  height: calc(100vh - 90px); /* Adjust as needed */
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.contentArea::-webkit-scrollbar {
+  display: none;
+}
+
+.contentArea h1 {
+  color: #2d3436;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.headerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.headerButtons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.navButton {
+  padding: 8px 16px;
+  background-color: #f0f0f0;
+  color: #2d3436;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.navButton.active {
+  background-color: #2d3436;
+  color: white;
+  border-color: #2d3436;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navButton:hover:not(.active) {
+  background-color: #e9e9e9;
+}
+
+.backButton {
+  padding: 8px 16px;
+  background-color: #2d3436;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.backButton:hover {
+  background-color: #636e72;
+}
+
+/* Product Grid Styles */
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.productCard {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.productCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles for the Slideshow (Used in Grid View) */
+.slideshowContainer {
+  position: relative;
+  width: 100%;
+  height: 150px; /* Default height for product grid */
+  overflow: hidden;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #f0f0f0;
+}
+
+.slide {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out; /* Smooth fade transition */
+}
+
+.slide.activeSlide {
+  opacity: 1; /* Show the active slide */
+}
+
+.productDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.9rem;
+}
+
+.productDetails span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.productDetails .prodId {
+  font-weight: 600;
+  color: #2d3436;
+  font-size: 1rem;
+}
+
+.productDetails .status {
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 12px;
+  display: inline-block;
+  align-self: center;
+  font-size: 0.8rem;
+}
+
+.statusAccepted {
+  background-color: #d4efdf;
+  color: #196f3d;
+}
+
+.statusRejected {
+  background-color: #fadbd8;
+  color: #922b21;
+}
+
+.statusHold {
+  background-color: #fdebd0;
+  color: #b9770e;
+}
+
+/* Details & Edit Form Styles */
+.formSection {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #e6e9f0;
+  border-radius: 5px;
+}
+
+.sectionTitle {
+  color: #2d3436;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.fieldGroup {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.fieldLabel {
+  display: block;
+  margin-bottom: 5px;
+  color: #2d3436;
+  font-weight: 500;
+}
+
+.fieldInput,
+.fieldSelect {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e6e9f0;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.fieldInput:disabled {
+  background: #f0f0f0;
+  cursor: not-allowed;
+}
+
+/* --- UPDATED STYLES FOR DETAILS PAGE PHOTOS --- */
+.photosContainer {
+  display: flex;
+  flex-wrap: wrap; /* Allows images to wrap to the next line if needed */
+  gap: 10px;
+  justify-content: center; /* Center the images */
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #e6e9f0;
+  border-radius: 5px;
+  background: #fdfdfd;
+}
+
+/* New style for each individual photo on the details page */
+.detailsPhoto {
+  height: 150px; /* Taller than grid, but not too large */
+  width: auto;
+  max-width: 200px; /* Limit width */
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* --- REMOVED .detailsSlideshow style --- */
+/* (It's no longer needed) */
+
+.formButton {
+  display: inline-block;
+  padding: 12px 20px;
+  background: #2d3436;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  margin-top: 10px;
+  margin-right: 10px;
+  transition: background 0.3s;
+}
+
+.formButton:hover {
+  background: #636e72;
+}
+
+.errorMessage {
+  color: red;
+  margin-top: 15px;
+}
+
+@media (max-width: 768px) {
+  .contentArea {
+    height: auto;
+    padding: 15px;
+  }
+
+  .contentArea h1 {
+    font-size: 1.2rem;
+  }
+  
+  /* Adjust photo size on mobile */
+  .detailsPhoto {
+    height: 120px;
+  }
+}
