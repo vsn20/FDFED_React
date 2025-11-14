@@ -17,11 +17,27 @@ api.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
         if (token) {
+            // Use x-auth-token to match your existing backend
             config.headers['x-auth-token'] = token;
+            // Also add Authorization header for the new company routes
+            config.headers['Authorization'] = `Bearer ${token}`;
         }
         return config;
     },
     (error) => {
+        return Promise.reject(error);
+    }
+);
+
+// Response interceptor to handle errors
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            // Token expired or invalid
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        }
         return Promise.reject(error);
     }
 );
