@@ -29,6 +29,7 @@ app.use('/api/auth/company', require('./routes/companyAuthRoutes'));
 app.use('/api/companies', require('./routes/owner/companyRoutes'));
 app.use('/api/branches', require('./routes/owner/branchRoutes'));
 app.use('/api/employees', require('./routes/owner/employeeRoutes'));
+app.use('/api/owner/products', require('./routes/owner/ProductRoutes'));
 
 // Manager routes
 app.use('/api/manager/employees', require('./routes/manager/employeeRoutes'));

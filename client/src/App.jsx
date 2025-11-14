@@ -26,6 +26,7 @@ import ManagerEmployeesPage from './pages/manager/Employees/ManagerEmployeesPage
 import ManagerEmployeeDetails from './pages/manager/Employees/ManagerEmployeeDetails';
 import ManagerProfileEdit from './pages/manager/Profile/ManagerProfileEdit';
 import CompanyProducts from './pages/company/products/CompanyProducts';
+import Products from './pages/owner/Products/Products';
 
 const PostLoginRedirect = () => {
     const { user } = useContext(AuthContext);
@@ -74,6 +75,8 @@ function App() {
                         <Route path="/owner/employees" element={<ProtectedRoute roles={['owner']}><EmployeesPage /></ProtectedRoute>} />
                         <Route path="/owner/companies" element={<ProtectedRoute roles={['owner']}><CompanyPage /></ProtectedRoute>} />
                         <Route path="/owner/branches" element={<ProtectedRoute roles={['owner']}><BranchPage /></ProtectedRoute>} />
+                        <Route path="/owner/products" element={<ProtectedRoute roles={['owner']}><Products /></ProtectedRoute>} />
+
                         {/* Manager Routes */}
                         <Route path="/manager/analytics" element={<ProtectedRoute roles={['manager']}><ManagerAnalyticsPage /></ProtectedRoute>} />
                         <Route path="/manager/employees" element={<ProtectedRoute roles={['manager']}><ManagerEmployeesPage /></ProtectedRoute>} /> 
