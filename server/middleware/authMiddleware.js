@@ -1,31 +1,42 @@
+// middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
 
-// Middleware to verify the token (Authentication)
-exports.protect = (req, res, next) => {
-    // Get token from header
-    const token = req.header('x-auth-token');
-
-    // Check if not token
-    if (!token) {
-        return res.status(401).json({ msg: 'No token, authorization denied' });
-    }
-
-    // Verify token
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded.user;
-        next();
-    } catch (err) {
-        res.status(401).json({ msg: 'Token is not valid' });
-    }
+exports.protect = async (req, res, next) => {
+  let token;
+  
+  // Check for token in different header formats
+  // Support both x-auth-token and Authorization Bearer
+  if (req.headers['x-auth-token']) {
+    token = req.headers['x-auth-token'];
+  } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+  
+  if (!token) {
+    return res.status(401).json({ message: 'Not authorized, no token' });
+  }
+  
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded.user;
+    next();
+  } catch (error) {
+    console.error('Token verification error:', error.message);
+    return res.status(401).json({ message: 'Not authorized, token failed' });
+  }
 };
 
-// Middleware to check for specific roles (Authorization)
 exports.authorize = (...roles) => {
-    return (req, res, next) => {
-        if (!req.user || !roles.includes(req.user.role)) {
-            return res.status(403).json({ msg: 'User role not authorized to access this route' });
-        }
-        next();
-    };
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+    
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ 
+        message: `User role ${req.user.role} is not authorized to access this route` 
+      });
+    }
+    next();
+  };
 };
