@@ -7,7 +7,15 @@ const productSchema = new mongoose.Schema({
   Model_no: { type: String, required: true },
   com_name: { type: String, required: true },
   prod_year: { type: String, required: true },
-  stock: { type: String, required: true },
+  
+  // --- FIXES ---
+  stock: { type: Number, required: true },
+  Retail_price: { type: Number, required: true },
+  Purchase_price: { type: Number, required: true }, // Added this field
+  miniselling: { type: Number, default: 1 },
+  installationcharge: { type: Number, default: 0 },
+  // -------------
+
   stockavailability: { 
     type: String, 
     enum: ['instock', 'outofstock'], 
@@ -16,12 +24,9 @@ const productSchema = new mongoose.Schema({
   },
   Status: { type: String, enum: ['Hold', 'Accepted', 'Rejected'], default: 'Hold' },
   prod_description: { type: String, required: true },
-  Retail_price: { type: String, required: true },
-  miniselling: { type: String, default: "1" },
   warrantyperiod: { type: String, required: true },
   installation: { type: String, required: true, enum: ['Required', 'Not Required'] },
   installationType: { type: String, enum: ['Paid', 'Free'] },
-  installationcharge: { type: String },
   prod_photos: [String],
   createdAt: { type: Date, default: Date.now },
   approvedAt: { type: Date }
