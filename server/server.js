@@ -33,12 +33,11 @@ app.use('/api/owner/products', require('./routes/owner/ProductRoutes'));
 
 // Manager routes
 app.use('/api/manager/employees', require('./routes/manager/employeeRoutes'));
-
 app.use('/api/our-branches', require('./routes/publicroutes'));
 
 // Salesman
 app.use('/api/salesman/profile', require('./routes/salesman/detailsRoutes'));
-
+app.use('/api/salesman/sales', require('./routes/salesman/salesRoutes'));
 // Company routes - with products
 app.use('/api/company', require('./routes/company'));
 
