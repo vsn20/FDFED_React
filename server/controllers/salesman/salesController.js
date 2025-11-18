@@ -229,8 +229,8 @@ exports.getCompanies = async (req, res) => {
 exports.getProductsByCompany = async (req, res) => {
   try {
     const products = await Product.find({ 
-      company_id: req.params.companyId,
-      // You might want to add other filters, e.g., active: true
+       Com_id: req.params.companyId,
+      // add filetr weather product is approved and in stock in the inventoryy
     }).lean();
     
     // Send only the data needed by the frontend

@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema({
   // --- FIXES ---
   stock: { type: Number, required: true },
   Retail_price: { type: Number, required: true },
-  Purchase_price: { type: Number, required: true }, // Added this field
+  // Purchase_price: { type: Number }, // Added this field
   miniselling: { type: Number, default: 1 },
   installationcharge: { type: Number, default: 0 },
   // -------------
