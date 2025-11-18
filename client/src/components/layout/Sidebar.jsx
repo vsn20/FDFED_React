@@ -56,14 +56,9 @@ const Sidebar = () => {
                     <span>👥</span> Salesmen
                 </Link>
             </li>
-            <li className={activeLink === "/manager/profile" ? "active" : ""}> {/* NEW: Profile link */}
+            <li className={activeLink === "/manager/profile" ? "active" : ""}>
                 <Link to="/manager/profile" onClick={() => handleLinkClick("/manager/profile")}>
                     <span>👤</span> Profile
-                </Link>
-            </li>
-            <li className={activeLink === "#" ? "active" : ""}>
-                <Link to="#" onClick={() => handleLinkClick("#")}>
-                    <span>📦</span> Orders
                 </Link>
             </li>
         </>
@@ -76,14 +71,14 @@ const Sidebar = () => {
                     <span>📊</span> Analytics
                 </Link>
             </li>
-            <li className={activeLink === "#" ? "active" : ""}>
-                <Link to="#" onClick={() => handleLinkClick("#")}>
-                    <span>💰</span> Sales
-                </Link>
-            </li>
             <li className={activeLink === "/salesman/profile" ? "active" : ""}>
                 <Link to="/salesman/profile" onClick={() => handleLinkClick("/salesman/profile")}>
                     <span>👤</span> Profile
+                </Link>
+            </li>
+            <li className={activeLink === "/salesman/sales" ? "active" : ""}>
+                <Link to="/salesman/sales" onClick={() => handleLinkClick("/salesman/sales")}>
+                    <span>👤</span> Sales
                 </Link>
             </li>
         </>

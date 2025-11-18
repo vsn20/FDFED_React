@@ -1,0 +1,145 @@
+/* AddSale.module.css */
+.formContainer {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.formContainer h1 {
+  color: #2d3436;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.errorMessage {
+  color: #e74c3c;
+  background: #fdecea;
+  border: 1px solid #e74c3c;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.formWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formSection {
+  border: 1px solid #e6e9f0;
+  border-radius: 8px;
+  padding: 20px;
+  background: #f8f9fd;
+}
+
+.sectionTitle {
+  color: #2d3436;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.fieldItem {
+  flex: 1 1 45%;
+  min-width: 220px;
+}
+
+.fieldLabel {
+  display: block;
+  margin-bottom: 6px;
+  color: #2d3436;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.fieldInput {
+  width: 100%;
+  padding: 9px;
+  border: 1px solid #e6e9f0;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  background: #ffffff;
+  transition: border-color 0.3s;
+}
+
+.fieldInput:focus {
+  border-color: #333333;
+  outline: none;
+}
+
+.fieldInput:disabled {
+  background: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.disabledField {
+  background: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.fieldError {
+  color: #d63031;
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.submitButton, .backButton {
+  display: inline-block;
+  padding: 12px 20px;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submitButton {
+  background-color: #333333;
+}
+
+.submitButton:hover {
+  background-color: #555555;
+}
+
+.submitButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.backButton {
+  background-color: #7f8c8d;
+}
+.backButton:hover {
+  background-color: #95a5a6;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .fieldItem {
+    flex: 1 1 100%;
+  }
+  .buttonGroup {
+    flex-direction: column-reverse;
+  }
+  .submitButton, .backButton {
+    width: 100%;
+  }
+}

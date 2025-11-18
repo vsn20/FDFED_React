@@ -1,0 +1,170 @@
+/* SalesList.module.css */
+.salesContainer {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.header h1 {
+  color: #2d3436;
+  font-size: 1.8rem;
+}
+
+.addButton {
+  padding: 10px 20px;
+  background: #333;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 0.9rem;
+}
+
+.addButton:hover {
+  background: #555;
+}
+
+.searchContainer {
+  margin-bottom: 20px;
+}
+
+.searchInput {
+  padding: 9px;
+  border: 1px solid #e6e9f0;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 300px;
+  font-size: 0.9rem;
+}
+
+.errorMessage {
+  color: #e74c3c;
+  background: #fdecea;
+  border: 1px solid #e74c3c;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.successMessage {
+  color: #27ae60;
+  background: #eafaf1;
+  border: 1px solid #27ae60;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.salesTable {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.salesTable th, .salesTable td {
+  padding: 12px 15px;
+  text-align: left;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.salesTable th {
+  background: #333;
+  color: white;
+  font-weight: 500;
+}
+
+.salesTable tr {
+  background: #fff;
+}
+
+.salesTable tbody tr:nth-child(even) {
+  background: #f8f9fd;
+}
+
+.salesTable tbody tr:hover {
+  background-color: #f0f4f8;
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  
+  .addButton {
+    text-align: center;
+  }
+
+  .salesTable {
+    display: block;
+    min-width: 0;
+  }
+  .salesTable thead {
+    display: none;
+  }
+  .salesTable tr {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    border: 1px solid #e6e9f0;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  .salesTable td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed #e6e9f0;
+  }
+  .salesTable td:last-child {
+    border-bottom: none;
+  }
+  .salesTable td:before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #2d3436;
+    margin-right: 10px;
+    min-width: 100px;
+  }
+}
+
+.branchDetails {
+  background: #f8f9fd;
+  border: 1px solid #e6e9f0;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 30px;
+}
+
+.branchDetails p {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.branchDetails p strong {
+  color: #2d3436;
+}
