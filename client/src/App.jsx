@@ -20,6 +20,8 @@ import BranchPage from './pages/owner/Branches/BranchPage';
 import Details from './pages/salesman/EmployeeDetails/Details';
 import CompanyLogin from './pages/CompanyLogin';
 import companyproducts from './pages/company/products/CompanyProducts';
+import CompanyOrders from './pages/company/orders/CompanyOrders';
+
 import CompanyAnalytics from './pages/company/CompanyAnalytics';
 import OurBranches from './pages/OurBranches';
 import ManagerEmployeesPage from './pages/manager/Employees/ManagerEmployeesPage';
@@ -101,6 +103,12 @@ function App() {
                         <Route path="/company/products" element={
                             <ProtectedRoute roles={['company']}>
                                  <CompanyProducts/>
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/company/orders" element={
+                            <ProtectedRoute roles={['company']}>
+                                <CompanyOrders/>
+                                 
                             </ProtectedRoute>
                         } />
                     </Route>
