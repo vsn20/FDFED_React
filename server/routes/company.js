@@ -12,12 +12,15 @@ const {
   updateStockAvailability
 } = require("../controllers/company/companyproducts_display");
 
-// Configure multer for file uploads
-// IMPORTANT: Save to frontend/public/uploads directory
+// Import the NEW Orders Controller
+const {
+  getCompanyOrders,
+  updateOrderStatus
+} = require("../controllers/company/orders_controller");
+
+// --- Multer Configuration (Kept as is from your upload) ---
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Adjust this path to point to your frontend public/uploads folder
-    // If backend is at /backend and frontend is at /frontend:
     const uploadsPath = path.join(__dirname, '../../client/public/uploads');
     cb(null, uploadsPath);
   },
@@ -29,33 +32,28 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 5 * 1024 * 1024 }, 
   fileFilter: (req, file, cb) => {
     const filetypes = /jpeg|jpg|png|gif|webp/;
     const mimetype = filetypes.test(file.mimetype);
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    
-    if (mimetype && extname) {
-      return cb(null, true);
-    }
+    if (mimetype && extname) return cb(null, true);
     cb(new Error("Error: Images Only!"));
   }
 });
 
-// Apply auth middleware to all routes
+// --- Middleware ---
 router.use(protect);
 router.use(authorize('company'));
 
-// Products list (JSON)
+// --- PRODUCT ROUTES ---
 router.get("/products", companyproducts_display);
-
-// Product details (JSON)
 router.get("/products/details/:prod_id", getProductById);
-
-// Add product (POST with file upload)
 router.post("/products/add", upload.array('prod_photos', 10), addProduct);
-
-// Update stock availability
 router.post("/products/update-stockavailability/:prod_id", updateStockAvailability);
+
+// --- NEW ORDER ROUTES ---
+router.get("/orders", getCompanyOrders); // Handles list, search, pagination
+router.put("/orders/:order_id", updateOrderStatus); // Handles status updates
 
 module.exports = router;
