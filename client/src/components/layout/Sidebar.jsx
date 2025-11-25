@@ -83,7 +83,12 @@ const Sidebar = () => {
             </li>
             <li className={activeLink === "/salesman/profile" ? "active" : ""}>
                 <Link to="/salesman/profile" onClick={() => handleLinkClick("/salesman/profile")}>
-                    <span>👤</span> Profile
+                    <span>👥</span> Profile
+                </Link>
+            </li>
+            <li className={activeLink === "/salesman/inventory" ? "active" : ""}>
+                <Link to="/salesman/inventory" onClick={() => handleLinkClick("/salesman/inventory")}>
+                    <span>📦</span> Inventory
                 </Link>
             </li>
             <li className={activeLink === "/salesman/sales" ? "active" : ""}>
@@ -91,6 +96,7 @@ const Sidebar = () => {
                     <span>👤</span> Sales
                 </Link>
             </li>
+            
         </>
     );
 

@@ -1,0 +1,106 @@
+.container {
+    padding: 20px;
+    width: 100%;
+}
+
+.contentArea {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.headerContainer h1 {
+    font-size: 24px;
+    color: #333;
+    margin: 0;
+}
+
+.searchContainer input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 300px;
+    font-size: 14px;
+}
+
+.branchInfo {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 30px;
+    border: 1px solid #e9ecef;
+}
+
+.infoGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.infoLabel {
+    font-size: 12px;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.infoValue {
+    font-size: 16px;
+    color: #212529;
+    font-weight: 500;
+}
+
+.tableWrapper {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.table th {
+    background-color: #333;
+    color: white;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+    font-size: 14px;
+}
+
+.table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.loading, .errorMessage, .noData {
+    text-align: center;
+    padding: 20px;
+    font-size: 16px;
+}
+
+.errorMessage {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
