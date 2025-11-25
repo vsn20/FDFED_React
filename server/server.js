@@ -34,6 +34,7 @@ app.use('/api/owner/products', require('./routes/owner/ProductRoutes'));
 // Manager routes
 app.use('/api/manager/employees', require('./routes/manager/employeeRoutes'));
 app.use('/api/manager/orders', require('./routes/managerOrderRoutes'));
+app.use('/api/manager/inventory', require('./routes/manager/managerInventoryRoutes'));
 app.use('/api/our-branches', require('./routes/publicroutes'));
 
 // Salesman
