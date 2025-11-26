@@ -20,7 +20,12 @@ const Sidebar = () => {
                     <span>📊</span> Analytics
                 </Link>
             </li>
-             <li className={activeLink === "/owner/analytics" ? "active" : ""}>
+            <li className={activeLink === "/owner/sales" ? "active" : ""}>
+                <Link to="/owner/sales" onClick={() => handleLinkClick("/owner/sales")}>
+                    <span>📊</span> Sales
+                </Link>
+            </li>       
+             <li className={activeLink === "/owner/products" ? "active" : ""}>
                 <Link to="/owner/products" onClick={() => handleLinkClick("/owner/products")}>
                     <span>📦</span> Products
                 </Link>
