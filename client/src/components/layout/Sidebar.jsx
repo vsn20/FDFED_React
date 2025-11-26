@@ -71,6 +71,11 @@ const Sidebar = () => {
                     <span>📦</span> Orders
                 </Link>
             </li>
+            <li className={activeLink === "/manager/inventory" ? "active" : ""}>
+            <Link to="/manager/inventory" onClick={() => handleLinkClick("/manager/inventory")}>
+                <span>📦</span> Inventory
+            </Link>
+        </li>
         </>
     );
 
@@ -83,7 +88,12 @@ const Sidebar = () => {
             </li>
             <li className={activeLink === "/salesman/profile" ? "active" : ""}>
                 <Link to="/salesman/profile" onClick={() => handleLinkClick("/salesman/profile")}>
-                    <span>👤</span> Profile
+                    <span>👥</span> Profile
+                </Link>
+            </li>
+            <li className={activeLink === "/salesman/inventory" ? "active" : ""}>
+                <Link to="/salesman/inventory" onClick={() => handleLinkClick("/salesman/inventory")}>
+                    <span>📦</span> Inventory
                 </Link>
             </li>
             <li className={activeLink === "/salesman/sales" ? "active" : ""}>
@@ -91,6 +101,7 @@ const Sidebar = () => {
                     <span>👤</span> Sales
                 </Link>
             </li>
+            
         </>
     );
 
@@ -104,6 +115,16 @@ const Sidebar = () => {
             <li className={activeLink === "/company/products" ? "active" : ""}>
                 <Link to="/company/products" onClick={() => handleLinkClick("/company/products")}>
                     <span>📦</span> Products
+                </Link>
+            </li>
+            <li className={activeLink === "/company/orders" ? "active" : ""}>
+                <Link to="/company/orders" onClick={() => handleLinkClick("/company/orders")}>
+                    <span>👥</span> orders
+                </Link>
+            </li>
+            <li className={activeLink === "/company/complaints" ? "active" : ""}>
+                <Link to="/company/complaints" onClick={() => handleLinkClick("/company/complaints")}>
+                    <span>👥</span> complaints
                 </Link>
             </li>
         </>

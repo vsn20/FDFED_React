@@ -12,7 +12,6 @@ const InventorySchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-// Ensure unique combination of branch_id, product_id, and company_id
 InventorySchema.index({ branch_id: 1, product_id: 1, company_id: 1 }, { unique: true });
 
-module.exports = mongoose.model("Inventory", InventorySchema);
+module.exports = mongoose.models.Inventory || mongoose.model("Inventory", InventorySchema);
