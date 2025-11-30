@@ -1,3 +1,10 @@
+Merge pull request #3 from vsn20/naman - vuppalasainaman@gmail.com
+in admin orders. orders details will be displayed when i click on the order date and pagination logic search and filters were added, - vuppalasainaman@gmail.com
+in admin orders completed. till displaying all orders in list. - vuppalasainaman@gmail.com
+Merge branch 'main' of https://github.com/vsn20/FDFED_React - vuppalasainaman@gmail.com
+commits page - vuppalasainaman@gmail.com
+Merge branch 'main' of https://github.com/vsn20/FDFED_React - “narayanamurthychikkala6@gmail.com”
+home page css updated - “narayanamurthychikkala6@gmail.com”
 Merge pull request #2 from vsn20/naman - vuppalasainaman@gmail.com
 sales details and sales routes in admin were added - vuppalasainaman@gmail.com
 sales in admin successfully added still the sales details were not added - vuppalasainaman@gmail.com
@@ -77,11 +84,11 @@ some changes - vuppalasainaman@gmail.com
 packages - “saichandavula2005@gmail.com”
 react app downloaded - vuppalasainaman@gmail.com
 
-
 ---------------- SUMMARY ----------------
-    20	vsn_20 <vuppalasainaman@gmail.com>
-    18	“Narayana <“narayanamurthychikkala6@gmail.com”>
+
+    24	vsn_20 <vuppalasainaman@gmail.com>
+    20	“Narayana <“narayanamurthychikkala6@gmail.com”>
     14	saichand-avula <saichandavula2005@gmail.com>
     13	“saichand-avula” <“saichandavula2005@gmail.com”>
     10	“[VenkataHemaSai]” <“[venkatahemasaibhimineni@gmail.com]”>
-     3	vsn20 <vuppalasainaman@gmail.com>
+     4	vsn20 <vuppalasainaman@gmail.com>
