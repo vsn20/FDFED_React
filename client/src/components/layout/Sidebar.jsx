@@ -24,7 +24,12 @@ const Sidebar = () => {
                 <Link to="/owner/sales" onClick={() => handleLinkClick("/owner/sales")}>
                     <span>📊</span> Sales
                 </Link>
-            </li>       
+            </li>
+                <li className={activeLink === "/owner/orders" ? "active" : ""}>
+                <Link to="/owner/orders" onClick={() => handleLinkClick("/owner/orders")}>
+                    <span>🌐</span> Orders
+                </Link>
+            </li>    
              <li className={activeLink === "/owner/products" ? "active" : ""}>
                 <Link to="/owner/products" onClick={() => handleLinkClick("/owner/products")}>
                     <span>📦</span> Products
