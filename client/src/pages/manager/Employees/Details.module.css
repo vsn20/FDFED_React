@@ -1,3 +1,4 @@
+/* ---------------- GLOBAL RESET ---------------- */
 * {
   margin: 0;
   padding: 0;
@@ -5,196 +6,41 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* ---------------- MAIN LAYOUT ---------------- */
 .container {
-  margin-top: 90px;
+  margin-top: 40px;
   display: flex;
   flex: 1;
-  justify-content: center;
+  /* Centering is usually handled by the contentArea itself when a max-width is set */
+  /* If this container is the page wrapper, padding is okay */
   padding: 0 20px;
   max-width: 100%;
+  overflow: hidden;
 }
 
+/* MATCH SALES PAGE CONTENT AREA */
 .contentArea {
+  /* Set a standard wide width for all manager content pages */
+  max-width: 1200px; 
+  width: 100%;
+  /* Center the content area within its parent (the container) */
+  margin: 0 auto;
+  /* Removed the fixed margin-left: 20px to allow it to be centered */
+
   background: #ffffff;
   border-radius: 15px;
-  padding: 25px;
+  padding: 30px; /* Increased padding inside the card */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  width: 100%;
-  max-width: 900px;
+  flex: 1;
+  overflow-y: auto;
+  min-height: 80vh;
 }
 
-.contentArea h1 {
-  color: #2d3436;
-  margin-bottom: 20px;
-  font-size: 1.8rem;
-  text-align: center;
-}
+/* HIDE SCROLLBAR LIKE SALES */
+.contentArea::-webkit-scrollbar { display: none; }
+.contentArea { scrollbar-width: none; -ms-overflow-style: none; }
 
-.loading {
-  text-align: center;
-  padding: 40px 20px;
-  color: #666;
-  font-size: 1.1rem;
-}
-
-.emptyState {
-  text-align: center;
-  padding: 20px;
-  color: #666;
-  font-style: italic;
-  margin: 0;
-}
-
-.successMessage {
-  color: #27ae60;
-  background: #eafaf1;
-  border: 1px solid #27ae60;
-  border-radius: 5px;
-  padding: 10px;
-  margin: 10px 0;
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-.errorMessage {
-  color: #e74c3c;
-  background: #fdecea;
-  border: 1px solid #e74c3c;
-  border-radius: 5px;
-  padding: 10px;
-  margin: 10px 0;
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-.formContainer {
-  margin-top: 20px;
-}
-
-.formWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.formSection {
-  border: 1px solid #e6e9f0;
-  border-radius: 8px;
-  padding: 20px;
-  background: #f8f9fd;
-}
-
-.sectionTitle {
-  color: #2d3436;
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-  text-align: left;
-}
-
-.fieldGroup {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.fieldGroup > div {
-  flex: 1 1 45%;
-  min-width: 220px;
-  position: relative;
-}
-
-.fieldLabel {
-  display: block;
-  margin-bottom: 6px;
-  color: #2d3436;
-  font-weight: 500;
-  font-size: 0.9rem;
-}
-
-.fieldLabel::after {
-  content: ' *';
-  color: #e74c3c;
-  font-weight: bold;
-  display: none;
-}
-
-.fieldLabel.required::after {
-  display: inline;
-}
-
-.fieldInput {
-  width: 100%;
-  padding: 9px;
-  border: 1px solid #e6e9f0;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  background: #ffffff;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.fieldInput:focus {
-  border-color: #333333;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.1);
-}
-
-.fieldInput:invalid {
-  border-color: black;
-}
-
-.disabledField {
-  background: #f0f0f0;
-  cursor: not-allowed;
-  color: #666;
-}
-
-.submitButton {
-  display: inline-block;
-  padding: 12px 20px;
-  background-color: #333333;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  align-self: flex-end;
-  min-width: 150px;
-}
-
-.submitButton:hover:not(:disabled) {
-  background-color: #555555;
-}
-
-.submitButton:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.backButton {
-  padding: 12px 20px;
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  align-self: flex-end;
-  min-width: 150px;
-  margin-top: 10px;
-}
-
-.backButton:hover:not(:disabled) {
-  background-color: #5a6268;
-}
-
-.backButton:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
+/* ---------------- HEADER + ADD BUTTON ---------------- */
 .headerContainer {
   display: flex;
   justify-content: flex-end;
@@ -203,115 +49,168 @@
 
 .addButton {
   padding: 10px 18px;
-  background-color: #28a745;
+  background-color: #2d3436;
   color: white;
   border: none;
   border-radius: 6px;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: 0.3s;
+}
+
+.submitButton {
+  padding: 10px 18px;
+  background-color: #2d3436;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.submitButton:hover{
+  transform: translateY(-2px);
 }
 
 .addButton:hover {
   background-color: #218838;
+  transform: translateY(-2px);
 }
 
+/* ---------------- SEARCH BAR ---------------- */
+.searchRow {
+  margin-bottom: 15px;
+}
+
+.searchInput {
+  width: 280px;
+  padding: 10px;
+  border: 1px solid #dcdfe6;
+  border-radius: 6px;
+  font-size: 0.92rem;
+  background: #fdfdfd;
+}
+
+.searchInput:focus {
+  border-color: #333;
+  box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.12);
+  outline: none;
+}
+
+/* ---------------- TABLE WRAPPER ---------------- */
 .tableWrapper {
   overflow-x: auto;
   border-radius: 8px;
+  margin-top: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  background: #ffffff;
+  padding-bottom: 10px; 
 }
 
+/* ---------------- TABLE ---------------- */
 .table {
   width: 100%;
   border-collapse: collapse;
   background: #ffffff;
 }
 
-.thead {
-  background: black;
+/* TARGET RAW <thead> <th> EXACTLY LIKE SALES PAGE */
+.table thead tr {
+  background: #333 !important;
 }
 
-.th,
-.td {
+.table thead th {
   padding: 12px;
+  color: white !important;
+  font-size: 0.9rem;
+  font-weight: 600;
   text-align: left;
+  border-bottom: 1px solid #e6e9f0;
+}
+
+/* TARGET RAW <td> WITHOUT JSX CLASS */
+.table tbody td {
+  padding: 12px;
+  color: #2d3436;
   border-bottom: 1px solid #e6e9f0;
   font-size: 0.9rem;
 }
 
-.th {
-  font-weight: bold;
-  color:white;
+/* TARGET RAW <tr> FOR HOVER */
+.table tbody tr {
+  transition: 0.2s ease;
 }
 
-.tr:hover {
+.table tbody tr:hover {
   background-color: #f8f9fd;
   cursor: pointer;
+  transform: scale(1.01);
 }
 
-.tr {
-  transition: background-color 0.2s;
+/* ---------------- PAGINATION ---------------- */
+.paginationControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
 }
 
-/* Responsive */
+.rowsInput {
+  width: 60px;
+  padding: 6px;
+  text-align: center;
+  border: 1px solid #dcdfe6;
+  border-radius: 5px;
+  font-size: 0.85rem;
+}
+
+.pageButton {
+  padding: 6px 14px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.pageButton:hover:not(:disabled) {
+  background: #555;
+}
+
+.pageButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* ---------------- FORM SECTIONS (unchanged) ---------------- */
+.formContainer { margin-top: 20px; }
+.formWrapper { display: flex; flex-direction: column; gap: 22px; }
+.formSection {
+  border: 1px solid #e6e9f0;
+  border-radius: 8px;
+  padding: 20px;
+  background: #f8f9fd;
+}
+.sectionTitle { font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; }
+.fieldGroup { display: flex; flex-wrap: wrap; gap: 20px; }
+.fieldGroup > div { flex: 1 1 45%; min-width: 220px; }
+.fieldLabel { font-size: 0.9rem; font-weight: 500; margin-bottom: 6px; }
+.fieldInput {
+  width: 100%; padding: 9px;
+  border: 1px solid #e6e9f0; border-radius: 5px;
+  background: #fff; transition: 0.3s;
+}
+
+/* ---------------- RESPONSIVE ---------------- */
 @media (max-width: 768px) {
-  .container {
-    margin-top: 70px;
-    padding: 0 10px;
-  }
-
-  .contentArea {
-    padding: 15px;
-  }
-
-  .contentArea h1 {
-    font-size: 1.4rem;
-  }
-
-  .fieldGroup > div {
-    flex: 1 1 100%;
-  }
-
-  .sectionTitle {
-    font-size: 1.1rem;
-  }
-
-  .submitButton,
-  .backButton,
-  .addButton {
-    width: 100%;
-    text-align: center;
-  }
-
-  .tableWrapper {
-    font-size: 0.85rem;
-  }
-
-  .th,
-  .td {
-    padding: 8px 6px;
-  }
-.activeStatus {
-  background-color: #d4edda; /* Light green for active */
-}
-
-.resignedStatus {
-  background-color: #fff3cd; /* Light yellow for resigned */
-}
-
-.firedStatus {
-  background-color: #f8d7da; /* Light red for fired */
-}
-}
-
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .contentArea h1 {
-    font-size: 1.5rem;
-  }
-
-  .sectionTitle {
-    font-size: 1.15rem;
-  }
+  /* Removed margin-left: 0; as contentArea is now centered */
+  .contentArea { padding: 20px; }
+  .searchInput { width: 100%; }
+  .pageButton, .addButton { width: 100%; }
+  .fieldGroup > div { flex: 1 1 100%; }
 }

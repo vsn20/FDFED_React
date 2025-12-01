@@ -2,17 +2,25 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../../context/AuthContext';
 import api from '../../../api/api';
-import ManagerAddOrder from './ManagerAddOrder'; // We will create this
-import styles from '../Employees/Details.module.css'; // Reusing styles
+import ManagerAddOrder from './ManagerAddOrder';
+import styles from '../Employees/Details.module.css';
 
 const ManagerOrdersPage = () => {
     const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
+
     const [orders, setOrders] = useState([]);
+    const [filteredOrders, setFilteredOrders] = useState([]);
     const [managerInfo, setManagerInfo] = useState(null);
-    const [view, setView] = useState('list'); // 'list' or 'add'
+    const [view, setView] = useState('list');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const navigate = useNavigate();
+
+    // NEW STATES
+    const [searchQuery, setSearchQuery] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [ordersPerPage, setOrdersPerPage] = useState(5);
+    const [rowsInput, setRowsInput] = useState("5");
 
     useEffect(() => {
         if (view === 'list') {
@@ -26,9 +34,9 @@ const ManagerOrdersPage = () => {
             setLoading(true);
             const res = await api.get('/manager/orders');
             setOrders(res.data);
+            setFilteredOrders(res.data);
             setError('');
         } catch (err) {
-            console.error("Error fetching orders:", err);
             setError(err.response?.data?.message || 'Failed to fetch orders');
         } finally {
             setLoading(false);
@@ -37,24 +45,62 @@ const ManagerOrdersPage = () => {
 
     const fetchManagerProfile = async () => {
         try {
-            const res = await api.get('/manager/employees/me'); // Get manager's branch info
+            const res = await api.get('/manager/employees/me');
             setManagerInfo(res.data);
-        } catch (err) {
-            console.error("Error fetching manager profile:", err);
+        } catch (err) {}
+    };
+
+    // ------------ PREFIX SEARCH ------------
+    useEffect(() => {
+        let result = orders;
+
+        if (searchQuery.trim() !== "") {
+            const q = searchQuery.toLowerCase();
+
+            result = orders.filter(o => {
+                const id = o.order_id?.toLowerCase() || "";
+                const product = o.product_name?.toLowerCase() || "";
+                const company = o.company_name?.toLowerCase() || "";
+
+                return (
+                    id.startsWith(q) ||
+                    product.startsWith(q) ||
+                    company.startsWith(q)
+                );
+            });
+        }
+
+        setFilteredOrders(result);
+        setCurrentPage(1);
+    }, [searchQuery, orders]);
+
+
+    // ---------- PAGINATION ----------
+    const last = currentPage * ordersPerPage;
+    const first = last - ordersPerPage;
+    const currentOrders = filteredOrders.slice(first, last);
+    const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
+
+
+    const handleRowsChange = (e) => {
+        const val = e.target.value;
+        setRowsInput(val);
+        if (val !== "" && !isNaN(val) && parseInt(val) > 0) {
+            setOrdersPerPage(parseInt(val));
+            setCurrentPage(1);
         }
     };
 
-    const handleBackFromAdd = () => {
-        setView('list'); // Go back to the list view
-        // fetchOrders(); // Already handled by useEffect on [view] change
-    };
-
-    const handleRowClick = (order_id) => {
-        navigate(`/manager/orders/${order_id}`);
-    };
+    const handleRowClick = (order_id) => navigate(`/manager/orders/${order_id}`);
 
     if (!user || user.role !== 'manager') {
-        return <div className={styles.container}><div className={styles.contentArea}><h1>Access Denied</h1></div></div>;
+        return (
+            <div className={styles.container}>
+                <div className={styles.contentArea}>
+                    <h1>Access Denied</h1>
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -62,18 +108,27 @@ const ManagerOrdersPage = () => {
             <div className={styles.contentArea}>
                 <h1>Orders ({managerInfo?.branch_name || 'Your Branch'})</h1>
                 
-                {/* Add Order Form View */}
                 {view === 'add' && (
-                    <ManagerAddOrder handleBack={handleBackFromAdd} managerInfo={managerInfo} />
+                    <ManagerAddOrder handleBack={() => setView('list')} managerInfo={managerInfo} />
                 )}
 
-                {/* Orders List View */}
                 {view === 'list' && (
                     <>
                         <div className={styles.headerContainer}>
-                            <button className={styles.addButton} onClick={() => setView('add')}>Add Order</button>
+                            <button className={styles.addButton} onClick={() => setView('add')}>
+                                Add Order
+                            </button>
                         </div>
-                        
+
+                        {/* SEARCH */}
+                        <input
+                            type="text"
+                            placeholder="Search Order ID, Product, Company..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            style={{ marginBottom: "10px", padding: "8px", width: "50%" }}
+                        />
+
                         {loading && <p>Loading orders...</p>}
                         {error && <p className={styles.errorMessage}>{error}</p>}
                         
@@ -91,21 +146,49 @@ const ManagerOrdersPage = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {orders.map((order) => (
+                                        {currentOrders.map((order) => (
                                             <tr key={order._id} className={styles.tr} onClick={() => handleRowClick(order.order_id)}>
-                                                <td className={styles.td} data-label="Order ID">{order.order_id}</td>
-                                                <td className={styles.td} data-label="Product">{order.product_name}</td>
-                                                <td className={styles.td} data-label="Company">{order.company_name}</td>
-                                                <td className={styles.td} data-label="Quantity">{order.quantity}</td>
-                                                <td className={styles.td} data-label="Status">{order.status}</td>
-                                                <td className={styles.td} data-label="Ordered Date">
-                                                    {new Date(order.ordered_date).toLocaleDateString()}
-                                                </td>
+                                                <td className={styles.td}>{order.order_id}</td>
+                                                <td className={styles.td}>{order.product_name}</td>
+                                                <td className={styles.td}>{order.company_name}</td>
+                                                <td className={styles.td}>{order.quantity}</td>
+                                                <td className={styles.td}>{order.status}</td>
+                                                <td className={styles.td}>{new Date(order.ordered_date).toLocaleDateString()}</td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                                 {orders.length === 0 && <p>No orders found for your branch.</p>}
+                            </div>
+                        )}
+
+                        {/* PAGINATION */}
+                        {filteredOrders.length > 0 && (
+                            <div className={styles.paginationControls}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    Rows per page:
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={rowsInput}
+                                        onChange={handleRowsChange}
+                                        style={{ width: "60px", marginLeft: "10px" }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <button className={styles.pageButton} onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>
+                                        Prev
+                                    </button>
+
+                                    <span style={{ margin: "0 12px" }}>
+                                        Page {currentPage} of {totalPages}
+                                    </span>
+
+                                    <button className={styles.pageButton} onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
+                                        Next
+                                    </button>
+                                </div>
                             </div>
                         )}
                     </>

@@ -4,7 +4,7 @@ const Product = require("../../models/products");
 const Branch = require("../../models/branches");
 const Company = require("../../models/company");
 
-// Display Orders with Search and Pagination
+// Display Orders with Searh and Pagination
 async function getCompanyOrders(req, res) {
   try {
     const { page = 1, limit = 10, search = "" } = req.query;

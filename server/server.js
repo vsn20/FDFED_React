@@ -1,3 +1,4 @@
+//path: server/server.js
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -30,11 +31,20 @@ app.use('/api/companies', require('./routes/owner/companyRoutes'));
 app.use('/api/branches', require('./routes/owner/branchRoutes'));
 app.use('/api/employees', require('./routes/owner/employeeRoutes'));
 app.use('/api/owner/products', require('./routes/owner/ProductRoutes'));
+app.use('/api/owner/sales', require('./routes/owner/SalesRoutes'));
+app.use('/api/owner/orders', require('./routes/owner/OrderRoutes'));
+app.use('/api/owner/inventory', require('./routes/owner/InventoryRoutes'));
+app.use('/api/owner/salaries', require('./routes/owner/SalariesRoutes'));
+app.use('/api/owner/profits',require('./routes/owner/profitRoutes'))
 
 // Manager routes
 app.use('/api/manager/employees', require('./routes/manager/employeeRoutes'));
 app.use('/api/manager/orders', require('./routes/managerOrderRoutes'));
 app.use('/api/manager/inventory', require('./routes/manager/managerInventoryRoutes'));
+app.use('/api/manager/sales', require('./routes/manager/SalesRoutes'));
+app.use('/api/manager/salary', require('./routes/manager/salaryRoutes'));
+
+// Public routes
 app.use('/api/our-branches', require('./routes/publicroutes'));
 
 // Salesman

@@ -1,3 +1,4 @@
+//path: client/src/App.jsx
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import AuthContext from './context/AuthContext';
@@ -34,12 +35,20 @@ import Sales from './pages/salesman/SalesDetails/sales';
 import Inventory from './pages/salesman/Inventory/Inventory';
 import Salaries from './pages/salesman/SalariesFeature/Salaries';
 
+
 import ManagerOrdersPage from './pages/manager/Orders/ManagerOrdersPage';
 import ManagerOrderDetails from './pages/manager/Orders/ManagerOrderDetails';
+import OwnerSales from './pages/owner/Sales/Sales';
 import ManagerInventoryPage from './pages/manager/Inventory/ManagerInventoryPage';
 
 import NewProducts from './pages/NewProducts';
 
+import Manager_Sales from './pages/manager/Sales/Manager_Sales';
+import ManagerSalaryPage from './pages/manager/Salary/ManagerSalaryPage';
+import AdminOrders from './pages/owner/Orders/AdminOrders';
+import Admin_Inventory from './pages/owner/Inventory/Admin_Inventory';
+import { Admin_salary } from './pages/owner/Salary/Admin_salary';
+import { Admin_Profits } from './pages/owner/Profits/Admin_Profits';
 const PostLoginRedirect = () => {
     const { user } = useContext(AuthContext);
 
@@ -89,6 +98,11 @@ function App() {
                         <Route path="/owner/companies" element={<ProtectedRoute roles={['owner']}><CompanyPage /></ProtectedRoute>} />
                         <Route path="/owner/branches" element={<ProtectedRoute roles={['owner']}><BranchPage /></ProtectedRoute>} />
                         <Route path="/owner/products" element={<ProtectedRoute roles={['owner']}><Products /></ProtectedRoute>} />
+                        <Route path="/owner/sales" element={<ProtectedRoute roles={['owner']}><OwnerSales/></ProtectedRoute>} />
+                        <Route path="/owner/orders" element={<ProtectedRoute roles={['owner']}><AdminOrders /></ProtectedRoute>} />
+                        <Route path="/owner/inventory" element={<ProtectedRoute roles={['owner']}><Admin_Inventory /></ProtectedRoute>} />
+                        <Route path="/owner/salaries" element={<ProtectedRoute roles={['owner']}><Admin_salary /></ProtectedRoute>} />
+                        <Route path="/owner/profits" element={<ProtectedRoute roles={['owner']}><Admin_Profits /></ProtectedRoute>} />
 
                         {/* Manager Routes */}
                         <Route path="/manager/analytics" element={<ProtectedRoute roles={['manager']}><ManagerAnalyticsPage /></ProtectedRoute>} />
@@ -98,7 +112,8 @@ function App() {
                         <Route path="/manager/orders" element={<ProtectedRoute roles={['manager']}><ManagerOrdersPage /></ProtectedRoute>} />
                         <Route path="/manager/orders/:id" element={<ProtectedRoute roles={['manager']}><ManagerOrderDetails /></ProtectedRoute>} />
                         <Route path='/manager/inventory' element={<ProtectedRoute roles={['manager']}><ManagerInventoryPage/></ProtectedRoute>} />
-
+                        <Route path='/manager/sales' element={<ProtectedRoute roles={['manager']}><Manager_Sales/></ProtectedRoute>} />
+                        <Route path="/manager/salary" element={ <ProtectedRoute roles={['manager']}><ManagerSalaryPage /> {/* NEW SALARY PAGE */}</ProtectedRoute>} />
                         {/* Salesman Routes */}
                         <Route path="/salesman/analytics" element={<ProtectedRoute roles={['salesman']}><SalesmanAnalyticsPage /></ProtectedRoute>} />
                         <Route path='/salesman/profile' element={<ProtectedRoute roles={['salesman']}><Details/></ProtectedRoute>} />

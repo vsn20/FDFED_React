@@ -183,7 +183,7 @@ const ManagerAddOrder = ({ handleBack, managerInfo }) => {
                 <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
                     {isSubmitting ? 'Adding...' : 'Add Order'}
                 </button>
-                <button type="button" className={styles.backButton} onClick={handleBack} disabled={isSubmitting}>
+                <button type="button" className={styles.submitButton} onClick={handleBack} disabled={isSubmitting}>
                     Back to List
                 </button>
             </form>
