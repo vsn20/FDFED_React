@@ -32,6 +32,7 @@ import CompanyProducts from './pages/company/products/CompanyProducts';
 import Products from './pages/owner/Products/Products';
 import Sales from './pages/salesman/SalesDetails/sales';
 import Inventory from './pages/salesman/Inventory/Inventory';
+import Salaries from './pages/salesman/SalariesFeature/Salaries';
 
 import ManagerOrdersPage from './pages/manager/Orders/ManagerOrdersPage';
 import ManagerOrderDetails from './pages/manager/Orders/ManagerOrderDetails';
@@ -99,7 +100,7 @@ function App() {
                         <Route path='/salesman/profile' element={<ProtectedRoute roles={['salesman']}><Details/></ProtectedRoute>} />
                         <Route path='/salesman/sales/*' element={<ProtectedRoute roles={['salesman']}><Sales/></ProtectedRoute>} />
                         <Route path='/salesman/inventory' element={<ProtectedRoute roles={['salesman']}><Inventory/></ProtectedRoute>} />
-
+                        <Route path='/salesman/salaries' element={<ProtectedRoute roles={['salesman']}><Salaries/></ProtectedRoute>} /> 
 
                         <Route path="/company/analytics" element={
                             <ProtectedRoute roles={['company']}>
