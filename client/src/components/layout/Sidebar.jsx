@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthContext from '../../context/AuthContext';
 import './Sidebar.css';
-
 const Sidebar = () => {
     const { user } = useContext(AuthContext);
     const [activeLink, setActiveLink] = useState(null);
@@ -71,6 +70,13 @@ const Sidebar = () => {
                     <span>👤</span> Profile
                 </Link>
             </li>
+
+             <li className={activeLink === "/manager/sales" ? "active" : ""}>
+                <Link to="/manager/sales" onClick={() => handleLinkClick("/manager/sales")}>
+                    <span>📊</span> Sales
+                </Link>
+            </li>
+            
             <li className={activeLink === "/manager/orders" ? "active" : ""}>
                 <Link to="/manager/orders" onClick={() => handleLinkClick("/manager/orders")}>
                     <span>📦</span> Orders

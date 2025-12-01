@@ -145,7 +145,7 @@ const ManagerOrderDetails = () => {
                                 {isSubmitting ? 'Cancelling...' : 'Cancel Order'}
                             </button>
                         )}
-                        <button type="button" className={styles.backButton} onClick={() => navigate('/manager/orders')}>
+                        <button type="button" className={styles.submitButton} onClick={() => navigate('/manager/orders')}>
                             Back to List
                         </button>
                         {/* --- END MODIFIED BUTTONS --- */}

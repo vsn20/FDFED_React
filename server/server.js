@@ -1,3 +1,4 @@
+//path: server/server.js
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -37,6 +38,9 @@ app.use('/api/owner/orders', require('./routes/owner/OrderRoutes'));
 app.use('/api/manager/employees', require('./routes/manager/employeeRoutes'));
 app.use('/api/manager/orders', require('./routes/managerOrderRoutes'));
 app.use('/api/manager/inventory', require('./routes/manager/managerInventoryRoutes'));
+app.use('/api/manager/sales', require('./routes/manager/SalesRoutes'));
+
+// Public routes
 app.use('/api/our-branches', require('./routes/publicroutes'));
 
 // Salesman
