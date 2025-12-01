@@ -37,6 +37,9 @@ import Salaries from './pages/salesman/SalariesFeature/Salaries';
 import ManagerOrdersPage from './pages/manager/Orders/ManagerOrdersPage';
 import ManagerOrderDetails from './pages/manager/Orders/ManagerOrderDetails';
 import ManagerInventoryPage from './pages/manager/Inventory/ManagerInventoryPage';
+
+import NewProducts from './pages/NewProducts';
+
 const PostLoginRedirect = () => {
     const { user } = useContext(AuthContext);
 
@@ -68,6 +71,7 @@ function App() {
                     {/* Public Routes */}
                     <Route element={<PublicLayout />}>
                         <Route path="/" element={<HomePage />} />
+                        <Route path="/newproducts" element={<NewProducts />} />
                         <Route path="/login" element={<LoginPage />} /> 
                         <Route path="/our-branches" element={<OurBranches />} />
                         <Route path="/about-us" element={<AboutUs />} />
