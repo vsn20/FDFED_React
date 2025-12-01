@@ -7,6 +7,8 @@ import AuthState from './context/AuthState';
 import PublicLayout from './components/layout/PublicLayout';
 import PrivateLayout from './components/layout/PrivateLayout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import CustomerLoginPage from './pages/CustomerLoginPage';
+import PreviousPurchases from './pages/customer/PreviousPurchases';
 
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -18,6 +20,7 @@ import SalesmanAnalyticsPage from './pages/salesman/SalesmanAnalyticsPage';
 import NotFoundPage from './pages/NotFoundPage';
 import CompanyPage from './pages/owner/CompanyPage';
 import BranchPage from './pages/owner/Branches/BranchPage';
+import Admin_messages from './pages/owner/messages/OwnerMessages';
 import Details from './pages/salesman/EmployeeDetails/Details';
 import CompanyLogin from './pages/CompanyLogin';
 import companyproducts from './pages/company/products/CompanyProducts';
@@ -67,6 +70,8 @@ const PostLoginRedirect = () => {
             return <Navigate to="/salesman/analytics" />;
         case 'company':
             return <Navigate to="/company/analytics" />;
+        case 'customer':
+            return <Navigate to="/customer/previouspurchases" />;
         default:
             return <Navigate to="/login" />;
     }
@@ -86,6 +91,7 @@ function App() {
                         <Route path="/our-branches" element={<OurBranches />} />
                         <Route path="/about-us" element={<AboutUs />} />
                         <Route path="/companylogin" element={<CompanyLogin />} />
+                        <Route path="/customerlogin" element={<CustomerLoginPage />} />
                     </Route>
 
                     {/* Redirect after login */}
@@ -104,6 +110,7 @@ function App() {
                         <Route path="/owner/inventory" element={<ProtectedRoute roles={['owner']}><Admin_Inventory /></ProtectedRoute>} />
                         <Route path="/owner/salaries" element={<ProtectedRoute roles={['owner']}><Admin_salary /></ProtectedRoute>} />
                         <Route path="/owner/profits" element={<ProtectedRoute roles={['owner']}><Admin_Profits /></ProtectedRoute>} />
+                        <Route path="/owner/messages" element={<ProtectedRoute roles={['owner']}><Admin_messages /></ProtectedRoute>} />
 
                         {/* Manager Routes */}
                         <Route path="/manager/analytics" element={<ProtectedRoute roles={['manager']}><ManagerAnalyticsPage /></ProtectedRoute>} />
@@ -146,6 +153,12 @@ function App() {
                         <Route path="/company/messages" element={
                             <ProtectedRoute roles={['company']}>
                                 <Companymessages/>
+                            </ProtectedRoute>
+                        } />
+
+                        <Route path="/customer/previouspurchases" element={
+                            <ProtectedRoute roles={['customer']}>
+                                <PreviousPurchases />
                             </ProtectedRoute>
                         } />
 
