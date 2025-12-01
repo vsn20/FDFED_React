@@ -5,8 +5,10 @@ const Company = require("../../models/company");
 // Helper to enrich message data (resolve IDs to Names)
 async function enrichMessages(messages, currentCompanyId) {
   const enriched = [];
+  // Ensure array
+  const msgs = Array.isArray(messages) ? messages : [messages];
   
-  for (let msg of messages) {
+  for (let msg of msgs) {
     let msgObj = msg.toObject ? msg.toObject() : msg;
 
     // Resolve SENDER (From)
@@ -121,10 +123,9 @@ async function getSent(req, res) {
   }
 }
 
-// 3. Get Sales Managers (FIXED: Checks for both 'Sales Manager' and 'manager')
+// 3. Get Sales Managers
 async function getSalesManagers(req, res) {
   try {
-    // Queries for either "Sales Manager" OR "manager" (case insensitive)
     const managers = await Employee.find({ 
       role: { $in: ["Sales Manager", "manager", "Manager"] }, 
       status: "active" 
@@ -139,7 +140,7 @@ async function getSalesManagers(req, res) {
   }
 }
 
-// 4. Send Message
+// 4. Send Message (UPDATED FOR SOCKET)
 async function sendMessage(req, res) {
   try {
     const { category, to, message } = req.body;
@@ -151,35 +152,35 @@ async function sendMessage(req, res) {
 
     const newMessage = {
       from,
-      to: category === 'specific_sales_manager' ? to : category,
       category,
       message,
       timestamp: new Date(),
       c_id: from
     };
 
+    // Logic for 'to' field
     if (category === "admin") {
       newMessage.to = "admin";
     } else if (category === "all_sales_manager") {
       newMessage.to = "all_sales_manager";
     } else if (category === "specific_sales_manager") {
       if (!to) return res.status(400).json({ success: false, message: "Recipient required" });
+      newMessage.to = to; // Ensure 'to' is set!
       newMessage.emp_id = to;
     } else {
       return res.status(400).json({ success: false, message: "Invalid category" });
     }
 
-    await Message.create(newMessage);
+    const saved = await Message.create(newMessage);
 
-    // Socket.io emission
+    // --- SOCKET FIX ---
+    // Enrich the message (turn IDs into Names) BEFORE sending to socket
+    const enrichedForSocket = await enrichMessages([saved], from);
+
     const io = req.io;
     if (io) {
-      io.emit("newMessage", {
-        from: newMessage.from,
-        to: newMessage.to,
-        message: newMessage.message,
-        timestamp: newMessage.timestamp
-      });
+      // Emit the enriched object
+      io.emit("newMessage", enrichedForSocket[0]);
     }
 
     res.json({ success: true, message: "Message sent successfully" });
