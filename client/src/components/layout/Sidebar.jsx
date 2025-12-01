@@ -64,6 +64,11 @@ const Sidebar = () => {
                     <span>🌐</span> Branches
                 </Link>
             </li>
+            <li className={activeLink === "/owner/messages" ? "active" : ""}>
+                <Link to="/owner/messages" onClick={() => handleLinkClick("/owner/messages")}>
+                    <span>🌐</span> message
+                </Link>
+            </li>
         </>
     );
 
@@ -169,6 +174,30 @@ const Sidebar = () => {
             </li>
         </>
     );
+    const customerLinks = (
+        <>
+            <li className={activeLink === "/customer/previouspurchases" ? "active" : ""}>
+                <Link to="/customer/previouspurchases" onClick={() => handleLinkClick("/customer/previouspurchases")}>
+                    <span>💸</span> Previous Purchases
+                </Link>
+            </li>
+            <li className={activeLink === "/customer/complaints" ? "active" : ""}>
+                <Link to="/customer/complaints" onClick={() => handleLinkClick("/customer/complaints")}>
+                    <span>💰</span> Complaints
+                </Link>
+            </li>
+            <li className={activeLink === "/customer/review" ? "active" : ""}>
+                <Link to="/customer/review" onClick={() => handleLinkClick("/customer/review")}>
+                    <span>🏬</span> Reviews
+                </Link>
+            </li>
+            <li className={activeLink === "/customer/blogs" ? "active" : ""}>
+                <Link to="/customer/blogs" onClick={() => handleLinkClick("/customer/blogs")}>
+                    <span>🏬</span> Blogs
+                </Link>
+            </li>
+        </>
+    );
 
     return (
         <div className="sidebar">
@@ -180,6 +209,7 @@ const Sidebar = () => {
                 {user.role === 'manager' && managerLinks}
                 {user.role === 'salesman' && salesmanLinks}
                 {user.role === 'company' && companyLinks}
+                {user.role === 'customer' && customerLinks}
             </ul>
         </div>
     );
