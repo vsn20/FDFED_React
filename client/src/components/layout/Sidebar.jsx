@@ -34,6 +34,11 @@ const Sidebar = () => {
                     <span>📦</span> Products
                 </Link>
             </li>
+            <li className={activeLink === "/owner/inventory" ? "active" : ""}>
+                <Link to="/owner/inventory" onClick={() => handleLinkClick("/owner/inventory")}>
+                    <span>📊</span> Inventory
+                </Link>
+            </li>
             <li className={activeLink === "/owner/employees" ? "active" : ""}>
                 <Link to="/owner/employees" onClick={() => handleLinkClick("/owner/employees")}>
                     <span>👥</span> Employees
