@@ -39,6 +39,7 @@ app.use('/api/manager/employees', require('./routes/manager/employeeRoutes'));
 app.use('/api/manager/orders', require('./routes/managerOrderRoutes'));
 app.use('/api/manager/inventory', require('./routes/manager/managerInventoryRoutes'));
 app.use('/api/manager/sales', require('./routes/manager/SalesRoutes'));
+app.use('/api/manager/salary', require('./routes/manager/salaryRoutes'));
 
 // Public routes
 app.use('/api/our-branches', require('./routes/publicroutes'));
