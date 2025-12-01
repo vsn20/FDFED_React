@@ -40,6 +40,7 @@ import ManagerOrderDetails from './pages/manager/Orders/ManagerOrderDetails';
 import OwnerSales from './pages/owner/Sales/Sales';
 import ManagerInventoryPage from './pages/manager/Inventory/ManagerInventoryPage';
 import Manager_Sales from './pages/manager/Sales/Manager_Sales';
+import ManagerSalaryPage from './pages/manager/Salary/ManagerSalaryPage';
 const PostLoginRedirect = () => {
     const { user } = useContext(AuthContext);
 
@@ -99,8 +100,7 @@ function App() {
                         <Route path="/manager/orders/:id" element={<ProtectedRoute roles={['manager']}><ManagerOrderDetails /></ProtectedRoute>} />
                         <Route path='/manager/inventory' element={<ProtectedRoute roles={['manager']}><ManagerInventoryPage/></ProtectedRoute>} />
                         <Route path='/manager/sales' element={<ProtectedRoute roles={['manager']}><Manager_Sales/></ProtectedRoute>} />
-                        
-
+                        <Route path="/manager/salary" element={ <ProtectedRoute roles={['manager']}><ManagerSalaryPage /> {/* NEW SALARY PAGE */}</ProtectedRoute>} />
                         {/* Salesman Routes */}
                         <Route path="/salesman/analytics" element={<ProtectedRoute roles={['salesman']}><SalesmanAnalyticsPage /></ProtectedRoute>} />
                         <Route path='/salesman/profile' element={<ProtectedRoute roles={['salesman']}><Details/></ProtectedRoute>} />
