@@ -55,6 +55,9 @@ app.use('/api/salesman/salaries', require('./routes/salesman/salaryRoutes'));
 // Company routes - with products
 app.use('/api/company', require('./routes/company'));
 
+// Public Routes
+app.use('/api/newproducts', require('./routes/newProductsRoutes'));
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
