@@ -1,0 +1,142 @@
+.container {
+  margin-top: 90px;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  padding: 0 20px;
+  max-width: 100%;
+}
+
+.contentArea {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 800px;
+}
+
+.header h1 {
+  color: #2c3e50;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.errorMessage {
+  color: #e74c3c;
+  background: #fdecea;
+  border: 1px solid #e74c3c;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.controlsContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.dateTitle {
+  font-size: 1.4rem;
+  color: #2980b9;
+  font-weight: 600;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+}
+
+.selectInput {
+  padding: 8px 12px;
+  border: 1px solid #dfe6e9;
+  border-radius: 6px;
+  font-size: 1rem;
+  min-width: 150px;
+}
+
+.generateBtn {
+  padding: 8px 20px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.generateBtn:hover {
+  background: #2980b9;
+}
+
+/* Salary Card Styles */
+.salaryCard {
+  background: #f8f9fd;
+  border: 1px solid #e6e9f0;
+  border-radius: 10px;
+  padding: 25px;
+  border-left: 5px solid #3498db;
+}
+
+.salaryRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+}
+
+.label {
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.value {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.divider {
+  height: 1px;
+  background: #dfe6e9;
+  margin: 15px 0;
+}
+
+.totalRow {
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin-bottom: 0;
+}
+
+.totalRow .value {
+  color: #27ae60; /* Green for money */
+}
+
+.note {
+  margin-top: 15px;
+  color: #e74c3c;
+  font-style: italic;
+  font-size: 0.95rem;
+  background: #fff0f0;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+@media (max-width: 600px) {
+  .controlsContainer {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  .controls {
+    flex-direction: column;
+  }
+}

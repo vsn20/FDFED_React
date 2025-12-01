@@ -1,0 +1,167 @@
+.pageContainer {
+    /* Remove padding and max-width/margin to allow contentArea to manage its space */
+    padding: 0;
+    margin: 0;
+    /* Ensure it takes up available space next to the sidebar */
+    width: 100%;
+    /* Added to match the visual padding of the entire content area */
+    padding: 20px; 
+}
+
+.contentArea {
+    /* Increased max-width for the main calculation card, making it wider than 900px */
+    max-width: 1200px; 
+    width: 100%; /* Ensure it's responsive up to max-width */
+    margin: 0 auto; /* Center the card within the pageContainer padding */
+    
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 30px; /* Increased padding inside the card */
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08); /* Slightly more prominent shadow */
+    border: none; /* Removed the light border, relying on shadow */
+}
+
+.title {
+    color: #333;
+    /* Updated border color to match the subtle line in the screenshot */
+    border-bottom: 1px solid #ebedf0; 
+    padding-bottom: 15px;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    font-weight: 600;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.label {
+    font-weight: 500; /* Slightly less bold */
+    color: #555;
+    font-size: 1em;
+}
+
+.selectInput {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px; /* Slightly more rounded */
+    font-size: 16px;
+    background-color: #fcfcfc;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.selectInput:focus {
+    border-color: #ffc107;
+    outline: none;
+}
+
+.dateRange {
+    /* Changed color to a darker tone for main heading and reduced margin */
+    color: #333; 
+    margin-bottom: 15px;
+    margin-top: 20px;
+    font-size: 1.4em;
+    font-weight: 600;
+}
+
+.loadingMessage,
+.errorMessage {
+    padding: 15px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: 500;
+    margin-top: 20px;
+}
+
+.loadingMessage {
+    background-color: #e8f7ff;
+    color: #007bff;
+}
+
+.errorMessage {
+    background-color: #fcebeb; /* Light red */
+    color: #dc3545;
+    border: 1px solid #f9dcdc;
+}
+
+.salaryList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.salaryEntry {
+    padding: 20px;
+    /* subtle border for separation */
+    border: 1px solid #e0e0e0; 
+    border-radius: 8px; /* More rounded corners */
+    background-color: #ffffff; /* White background for entries */
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.salaryEntry:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color:#ffc107; /* Highlight on hover */
+}
+
+.entryHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Solid, light gray line */
+    border-bottom: 1px solid #eeeeee; 
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+}
+
+.employeeName {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+.role {
+    /* Using the manager/salesman colors from the screenshot */
+    background-color: #ffc107; 
+    color: #333;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.entryDetails > div {
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between; /* Align values right */
+}
+
+.label {
+    /* Restore the label style for internal details */
+    font-weight: 500;
+    color: #555;
+}
+
+.total {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #008000;
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f0; /* Lighter separator */
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.note {
+    color: #dc3545;
+    font-style: italic;
+    margin-top: 10px;
+    padding-top: 5px;
+    border-top: 1px solid #f0f0f0;
+}
