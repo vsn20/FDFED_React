@@ -30,6 +30,7 @@ import ManagerEmployeesPage from './pages/manager/Employees/ManagerEmployeesPage
 import ManagerEmployeeDetails from './pages/manager/Employees/ManagerEmployeeDetails';
 import ManagerProfileEdit from './pages/manager/Profile/ManagerProfileEdit';
 import CompanyProducts from './pages/company/products/CompanyProducts';
+import Companymessages from './pages/company/messages/Companymessages';
 import Products from './pages/owner/Products/Products';
 import Sales from './pages/salesman/SalesDetails/sales';
 import Inventory from './pages/salesman/Inventory/Inventory';
@@ -142,6 +143,12 @@ function App() {
                                 
                             </ProtectedRoute>
                         } />
+                        <Route path="/company/messages" element={
+                            <ProtectedRoute roles={['company']}>
+                                <Companymessages/>
+                            </ProtectedRoute>
+                        } />
+
                     </Route>
 
                     {/* Not Found */}
