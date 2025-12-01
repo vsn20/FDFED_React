@@ -4,6 +4,9 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 const connectDB = require('./config/db');
+// 1. Import http and socket.io
+const http = require('http');
+const { Server } = require("socket.io");
 
 // Load env vars
 dotenv.config();
@@ -13,16 +16,32 @@ connectDB();
 
 const app = express();
 
-// Enable CORS
+// 2. Create HTTP server
+const server = http.createServer(app);
+
+// 3. Initialize Socket.io with CORS
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173/", 
+    methods: ["GET", "POST", "PUT", "DELETE"]
+  }
+});
+
+// Enable CORS for Express
 app.use(cors());
 
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from frontend public/uploads directory
-// Adjust the path based on your folder structure
+// Serve static files
 app.use('/uploads', express.static(path.join(__dirname, '../client/public/uploads')));
+
+// 4. Middleware to pass 'io' to all routes/controllers
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
 
 // Mount routers
 app.use('/api/auth', require('./routes/authRoutes'));
@@ -47,8 +66,18 @@ app.use('/api/our-branches', require('./routes/publicroutes'));
 app.use('/api/salesman/profile', require('./routes/salesman/detailsRoutes'));
 app.use('/api/salesman/sales', require('./routes/salesman/salesRoutes'));
 app.use('/api/salesman/inventory', require('./routes/salesman/inventoryRoutes'));
-// Company routes - with products
+
+// Company routes
 app.use('/api/company', require('./routes/company'));
+
+// 5. Socket.io Connection Logic
+io.on("connection", (socket) => {
+  console.log("New client connected:", socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected:", socket.id);
+  });
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -61,4 +90,5 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5001;
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// 6. Change app.listen to server.listen
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

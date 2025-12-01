@@ -138,6 +138,11 @@ const Sidebar = () => {
                     <span>👥</span> complaints
                 </Link>
             </li>
+            <li className={activeLink === "/company/messages" ? "active" : ""}>
+                <Link to="/company/messages" onClick={() => handleLinkClick("/company/messages")}>
+                    <span>👥</span> messages
+                </Link>
+            </li>
         </>
     );
 

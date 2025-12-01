@@ -1,192 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import AuthContext from '../../../context/AuthContext';
+import styles from './Products.module.css'; // Importing the CSS module
 
-// API base URL - adjust as needed
+// API base URL
 const API_BASE_URL = 'http://localhost:5001/api';
 
-// Shared CSS Module
-const styles = {
-  container: {
-    marginTop: '90px',
-    display: 'flex',
-    flex: 1,
-    gap: '25px',
-    padding: '0 20px',
-    maxWidth: '100%'
-  },
-  contentArea: {
-    background: '#ffffff',
-    borderRadius: '15px',
-    padding: '25px',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-    flex: 1,
-    height: 'calc(100vh - 90px)',
-    overflowY: 'auto',
-    msOverflowStyle: 'none',
-    scrollbarWidth: 'none'
-  },
-  heading: {
-    color: '#2d3436',
-    marginBottom: '20px',
-    fontSize: '1.5rem'
-  },
-  headerContainer: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '20px'
-  },
-  button: {
-    padding: '8px 16px',
-    backgroundColor: '#2d3436',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    fontSize: '1rem',
-    transition: 'background 0.3s'
-  },
-  productsContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '20px'
-  },
-  productItem: {
-    flex: '1 1 calc(33.33% - 20px)',
-    background: '#ffffff',
-    borderRadius: '10px',
-    padding: '15px',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-    textAlign: 'center'
-  },
-  slideshowContainer: {
-    position: 'relative',
-    width: '100%',
-    margin: '0 auto 10px auto',
-    cursor: 'pointer'
-  },
-  slideImage: {
-    width: '100%',
-    height: 'auto',
-    borderRadius: '5px'
-  },
-  productDetails: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px'
-  },
-  clickable: {
-    cursor: 'pointer',
-    color: '#2d3436',
-    fontSize: '1.1rem',
-    fontWeight: 500,
-    letterSpacing: '0.5px'
-  },
-  formSection: {
-    marginBottom: '20px',
-    padding: '15px',
-    border: '1px solid #e6e9f0',
-    borderRadius: '5px'
-  },
-  sectionTitle: {
-    color: '#2d3436',
-    fontSize: '1.2rem',
-    marginBottom: '15px'
-  },
-  fieldGroup: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '20px'
-  },
-  fieldWrapper: {
-    flex: '1',
-    minWidth: '250px'
-  },
-  fieldLabel: {
-    display: 'block',
-    marginBottom: '5px',
-    color: '#2d3436',
-    fontWeight: 500
-  },
-  fieldInput: {
-    width: '100%',
-    padding: '10px',
-    border: '1px solid #e6e9f0',
-    borderRadius: '5px',
-    fontSize: '1rem'
-  },
-  fieldInputDisabled: {
-    width: '100%',
-    padding: '10px',
-    border: '1px solid #e6e9f0',
-    borderRadius: '5px',
-    fontSize: '1rem',
-    background: '#f0f0f0',
-    cursor: 'not-allowed'
-  },
-  submitBtn: {
-    display: 'block',
-    width: '100%',
-    padding: '12px',
-    background: '#2d3436',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    textAlign: 'center',
-    marginTop: '20px',
-    transition: 'background 0.3s'
-  },
-  backLink: {
-    display: 'block',
-    textAlign: 'center',
-    color: '#2d3436',
-    textDecoration: 'none',
-    marginTop: '20px',
-    fontSize: '1.1rem',
-    fontWeight: 500,
-    cursor: 'pointer',
-    transition: 'color 0.3s ease'
-  },
-  errorMessage: {
-    color: '#e74c3c',
-    margin: '10px 0',
-    minHeight: '20px'
-  },
-  successMessage: {
-    color: '#27ae60',
-    margin: '10px 0',
-    minHeight: '20px'
-  },
-  photos: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '10px',
-    justifyContent: 'center',
-    marginBottom: '20px'
-  },
-  photoThumbnail: {
-    maxWidth: '150px',
-    height: 'auto',
-    borderRadius: '5px'
-  },
-  updateBtn: {
-    display: 'inline-block',
-    padding: '10px 20px',
-    background: '#2d3436',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    textAlign: 'center',
-    marginTop: '10px',
-    transition: 'background 0.3s'
-  }
-};
-
-// Products List Component
+// --- Products List Component ---
 const ProductsList = ({ onAddProduct, onViewDetails }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -220,6 +39,7 @@ const ProductsList = ({ onAddProduct, onViewDetails }) => {
     }
   };
 
+  // Slideshow Logic
   useEffect(() => {
     if (products.length === 0) return;
 
@@ -230,14 +50,14 @@ const ProductsList = ({ onAddProduct, onViewDetails }) => {
         const interval = setInterval(() => {
           const container = document.querySelector(`[data-product-index="${productIndex}"]`);
           if (container) {
-            const slides = container.querySelectorAll('.slide-image');
+            const slides = container.querySelectorAll(`.${styles.slideImage}`);
             if (slides.length > 0) {
-              slides[currentSlide].style.display = 'none';
+              slides.forEach(slide => slide.style.opacity = '0'); // Hide all
               currentSlide = (currentSlide + 1) % slides.length;
-              slides[currentSlide].style.display = 'block';
+              slides[currentSlide].style.opacity = '1'; // Show next
             }
           }
-        }, 2000);
+        }, 3000); // 3 seconds per slide
         intervals.push(interval);
       }
     });
@@ -245,69 +65,56 @@ const ProductsList = ({ onAddProduct, onViewDetails }) => {
     return () => intervals.forEach(interval => clearInterval(interval));
   }, [products]);
 
-  if (loading) return <div style={styles.contentArea}><p>Loading...</p></div>;
-  if (error) return <div style={styles.contentArea}><p style={styles.errorMessage}>Error: {error}</p></div>;
+  if (loading) return <div className={styles.contentArea}><p>Loading...</p></div>;
+  if (error) return <div className={styles.contentArea}><p className={styles.errorMessage}>Error: {error}</p></div>;
 
   return (
-    <div style={styles.contentArea}>
-      <div style={styles.headerContainer}>
-        <h1 style={styles.heading}>Products</h1>
-        <button 
-          onClick={onAddProduct}
-          style={styles.button}
-          onMouseEnter={(e) => e.target.style.background = '#636e72'}
-          onMouseLeave={(e) => e.target.style.background = '#2d3436'}
-        >
-          Add Product
+    <div className={styles.contentArea}>
+      <div className={styles.headerContainer}>
+        <h1 className={styles.heading}>Products Management</h1>
+        <button className={styles.button} onClick={onAddProduct}>
+          + Add New Product
         </button>
       </div>
-      <div style={styles.productsContainer}>
+      
+      <div className={styles.productsContainer}>
         {products.length > 0 ? (
           products.map((product, index) => (
-            <div key={product.prod_id} style={styles.productItem}>
+            <div 
+              key={product.prod_id} 
+              className={styles.productItem}
+              onClick={() => onViewDetails(product.prod_id)}
+            >
               <div 
-                style={styles.slideshowContainer}
+                className={styles.slideshowContainer}
                 data-product-index={index}
-                onClick={() => onViewDetails(product.prod_id)}
               >
-                {product.prod_photos && product.prod_photos.map((photo, photoIndex) => (
+                {product.prod_photos && product.prod_photos.length > 0 ? (
+                  product.prod_photos.map((photo, photoIndex) => (
+                    <img 
+                      key={photoIndex}
+                      src={photo}
+                      alt="Product"
+                      className={styles.slideImage}
+                      style={{ opacity: photoIndex === 0 ? 1 : 0 }}
+                    />
+                  ))
+                ) : (
                   <img 
-                    key={photoIndex}
-                    src={photo}
-                    alt="Product Photo"
-                    className="slide-image"
-                    style={{
-                      ...styles.slideImage,
-                      display: photoIndex === 0 ? 'block' : 'none'
-                    }}
+                    src="/placeholder.jpg" 
+                    alt="No Image" 
+                    className={styles.slideImage} 
+                    style={{ opacity: 1 }}
                   />
-                ))}
+                )}
               </div>
-              <div style={styles.productDetails}>
-                <span 
-                  onClick={() => onViewDetails(product.prod_id)}
-                  style={styles.clickable}
-                >
-                  {product.prod_id}
-                </span>
-                <span 
-                  onClick={() => onViewDetails(product.prod_id)}
-                  style={styles.clickable}
-                >
-                  {product.Model_no}
-                </span>
-                <span 
-                  onClick={() => onViewDetails(product.prod_id)}
-                  style={styles.clickable}
-                >
-                  Stock: {product.stock}
-                </span>
-                <span 
-                  onClick={() => onViewDetails(product.prod_id)}
-                  style={styles.clickable}
-                >
-                  {product.Status}
-                </span>
+              
+              <div className={styles.productDetails}>
+                <span>{product.Prod_name}</span>
+                <span>ID: {product.prod_id}</span>
+                <span>Model: {product.Model_no}</span>
+                <span>Stock: {product.stock}</span>
+                <span>{product.Status}</span>
               </div>
             </div>
           ))
@@ -319,7 +126,7 @@ const ProductsList = ({ onAddProduct, onViewDetails }) => {
   );
 };
 
-// Add Product Component
+// --- Add Product Form Component ---
 const AddProductForm = ({ onBack }) => {
   const { user, token } = useContext(AuthContext);
   const [formData, setFormData] = useState({
@@ -343,6 +150,7 @@ const AddProductForm = ({ onBack }) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
 
+    // Conditional logic for installation fields
     if (name === 'installation') {
       if (value !== 'Required') {
         setFormData(prev => ({ 
@@ -352,7 +160,6 @@ const AddProductForm = ({ onBack }) => {
         }));
       }
     }
-
     if (name === 'installationType' && value !== 'Paid') {
       setFormData(prev => ({ ...prev, installationcharge: '' }));
     }
@@ -401,196 +208,196 @@ const AddProductForm = ({ onBack }) => {
   };
 
   return (
-    <div style={styles.contentArea}>
-      <h1 style={styles.heading}>Add New Product</h1>
-      <div>
-        <div style={styles.formSection}>
-          <div style={styles.sectionTitle}>Product Information</div>
-          <div style={styles.fieldGroup}>
-            <div style={styles.fieldWrapper}>
-              <label style={styles.fieldLabel}>Product Name</label>
-              <input
-                type="text"
-                name="Prod_name"
-                value={formData.Prod_name}
-                onChange={handleChange}
-                style={styles.fieldInput}
-                required
-              />
-            </div>
-            <div style={styles.fieldWrapper}>
-              <label style={styles.fieldLabel}>Company ID</label>
-              <input
-                type="text"
-                value={user?.c_id || ''}
-                style={styles.fieldInputDisabled}
-                disabled
-              />
-            </div>
-            <div style={styles.fieldWrapper}>
-              <label style={styles.fieldLabel}>Model Number</label>
-              <input
-                type="text"
-                name="Model_no"
-                value={formData.Model_no}
-                onChange={handleChange}
-                style={styles.fieldInput}
-                required
-              />
-            </div>
-            <div style={styles.fieldWrapper}>
-              <label style={styles.fieldLabel}>Company Name</label>
-              <input
-                type="text"
-                value={user?.name || ''}
-                style={styles.fieldInputDisabled}
-                disabled
-              />
-            </div>
-            <div style={styles.fieldWrapper}>
-              <label style={styles.fieldLabel}>Production Year</label>
-              <input
-                type="text"
-                name="prod_year"
-                value={formData.prod_year}
-                onChange={handleChange}
-                style={styles.fieldInput}
-                required
-              />
-            </div>
-            <div style={styles.fieldWrapper}>
-              <label style={styles.fieldLabel}>Stock</label>
-              <input
-                type="text"
-                name="stock"
-                value={formData.stock}
-                onChange={handleChange}
-                style={styles.fieldInput}
-                required
-              />
-            </div>
-            <div style={styles.fieldWrapper}>
-              <label style={styles.fieldLabel}>Stock Availability</label>
-              <select
-                name="stockavailability"
-                value={formData.stockavailability}
-                onChange={handleChange}
-                style={styles.fieldInput}
-                required
-              >
-                <option value="instock">In Stock</option>
-                <option value="outofstock">Out of Stock</option>
-              </select>
-            </div>
-            <div style={styles.fieldWrapper}>
-              <label style={styles.fieldLabel}>Description</label>
-              <input
-                type="text"
-                name="prod_description"
-                value={formData.prod_description}
-                onChange={handleChange}
-                style={styles.fieldInput}
-                required
-              />
-            </div>
-            <div style={styles.fieldWrapper}>
-              <label style={styles.fieldLabel}>Company Selling Price</label>
-              <input
-                type="text"
-                name="Retail_price"
-                value={formData.Retail_price}
-                onChange={handleChange}
-                style={styles.fieldInput}
-                required
-              />
-            </div>
-            <div style={styles.fieldWrapper}>
-              <label style={styles.fieldLabel}>Warranty Period</label>
-              <input
-                type="text"
-                name="warrantyperiod"
-                value={formData.warrantyperiod}
-                onChange={handleChange}
-                style={styles.fieldInput}
-                required
-              />
-            </div>
-            <div style={styles.fieldWrapper}>
-              <label style={styles.fieldLabel}>Installation</label>
-              <select
-                name="installation"
-                value={formData.installation}
-                onChange={handleChange}
-                style={styles.fieldInput}
-                required
-              >
-                <option value="">Select Installation</option>
-                <option value="Required">Required</option>
-                <option value="Not Required">Not Required</option>
-              </select>
-            </div>
-            <div style={styles.fieldWrapper}>
-              <label style={styles.fieldLabel}>Installation Type</label>
-              <select
-                name="installationType"
-                value={formData.installationType}
-                onChange={handleChange}
-                style={formData.installation === 'Required' ? styles.fieldInput : styles.fieldInputDisabled}
-                disabled={formData.installation !== 'Required'}
-              >
-                <option value="">Select Type</option>
-                <option value="Paid">Paid</option>
-                <option value="Free">Free</option>
-              </select>
-            </div>
-            <div style={styles.fieldWrapper}>
-              <label style={styles.fieldLabel}>Installation Charge</label>
-              <input
-                type="text"
-                name="installationcharge"
-                value={formData.installationcharge}
-                onChange={handleChange}
-                style={formData.installationType === 'Paid' ? styles.fieldInput : styles.fieldInputDisabled}
-                disabled={formData.installationType !== 'Paid'}
-              />
-            </div>
-            <div style={styles.fieldWrapper}>
-              <label style={styles.fieldLabel}>Product Photos</label>
-              <input
-                type="file"
-                onChange={handleFileChange}
-                style={{ ...styles.fieldInput, padding: '10px 0' }}
-                multiple
-                accept="image/*"
-                required
-              />
-            </div>
-          </div>
-        </div>
-        <button 
-          onClick={handleSubmit}
-          style={styles.submitBtn}
-          disabled={loading}
-          onMouseEnter={(e) => !loading && (e.target.style.background = '#636e72')}
-          onMouseLeave={(e) => !loading && (e.target.style.background = '#2d3436')}
-        >
-          {loading ? 'Adding Product...' : 'Add Product'}
+    <div className={styles.contentArea}>
+      <div className={styles.headerContainer}>
+        <h1 className={styles.heading}>Add New Product</h1>
+        <button className={styles.backLink} onClick={onBack}>
+          &larr; Back to Products
         </button>
-        {error && <div style={styles.errorMessage}>{error}</div>}
       </div>
-      <span 
-        onClick={onBack}
-        style={styles.backLink}
-        onMouseEnter={(e) => e.target.style.color = '#636e72'}
-        onMouseLeave={(e) => e.target.style.color = '#2d3436'}
+
+      <div className={styles.formSection}>
+        <div className={styles.sectionTitle}>Product Information</div>
+        <div className={styles.fieldGroup}>
+          
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Product Name</label>
+            <input
+              type="text"
+              name="Prod_name"
+              value={formData.Prod_name}
+              onChange={handleChange}
+              className={styles.fieldInput}
+              required
+            />
+          </div>
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Model Number</label>
+            <input
+              type="text"
+              name="Model_no"
+              value={formData.Model_no}
+              onChange={handleChange}
+              className={styles.fieldInput}
+              required
+            />
+          </div>
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Company ID (Auto)</label>
+            <input
+              type="text"
+              value={user?.c_id || ''}
+              className={styles.fieldInputDisabled}
+              disabled
+            />
+          </div>
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Production Year</label>
+            <input
+              type="text"
+              name="prod_year"
+              value={formData.prod_year}
+              onChange={handleChange}
+              className={styles.fieldInput}
+              required
+            />
+          </div>
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Initial Stock</label>
+            <input
+              type="text"
+              name="stock"
+              value={formData.stock}
+              onChange={handleChange}
+              className={styles.fieldInput}
+              required
+            />
+          </div>
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Stock Status</label>
+            <select
+              name="stockavailability"
+              value={formData.stockavailability}
+              onChange={handleChange}
+              className={styles.fieldSelect}
+            >
+              <option value="instock">In Stock</option>
+              <option value="outofstock">Out of Stock</option>
+            </select>
+          </div>
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Selling Price</label>
+            <input
+              type="text"
+              name="Retail_price"
+              value={formData.Retail_price}
+              onChange={handleChange}
+              className={styles.fieldInput}
+              required
+            />
+          </div>
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Warranty Period</label>
+            <input
+              type="text"
+              name="warrantyperiod"
+              value={formData.warrantyperiod}
+              onChange={handleChange}
+              className={styles.fieldInput}
+              required
+            />
+          </div>
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Installation Required?</label>
+            <select
+              name="installation"
+              value={formData.installation}
+              onChange={handleChange}
+              className={styles.fieldSelect}
+              required
+            >
+              <option value="">Select...</option>
+              <option value="Required">Required</option>
+              <option value="Not Required">Not Required</option>
+            </select>
+          </div>
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Installation Type</label>
+            <select
+              name="installationType"
+              value={formData.installationType}
+              onChange={handleChange}
+              className={formData.installation === 'Required' ? styles.fieldSelect : styles.fieldInputDisabled}
+              disabled={formData.installation !== 'Required'}
+            >
+              <option value="">Select...</option>
+              <option value="Paid">Paid</option>
+              <option value="Free">Free</option>
+            </select>
+          </div>
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Installation Charge</label>
+            <input
+              type="text"
+              name="installationcharge"
+              value={formData.installationcharge}
+              onChange={handleChange}
+              className={formData.installationType === 'Paid' ? styles.fieldInput : styles.fieldInputDisabled}
+              disabled={formData.installationType !== 'Paid'}
+            />
+          </div>
+
+          <div className={styles.fieldWrapper} style={{gridColumn: '1 / -1'}}>
+            <label className={styles.fieldLabel}>Description</label>
+            <input
+              type="text"
+              name="prod_description"
+              value={formData.prod_description}
+              onChange={handleChange}
+              className={styles.fieldInput}
+              required
+            />
+          </div>
+
+          <div className={styles.fieldWrapper} style={{gridColumn: '1 / -1'}}>
+            <label className={styles.fieldLabel}>Product Photos</label>
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className={styles.fieldInput}
+              multiple
+              accept="image/*"
+              required
+            />
+          </div>
+
+        </div>
+      </div>
+
+      <button 
+        onClick={handleSubmit}
+        className={styles.submitBtn}
+        disabled={loading}
       >
-        Back to Products
-      </span>
+        {loading ? 'Adding Product...' : 'Add Product'}
+      </button>
+
+      {error && <div className={styles.errorMessage}>{error}</div>}
     </div>
   );
 };
 
-// Product Details Component
+// --- Product Details Component ---
 const ProductDetails = ({ productId, onBack }) => {
   const { token } = useContext(AuthContext);
   const [product, setProduct] = useState(null);
@@ -645,128 +452,118 @@ const ProductDetails = ({ productId, onBack }) => {
         setMessage('Stock availability updated successfully!');
         fetchProductDetails();
       } else {
-        setError(result.message || 'An error occurred while updating stock availability.');
+        setError(result.message || 'An error occurred.');
       }
     } catch (err) {
       setError('Network error: ' + err.message);
     }
   };
 
-  if (loading) return <div style={styles.contentArea}><p>Loading...</p></div>;
-  if (error && !product) return <div style={styles.contentArea}><p style={styles.errorMessage}>Error: {error}</p></div>;
-  if (!product) return <div style={styles.contentArea}><p>Product not found.</p></div>;
+  if (loading) return <div className={styles.contentArea}><p>Loading...</p></div>;
+  if (!product) return <div className={styles.contentArea}><p className={styles.errorMessage}>Product not found.</p></div>;
 
   return (
-    <div style={styles.contentArea}>
-      <h1 style={styles.heading}>Product Details</h1>
-      <div style={styles.photos}>
-        {product.prod_photos && product.prod_photos.map((photo, index) => (
-          <img key={index} src={photo} alt="Product Photo" style={styles.photoThumbnail} />
-        ))}
+    <div className={styles.contentArea}>
+      <div className={styles.headerContainer}>
+        <h1 className={styles.heading}>Product Details</h1>
+        <button className={styles.backLink} onClick={onBack}>
+          &larr; Back to Products
+        </button>
       </div>
-      <div style={styles.formSection}>
-        <div style={styles.sectionTitle}>Product Information</div>
-        <div style={styles.fieldGroup}>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Product ID</label>
-            <input type="text" value={product.prod_id} style={styles.fieldInputDisabled} disabled />
+
+      <div className={styles.photos}>
+        {product.prod_photos && product.prod_photos.length > 0 ? (
+          product.prod_photos.map((photo, index) => (
+            <img 
+              key={index} 
+              src={photo} 
+              alt={`Photo ${index}`} 
+              className={styles.photoThumbnail} 
+            />
+          ))
+        ) : (
+          <p>No photos available.</p>
+        )}
+      </div>
+
+      <div className={styles.formSection}>
+        <div className={styles.sectionTitle}>Product Information</div>
+        <div className={styles.fieldGroup}>
+          
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Product ID</label>
+            <input type="text" value={product.prod_id} className={styles.fieldInputDisabled} disabled />
           </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Product Name</label>
-            <input type="text" value={product.Prod_name} style={styles.fieldInputDisabled} disabled />
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Product Name</label>
+            <input type="text" value={product.Prod_name} className={styles.fieldInputDisabled} disabled />
           </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Company ID</label>
-            <input type="text" value={product.Com_id} style={styles.fieldInputDisabled} disabled />
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Model Number</label>
+            <input type="text" value={product.Model_no} className={styles.fieldInputDisabled} disabled />
           </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Model Number</label>
-            <input type="text" value={product.Model_no} style={styles.fieldInputDisabled} disabled />
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Stock Count</label>
+            <input type="text" value={product.stock} className={styles.fieldInputDisabled} disabled />
           </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Company Name</label>
-            <input type="text" value={product.com_name} style={styles.fieldInputDisabled} disabled />
-          </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Production Year</label>
-            <input type="text" value={product.prod_year} style={styles.fieldInputDisabled} disabled />
-          </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Stock</label>
-            <input type="text" value={product.stock} style={styles.fieldInputDisabled} disabled />
-          </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Stock Availability</label>
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Stock Availability</label>
             <select
               value={stockAvailability}
               onChange={(e) => setStockAvailability(e.target.value)}
-              style={styles.fieldInput}
+              className={styles.fieldSelect}
             >
               <option value="instock">In Stock</option>
               <option value="outofstock">Out of Stock</option>
             </select>
-            <button 
-              onClick={handleUpdateAvailability}
-              style={styles.updateBtn}
-              onMouseEnter={(e) => e.target.style.background = '#636e72'}
-              onMouseLeave={(e) => e.target.style.background = '#2d3436'}
-            >
+            <button className={styles.updateBtn} onClick={handleUpdateAvailability}>
               Update Availability
             </button>
-            {error && <div style={styles.errorMessage}>{error}</div>}
-            {message && <div style={styles.successMessage}>{message}</div>}
+            {message && <div className={styles.successMessage}>{message}</div>}
+            {error && <div className={styles.errorMessage}>{error}</div>}
           </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Status</label>
-            <input type="text" value={product.Status} style={styles.fieldInputDisabled} disabled />
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Current Status</label>
+            <input type="text" value={product.Status} className={styles.fieldInputDisabled} disabled />
           </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Description</label>
-            <input type="text" value={product.prod_description} style={styles.fieldInputDisabled} disabled />
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Selling Price</label>
+            <input type="text" value={product.Retail_price} className={styles.fieldInputDisabled} disabled />
           </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Company Selling Price</label>
-            <input type="text" value={product.Retail_price} style={styles.fieldInputDisabled} disabled />
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Warranty</label>
+            <input type="text" value={product.warrantyperiod} className={styles.fieldInputDisabled} disabled />
           </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Created At</label>
-            <input type="text" value={product.createdAt || 'N/A'} style={styles.fieldInputDisabled} disabled />
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Installation</label>
+            <input type="text" value={product.installation} className={styles.fieldInputDisabled} disabled />
           </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Approved At</label>
-            <input type="text" value={product.approvedAt || 'N/A'} style={styles.fieldInputDisabled} disabled />
+
+          <div className={styles.fieldWrapper}>
+            <label className={styles.fieldLabel}>Install Charge</label>
+            <input type="text" value={product.installationcharge || 'N/A'} className={styles.fieldInputDisabled} disabled />
           </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Warranty Period</label>
-            <input type="text" value={product.warrantyperiod} style={styles.fieldInputDisabled} disabled />
+
+          <div className={styles.fieldWrapper} style={{gridColumn: '1 / -1'}}>
+            <label className={styles.fieldLabel}>Description</label>
+            <input type="text" value={product.prod_description} className={styles.fieldInputDisabled} disabled />
           </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Installation</label>
-            <input type="text" value={product.installation} style={styles.fieldInputDisabled} disabled />
-          </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Installation Type</label>
-            <input type="text" value={product.installationType || 'N/A'} style={styles.fieldInputDisabled} disabled />
-          </div>
-          <div style={styles.fieldWrapper}>
-            <label style={styles.fieldLabel}>Installation Charge</label>
-            <input type="text" value={product.installationcharge || 'N/A'} style={styles.fieldInputDisabled} disabled />
-          </div>
+
         </div>
       </div>
-      <span 
-        onClick={onBack}
-        style={styles.backLink}
-        onMouseEnter={(e) => e.target.style.color = '#636e72'}
-        onMouseLeave={(e) => e.target.style.color = '#2d3436'}
-      >
-        Back to Products
-      </span>
     </div>
   );
 };
 
-// Main App Component
+// --- Main App Component ---
 const CompanyProductsApp = () => {
   const [view, setView] = useState('list');
   const [selectedProductId, setSelectedProductId] = useState(null);
@@ -784,26 +581,24 @@ const CompanyProductsApp = () => {
   };
 
   return (
-    <div style={{ background: '#f5f6fa', minHeight: '100vh' }}>
-      <div style={styles.container}>
-        {view === 'list' && (
-          <ProductsList 
-            onAddProduct={handleAddProduct}
-            onViewDetails={handleViewDetails}
-          />
-        )}
-        {view === 'add' && (
-          <AddProductForm 
-            onBack={handleBackToList}
-          />
-        )}
-        {view === 'details' && selectedProductId && (
-          <ProductDetails 
-            productId={selectedProductId}
-            onBack={handleBackToList}
-          />
-        )}
-      </div>
+    <div className={styles.container}>
+      {view === 'list' && (
+        <ProductsList 
+          onAddProduct={handleAddProduct}
+          onViewDetails={handleViewDetails}
+        />
+      )}
+      {view === 'add' && (
+        <AddProductForm 
+          onBack={handleBackToList}
+        />
+      )}
+      {view === 'details' && selectedProductId && (
+        <ProductDetails 
+          productId={selectedProductId}
+          onBack={handleBackToList}
+        />
+      )}
     </div>
   );
 };
