@@ -1,3 +1,4 @@
+//path: client/src/App.jsx
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import AuthContext from './context/AuthContext';
@@ -38,6 +39,7 @@ import ManagerOrdersPage from './pages/manager/Orders/ManagerOrdersPage';
 import ManagerOrderDetails from './pages/manager/Orders/ManagerOrderDetails';
 import OwnerSales from './pages/owner/Sales/Sales';
 import ManagerInventoryPage from './pages/manager/Inventory/ManagerInventoryPage';
+import Manager_Sales from './pages/manager/Sales/Manager_Sales';
 const PostLoginRedirect = () => {
     const { user } = useContext(AuthContext);
 
@@ -96,6 +98,8 @@ function App() {
                         <Route path="/manager/orders" element={<ProtectedRoute roles={['manager']}><ManagerOrdersPage /></ProtectedRoute>} />
                         <Route path="/manager/orders/:id" element={<ProtectedRoute roles={['manager']}><ManagerOrderDetails /></ProtectedRoute>} />
                         <Route path='/manager/inventory' element={<ProtectedRoute roles={['manager']}><ManagerInventoryPage/></ProtectedRoute>} />
+                        <Route path='/manager/sales' element={<ProtectedRoute roles={['manager']}><Manager_Sales/></ProtectedRoute>} />
+                        
 
                         {/* Salesman Routes */}
                         <Route path="/salesman/analytics" element={<ProtectedRoute roles={['salesman']}><SalesmanAnalyticsPage /></ProtectedRoute>} />
