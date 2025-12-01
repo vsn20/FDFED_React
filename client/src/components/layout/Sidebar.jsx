@@ -96,7 +96,11 @@ const Sidebar = () => {
                     <span>👤</span> Sales
                 </Link>
             </li>
-            
+            <li className={activeLink === "/salesman/salaries" ? "active" : ""}>
+                <Link to="/salesman/salaries" onClick={() => handleLinkClick("/salesman/salaries")}>
+                    <span>💰</span> Salaries
+                </Link>
+            </li>
         </>
     );
 
