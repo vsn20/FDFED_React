@@ -60,7 +60,7 @@ const AddCompany = ({ handleBack }) => {
                 phone: '',
                 address: ''
             });
-            handleBack(); 
+            // handleBack(); 
         } catch (error) {
             console.log('Error submitting company data:', error);
             setError('Failed to add company. Please try again.');
