@@ -170,11 +170,6 @@ const Sidebar = () => {
                     <span>📦</span> Products
                 </Link>
             </li>
-            <li className={activeLink === "/company/sales" ? "active" : ""}>
-                <Link to="/company/sales" onClick={() => handleLinkClick("/company/sales")}>
-                    <span>💰</span> Sales
-                </Link>
-            </li>
             <li className={activeLink === "/company/orders" ? "active" : ""}>
                 <Link to="/company/orders" onClick={() => handleLinkClick("/company/orders")}>
                     <span>📝</span> orders
