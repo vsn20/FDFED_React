@@ -21,7 +21,7 @@
 /* MATCH SALES PAGE CONTENT AREA */
 .contentArea {
   /* Set a standard wide width for all manager content pages */
-  max-width: 1200px; 
+  max-width: 1200px;
   width: 100%;
   /* Center the content area within its parent (the container) */
   margin: 0 auto;
@@ -105,7 +105,9 @@
   margin-top: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   background: #ffffff;
-  padding-bottom: 10px; 
+  padding-bottom: 10px;
+  /* ✨ FIX: Hide any potential horizontal overflow caused by scaling */
+  overflow-x: hidden; 
 }
 
 /* ---------------- TABLE ---------------- */
@@ -140,12 +142,15 @@
 /* TARGET RAW <tr> FOR HOVER */
 .table tbody tr {
   transition: 0.2s ease;
+  /* Optional: Add position relative to make scaling more predictable */
+  position: relative; 
 }
 
 .table tbody tr:hover {
   background-color: #f8f9fd;
   cursor: pointer;
-  transform: scale(1.01);
+  /* Reduced scale slightly to 1.005 for stability */
+  transform: scale(1.005); 
 }
 
 /* ---------------- PAGINATION ---------------- */

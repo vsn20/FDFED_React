@@ -44,11 +44,9 @@ const PublicLayout = () => {
           >
             Our Branches
           </Link>
-
-          {/* BOTH Customer & Employee point to /login */}
           <Link
-            to="/login"
-            className={`nav-link ${location.pathname === '/login' ? 'active' : ''}`}
+            to="/customerlogin"
+            className={`nav-link ${location.pathname === '/customerlogin' ? 'active' : ''}`}
           >
             Customer
           </Link>
