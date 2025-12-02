@@ -11,6 +11,7 @@ import CustomerLoginPage from './pages/CustomerLoginPage';
 import PreviousPurchases from './pages/customer/PreviousPurchases';
 
 import HomePage from './pages/HomePage';
+import contactus from './pages/contactus';
 import LoginPage from './pages/LoginPage';
 import AboutUs from './pages/AboutUs'
 import OwnerAnalyticsPage from './pages/owner/OwnerAnalyticsPage';
@@ -37,6 +38,7 @@ import Products from './pages/owner/Products/Products';
 import Sales from './pages/salesman/SalesDetails/sales';
 import Inventory from './pages/salesman/Inventory/Inventory';
 import Salaries from './pages/salesman/SalariesFeature/Salaries';
+import Reviews from './pages/customer/Reviews/Review';
 
 
 import ManagerOrdersPage from './pages/manager/Orders/ManagerOrdersPage';
@@ -45,6 +47,7 @@ import OwnerSales from './pages/owner/Sales/Sales';
 import ManagerInventoryPage from './pages/manager/Inventory/ManagerInventoryPage';
 
 import NewProducts from './pages/NewProducts';
+import Complaints_Customer from './pages/customer/Complaints_Customer';
 
 import Manager_Sales from './pages/manager/Sales/Manager_Sales';
 import ManagerSalaryPage from './pages/manager/Salary/ManagerSalaryPage';
@@ -92,6 +95,8 @@ function App() {
                         <Route path="/about-us" element={<AboutUs />} />
                         <Route path="/companylogin" element={<CompanyLogin />} />
                         <Route path="/customerlogin" element={<CustomerLoginPage />} />
+                        <Route path="/contact-us" element={<contactus />} />
+
                     </Route>
 
                     {/* Redirect after login */}
@@ -159,6 +164,16 @@ function App() {
                         <Route path="/customer/previouspurchases" element={
                             <ProtectedRoute roles={['customer']}>
                                 <PreviousPurchases />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/customer/complaints" element={
+                            <ProtectedRoute roles={['customer']}>
+                                <Complaints_Customer />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/customer/review" element={
+                            <ProtectedRoute roles={['customer']}>
+                                <Reviews />
                             </ProtectedRoute>
                         } />
 
