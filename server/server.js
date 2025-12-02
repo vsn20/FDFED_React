@@ -65,6 +65,7 @@ app.use('/api/owner/orders', require('./routes/owner/OrderRoutes'));
 app.use('/api/owner/inventory', require('./routes/owner/InventoryRoutes'));
 app.use('/api/owner/salaries', require('./routes/owner/SalariesRoutes'));
 app.use('/api/owner/profits', require('./routes/owner/profitRoutes'));
+app.use('/api/owner/analytics', require('./routes/owner/ownerDashboardRoutes'));
 
 // *** MESSAGING ROUTE ***
 // Ensure your Frontend fetches from: http://localhost:5001/api/owner/messages
@@ -76,6 +77,7 @@ app.use('/api/manager/orders', require('./routes/managerOrderRoutes'));
 app.use('/api/manager/inventory', require('./routes/manager/managerInventoryRoutes'));
 app.use('/api/manager/sales', require('./routes/manager/SalesRoutes'));
 app.use('/api/manager/salary', require('./routes/manager/salaryRoutes'));
+
 
 // Salesman Routes
 app.use('/api/salesman/profile', require('./routes/salesman/detailsRoutes'));
