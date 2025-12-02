@@ -84,7 +84,7 @@ const SalesmanAnalyticsPage = () => {
     labels: chartData.days,
     datasets: [
       {
-        label: 'Profit ($)',
+        label: 'Profit (₹)',
         data: chartData.profitTotals,
         // Green for profit, Red for loss
         backgroundColor: chartData.profitTotals.map(val => val >= 0 ? 'rgba(46, 204, 113, 0.7)' : 'rgba(231, 76, 60, 0.7)'),
