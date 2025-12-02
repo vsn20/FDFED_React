@@ -10,7 +10,6 @@ const PrivateLayout = () => {
             <div style={{ flex: 1 }}>
                 <Topbar />
                     <main style={{ padding: '20px', marginLeft: '275px', marginTop: '50px' }}>
-                    {/* The Outlet component renders the matched child route component */}
                     <Outlet />
                     </main>
             </div>

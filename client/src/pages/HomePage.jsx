@@ -5,24 +5,16 @@ import './Homepage.css'; // Import the CSS
 function Home() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [animationCounter, setAnimationCounter] = useState(0);
-    const numSlides = 5; // Total number of slides
-
-    // This useEffect hook replicates the JavaScript logic from your EJS file.
-    // It updates the current slide every 5 seconds.
+    const numSlides = 5;
     useEffect(() => {
         const slideInterval = setInterval(() => {
             setCurrentSlide(prevSlide => (prevSlide + 1) % numSlides);
-            // We update a counter. This will be used as a 'key' to force
-            // the slide-text component to re-render and re-animate.
             setAnimationCounter(count => count + 1);
-        }, 5000); // 5-second interval matches the CSS animation
+        }, 5000); 
 
-        return () => clearInterval(slideInterval); // Cleanup on unmount
+        return () => clearInterval(slideInterval); 
     }, []);
 
-    // This helper function creates the slide text.
-    // By giving it a unique key that changes (animationCounter),
-    // React re-mounts the element, triggering the CSS animation.
     const renderSlideText = (slideIndex, text) => {
         const key = currentSlide === slideIndex ? `slide-${animationCounter}` : `slide-text-${slideIndex}`;
         return (
@@ -35,7 +27,7 @@ function Home() {
     return (
         <>
             <section id="Home">
-                {/* Left Sidebar */}
+              
                 <div className="left-sidebar-container">
                     <div className="left-sidebar">
                         <a href="/newproducts" id="new-products-link">New Products</a>
@@ -43,8 +35,6 @@ function Home() {
                         <a href="/topproducts" id="top-products-link">Top Products</a>
                     </div>
                 </div>
-
-                {/* Slideshow */}
                 <div className="slideshow-container">
                     <div className="slideshow">
                         <div className="slide">
@@ -70,7 +60,7 @@ function Home() {
                     </div>
                 </div>
 
-                {/* Image Description Section */}
+              
                 <div className="image-description-container">
                     <img src="/shopsmart.jpg" alt="Featured Product" />
                     <div className="description">
@@ -79,7 +69,7 @@ function Home() {
                     </div>
                 </div>
 
-                {/* Hero Image Section */}
+               
                 <div className="hero-image-container">
                     <img src="https://cdn.pixabay.com/photo/2016/11/18/17/46/house-1836070_1280.jpg" alt="Hero Image" />
                     <div className="hero-overlay-text">
@@ -88,14 +78,14 @@ function Home() {
                     </div>
                 </div>
 
-                {/* Hero Description Section */}
+                
                 <div className="hero-description">
                     <img src="/IntoHome6.jpg" alt="Floating Image" />
                     <h3>Elevate Your Lifestyle</h3>
                     <p>Transforming your home starts with choosing the right appliances. At Electroland, we offer a curated selection of products that blend functionality with modern design. Whether you're upgrading your kitchen, laundry, or living spaces, our appliances are engineered to deliver top performance and lasting value. Discover how Electroland can help you create a home that's both beautiful and efficient.</p>
                 </div>
 
-                {/* Why Choose Us Section */}
+              
                 <div className="why-choose-us">
                     <h2>Why Choose Electroland</h2>
                     <div className="features-grid">
@@ -122,7 +112,7 @@ function Home() {
                     </div>
                 </div>
 
-                {/* Reviews Section */}
+                
                 <div className="reviews-container">
                     <h2 className="reviews-title">What Our Customers Say</h2>
                     <div className="reviews-grid">

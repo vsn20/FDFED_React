@@ -1,3 +1,4 @@
+// client/src/pages/owner/Employees/EmployeesPage.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEmployees } from '../../../redux/slices/employeeSlice';
@@ -17,32 +18,32 @@ const EmployeesPage = () => {
     const [addEmployeeMode, setAddEmployeeMode] = useState(false);
     const [singleEmployeeId, setSingleEmployeeId] = useState(null);
 
-    // 3. Filter State (Pattern from Sales.jsx)
+    // 3. Filter State
     const [filteredEmployees, setFilteredEmployees] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedBranch, setSelectedBranch] = useState('');
     const [selectedRole, setSelectedRole] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('');
 
-    // 4. Pagination State (Pattern from Sales.jsx)
+    // 4. Pagination State
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(5); // Actual logic value
-    const [itemsPerPageInput, setItemsPerPageInput] = useState('5'); // Input display value
+    const [itemsPerPage, setItemsPerPage] = useState(5); 
+    const [itemsPerPageInput, setItemsPerPageInput] = useState('5'); 
 
-    // Initial Fetch
+    // Initial Fetch on Mount
     useEffect(() => {
         if (empStatus === 'idle') dispatch(fetchEmployees());
         if (branchStatus === 'idle') dispatch(fetchBranches());
     }, [empStatus, branchStatus, dispatch]);
 
-    // Sync Redux data with local filtered state on load
+    // Sync Redux data with local filtered state whenever Redux data changes
     useEffect(() => {
         setFilteredEmployees(allEmployees);
     }, [allEmployees]);
 
-    // --- Unified Filter Logic (From Sales.jsx) ---
+    // --- Unified Filter Logic ---
     useEffect(() => {
-        let result = allEmployees;
+        let result = allEmployees || [];
 
         // 1. Search Query
         if (searchQuery.trim()) {
@@ -55,23 +56,19 @@ const EmployeesPage = () => {
             );
         }
 
-        // 2. Branch Filter
+        // 2. Filters
         if (selectedBranch) {
             result = result.filter(emp => emp.bid === selectedBranch);
         }
-
-        // 3. Role Filter
         if (selectedRole) {
             result = result.filter(emp => emp.role === selectedRole);
         }
-
-        // 4. Status Filter
         if (selectedStatus) {
             result = result.filter(emp => emp.status === selectedStatus);
         }
 
         setFilteredEmployees(result);
-        setCurrentPage(1); // Reset to page 1 on filter change
+        setCurrentPage(1); // Reset to page 1
     }, [searchQuery, selectedBranch, selectedRole, selectedStatus, allEmployees]);
 
 
@@ -120,9 +117,11 @@ const EmployeesPage = () => {
         setSingleEmployeeId(null);
     };
 
+    // FIX: Re-fetch data when returning from Add/Edit form
     const handleBack = () => {
         setAddEmployeeMode(false);
         setSingleEmployeeId(null);
+        dispatch(fetchEmployees()); // Force refresh list from server
     };
 
     const handleRowClick = (e_id) => {
@@ -161,7 +160,7 @@ const EmployeesPage = () => {
                             <button className={styles.addButton} onClick={handleAddEmployee}>+ Add Employee</button>
                         </div>
 
-                        {/* Filters Section (Styled like Sales.jsx) */}
+                        {/* Filters Section */}
                         <div className={styles.controlsContainer}>
                             <div className={styles.searchGroup}>
                                 <input
@@ -252,7 +251,7 @@ const EmployeesPage = () => {
                             </table>
                         </div>
 
-                        {/* Pagination Section (Logic from Sales.jsx) */}
+                        {/* Pagination Section */}
                         {filteredEmployees.length > 0 && (
                             <div className={styles.paginationContainer}>
                                 <div className={styles.rowsPerPage}>

@@ -11,8 +11,8 @@ const ProfitDashboard = () => {
     // Filter & Pagination State
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [cardsPerPage, setCardsPerPage] = useState(8);
-    const [rowsInput, setRowsInput] = useState("8");
+    const [cardsPerPage, setCardsPerPage] = useState(5);
+    const [rowsInput, setRowsInput] = useState("5");
 
     // 1. Initialize Month Dropdown
     useEffect(() => {
@@ -87,8 +87,8 @@ const ProfitDashboard = () => {
 
     return (
         <div className="content-area">
-            <div className="page-header">
-                <h1>Profits</h1>
+            <h2>Profits</h2>
+            <div className="page-header">               
                 <h2>{selectedMonth.replace('-', ' ')} Report</h2>
             </div>
 
@@ -104,7 +104,7 @@ const ProfitDashboard = () => {
                             <option key={opt} value={opt}>{opt.replace('-', ' ')}</option>
                         ))}
                     </select>
-                    <button className="btn-generate" onClick={fetchData}>Refresh</button>
+                   
                 </div>
 
                 <div className="control-group" style={{justifyContent: 'flex-end'}}>
@@ -116,6 +116,7 @@ const ProfitDashboard = () => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
+                 <button className="btn-generate" onClick={fetchData}>Reset</button>
             </div>
 
             {loading ? (

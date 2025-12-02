@@ -1,0 +1,148 @@
+/* ---------------- GLOBAL RESET ---------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ---------------- MAIN LAYOUT ---------------- */
+.container {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ---------------- FORM STYLES ---------------- */
+.formContainer { margin-top: 20px; }
+
+.formWrapper { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 25px; 
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.formSection {
+  border: 1px solid #e6e9f0;
+  border-radius: 8px;
+  padding: 20px;
+  background: #f8f9fd;
+}
+.sectionTitle { 
+    font-size: 1.2rem; 
+    font-weight: bold; 
+    margin-bottom: 15px; 
+    color: #333;
+}
+.fieldGroup { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 20px; 
+}
+.fieldGroup > div { 
+    flex: 1 1 45%; 
+    min-width: 250px; 
+    display: flex;
+    flex-direction: column;
+}
+.fieldLabel { 
+    font-size: 0.9rem; 
+    font-weight: 500; 
+    margin-bottom: 6px; 
+    color: #555;
+}
+.fieldInput {
+  width: 100%; 
+  padding: 10px;
+  border: 1px solid #dcdfe6; 
+  border-radius: 5px;
+  background: #fff; 
+  transition: border-color 0.3s;
+  font-size: 0.9rem;
+}
+
+.fieldInput:focus {
+    border-color: #333;
+    outline: none;
+}
+
+.disabledField {
+    background-color: #eee;
+    color: #777;
+    cursor: not-allowed;
+}
+
+/* ---------------- BUTTONS ---------------- */
+.submitButton {
+  padding: 12px 25px;
+  background-color: #2d3436;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s;
+  align-self: flex-end; /* Aligns button to the left */
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: #555;
+  transform: translateY(-1px);
+}
+
+.submitButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+/* ---------------- MESSAGES AND ERRORS ---------------- */
+.successMessage {
+  padding: 12px;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.errorMessage {
+  padding: 12px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.validationError {
+  color: #dc3545; /* Red color for error message beneath field */
+  font-size: 0.8rem;
+  margin-top: 4px;
+  display: block; /* Ensure it takes up its own line */
+}
+
+/* Highlight input field on error - New class for the input element */
+.fieldInput[aria-invalid="true"],
+.validationErrorInput {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 1px #dc3545;
+}
+
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width: 768px) {
+  .formWrapper { padding: 20px; }
+  .fieldGroup > div { flex: 1 1 100%; min-width: auto; }
+  .submitButton { width: 100%; margin-bottom: 10px; }
+}

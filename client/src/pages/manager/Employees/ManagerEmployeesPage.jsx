@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux'; // Redux Hooks
+import {
+    fetchEmployeesStart,
+    fetchEmployeesSuccess,
+    fetchEmployeesFailure
+} from '../../../redux/slices/managerEmployeeSlice'; // Redux Actions
 import AuthContext from '../../../context/AuthContext';
 import api from '../../../api/api';
 import ManagerAddEmployee from './ManagerAddEmployee';
@@ -7,13 +13,17 @@ import styles from './Details.module.css';
 
 const ManagerEmployeesPage = () => {
     const { user } = useContext(AuthContext);
-    const [employees, setEmployees] = useState([]);
+    const navigate = useNavigate();
+    const dispatch = useDispatch(); // Initialize dispatch
+
+    // REDUX STATE
+    const employees = useSelector(state => state.managerEmployees.list); // Get employee list from Redux
+    const loading = useSelector(state => state.managerEmployees.loading); // Get loading state
+    const error = useSelector(state => state.managerEmployees.error); // Get error state
+
+    // LOCAL STATES
     const [manager, setManager] = useState(null);
     const [addSalesman, setAddSalesman] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const navigate = useNavigate();
-
     // NEW STATES for Search and Pagination
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredEmployees, setFilteredEmployees] = useState([]);
@@ -28,17 +38,16 @@ const ManagerEmployeesPage = () => {
         }
     }, [addSalesman]); // Re-fetch when exiting the add form
 
+    // MODIFIED: Use Redux for state management
     const fetchEmployees = async () => {
+        dispatch(fetchEmployeesStart()); // NEW: Dispatch start action
         try {
-            setLoading(true);
             const res = await api.get('/manager/employees');
-            setEmployees(res.data);
-            setFilteredEmployees(res.data); // Initialize filtered list
-            setError('');
+            dispatch(fetchEmployeesSuccess(res.data)); // NEW: Dispatch success action
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to fetch employees');
-        } finally {
-            setLoading(false);
+            // Updated error handling to match slice payload
+            const errorMessage = err.response?.data?.message || 'Failed to fetch employees';
+            dispatch(fetchEmployeesFailure(errorMessage)); // NEW: Dispatch failure action
         }
     };
 
@@ -73,7 +82,7 @@ const ManagerEmployeesPage = () => {
 
         setFilteredEmployees(result);
         setCurrentPage(1); // Reset to first page on search
-    }, [searchQuery, employees]);
+    }, [searchQuery, employees]); // 'employees' now comes from Redux state
 
 
     // ---------- PAGINATION calculations ----------
@@ -116,6 +125,8 @@ const ManagerEmployeesPage = () => {
         );
     }
 
+    // REMOVED: Local loading and error state logic
+
     return (
         <div className={styles.container}>
             <div className={styles.contentArea}>
@@ -123,6 +134,7 @@ const ManagerEmployeesPage = () => {
                 
                 {/* Add Salesman Form */}
                 {addSalesman && (
+                    // ManagerAddEmployee will need access to dispatch (passed implicitly through props)
                     <ManagerAddEmployee handleBack={handleBackFromAdd} manager={manager} />
                 )}
 
@@ -142,9 +154,11 @@ const ManagerEmployeesPage = () => {
                             style={{ marginBottom: "10px", padding: "8px", width: "50%" }}
                         />
 
+                        {/* NEW: Use Redux loading/error */}
                         {loading && <p>Loading employees...</p>}
                         {error && <p className={styles.errorMessage}>{error}</p>}
 
+                        {/* Use Redux loading/error */}
                         {!loading && !error && (
                             <div className={styles.tableWrapper}>
                                 <table className={styles.table}>
@@ -161,7 +175,7 @@ const ManagerEmployeesPage = () => {
                                     <tbody>
                                         {currentEmployees.map((employee) => (
                                             <tr 
-                                                key={employee._id} 
+                                                key={employee.e_id} // Use e_id as key, assuming it's unique
                                                 className={styles.tr} 
                                                 onClick={() => handleRowClick(employee.e_id)}
                                             >

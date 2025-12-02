@@ -14,8 +14,8 @@ const InventoryList = () => {
 
     // Pagination State
     const [currentPage, setCurrentPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [rowsInput, setRowsInput] = useState("10");
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsInput, setRowsInput] = useState("5");
 
     // Fetch Data on Mount
     useEffect(() => {
@@ -87,10 +87,8 @@ const InventoryList = () => {
 
     return (
         <div className="content-area">
-            <div className="page-header">
-                <h1>Inventory</h1>
-            </div>
-
+          
+                <h2>Inventory</h2>
             {/* Filters */}
             <div className="filters-bar">
                 <input 

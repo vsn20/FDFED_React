@@ -10,8 +10,8 @@ const OrderList = ({ orders, loading, onOrderClick }) => {
     
     // Pagination State
     const [currentPage, setCurrentPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [rowsInput, setRowsInput] = useState("10");
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsInput, setRowsInput] = useState("5");
 
     // Helper Data
     const [branches, setBranches] = useState([]);
@@ -82,9 +82,7 @@ const OrderList = ({ orders, loading, onOrderClick }) => {
 
     return (
         <div className="content-area">
-            <div className="page-header">
-                <h1>All Orders</h1>
-            </div>
+             <h2>All Orders</h2>
 
             {/* Filters */}
             <div className="filters-bar">

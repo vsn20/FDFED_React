@@ -211,6 +211,34 @@
   background: #fff; transition: 0.3s;
 }
 
+/* ---------------- MESSAGES AND ERRORS (New/Updated) ---------------- */
+.successMessage {
+  padding: 10px;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.errorMessage {
+  padding: 10px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.validationError {
+  color: #721c24; /* Use the error color from errorMessage */
+  font-size: 0.85rem;
+  margin-top: 4px;
+  display: block; /* Ensure it takes up its own line */
+}
+
 /* ---------------- RESPONSIVE ---------------- */
 @media (max-width: 768px) {
   /* Removed margin-left: 0; as contentArea is now centered */

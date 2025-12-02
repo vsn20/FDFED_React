@@ -8,32 +8,42 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* --- LAYOUT CONTAINERS --- */
+/* --- LAYOUT CONTAINERS (Updated to match Sidebar Height) --- */
 .container {
-  margin-top: 90px;
+  margin-top: 20px; /* Aligned with sidebar margin */
   display: flex;
   flex: 1;
   gap: 25px;
   padding: 0 20px;
+  flex-direction: column;
+  min-height: 80vh; /* Ensures it stretches nicely with sidebar */
   max-width: 100%;
 }
 
+/* --- CONTENT AREA (Card Style) --- */
 .contentArea {
   background: #ffffff;
   border-radius: 15px;
-  padding: 20px;
+  padding: 25px; /* Consistent padding */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   flex: 1;
-  overflow-x: auto;
-  min-height: 80vh;
+  overflow-y: auto;
+  
+  /* Hide scrollbar logic */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.contentArea::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .contentArea h1,
 .contentArea h2 {
   color: #2d3436;
-  margin-bottom: 20px;
   font-size: 1.5rem;
-  text-align: center;
+  margin: 0 0 20px 0; /* Add bottom margin for spacing */
+  text-align: left; /* Aligned left like standard pages */
 }
 
 /* --- HEADER & BUTTONS --- */
@@ -61,12 +71,12 @@
   background-color: #555555;
 }
 
-/* --- SEARCH & FILTER CONTROLS (NEW) --- */
+/* --- SEARCH & FILTER CONTROLS --- */
 .controlsContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #ffffff;
+  background: #f8f9fa; /* Light grey background for filter bar */
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 20px;
@@ -87,11 +97,12 @@
   border-radius: 6px;
   font-size: 0.9rem;
   transition: border-color 0.2s;
+  background-color: white;
+  outline: none;
 }
 
 .searchInput:focus {
   border-color: #333;
-  outline: none;
 }
 
 .filterGroup {
@@ -108,16 +119,16 @@
   cursor: pointer;
   min-width: 140px;
   font-size: 0.9rem;
+  outline: none;
 }
 
 .filterSelect:focus {
-  outline: none;
   border-color: #333;
 }
 
 .resetBtn {
   padding: 10px 20px;
-  background-color: #ef4444;
+  background-color: #0e0e0e; /* Red for Reset */
   color: white;
   border: none;
   border-radius: 6px;
@@ -127,7 +138,7 @@
 }
 
 .resetBtn:hover {
-  background-color: #dc2626;
+  background-color: #504e4e;
 }
 
 /* --- TABLE STYLES --- */
@@ -135,6 +146,8 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin-bottom: 20px;
+  border: 1px solid #e6e9f0;
+  border-radius: 10px;
 }
 
 .table {
@@ -142,8 +155,6 @@
   min-width: 800px;
   border-collapse: collapse;
   background: #ffffff;
-  border-radius: 10px;
-  border-spacing: 0;
 }
 
 .thead {
@@ -152,15 +163,16 @@
 
 .th {
   color: white;
-  padding: 12px;
+  padding: 15px;
   text-align: left;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
   border-bottom: 2px solid #ffffff;
+  white-space: nowrap;
 }
 
 .td {
-  padding: 12px;
+  padding: 15px;
   text-align: left;
   font-size: 0.9rem;
   border-bottom: 1px solid #e6e9f0;
@@ -180,7 +192,7 @@
   background-color: #f8fafc;
 }
 
-/* --- STATUS BADGES (NEW) --- */
+/* --- STATUS BADGES --- */
 .statusBadge {
   padding: 4px 10px;
   border-radius: 12px;
@@ -205,7 +217,7 @@
   background-color: #fee2e2;
 }
 
-/* --- PAGINATION (NEW) --- */
+/* --- PAGINATION --- */
 .paginationContainer {
   display: flex;
   justify-content: space-between;
@@ -273,7 +285,7 @@
   margin: 0 5px;
 }
 
-/* --- FORM STYLES (Add/Edit Employee) --- */
+/* --- FORM STYLES --- */
 .formContainer {
   max-width: 700px;
   margin: 0 auto;
@@ -382,7 +394,6 @@
     padding: 15px;
   }
 
-  /* Stack controls vertically */
   .controlsContainer {
     flex-direction: column;
     align-items: stretch;
@@ -430,7 +441,6 @@
     color: #4b5563;
   }
 
-  /* Pagination Stacking */
   .paginationContainer {
     flex-direction: column;
     text-align: center;
