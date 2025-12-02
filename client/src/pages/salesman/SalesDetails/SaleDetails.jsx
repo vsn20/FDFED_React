@@ -109,11 +109,11 @@ const SaleDetails = () => {
           <div className={styles.fieldGroup}>
             <div>
               <label className={styles.fieldLabel}>Purchased Price</label>
-              <input className={styles.fieldInput} type="text" value={`$${sale.purchased_price.toFixed(2)}`} readOnly />
+              <input className={styles.fieldInput} type="text" value={`₹${sale.purchased_price.toFixed(2)}`} readOnly />
             </div>
             <div>
               <label className={styles.fieldLabel}>Sold Price</label>
-              <input className={styles.fieldInput} type="text" value={`$${sale.sold_price.toFixed(2)}`} readOnly />
+              <input className={styles.fieldInput} type="text" value={`₹${sale.sold_price.toFixed(2)}`} readOnly />
             </div>
             <div>
               <label className={styles.fieldLabel}>Quantity</label>
@@ -121,11 +121,11 @@ const SaleDetails = () => {
             </div>
             <div>
               <label className={styles.fieldLabel}>Total Amount</label>
-              <input className={styles.fieldInput} type="text" value={`$${sale.amount.toFixed(2)}`} readOnly />
+              <input className={styles.fieldInput} type="text" value={`₹${sale.amount.toFixed(2)}`} readOnly />
             </div>
             <div>
               <label className={styles.fieldLabel}>Profit/Loss</label>
-              <input className={styles.fieldInput} type="text" value={`$${sale.profit_or_loss.toFixed(2)}`} readOnly />
+              <input className={styles.fieldInput} type="text" value={`₹${sale.profit_or_loss.toFixed(2)}`} readOnly />
             </div>
           </div>
         </div>

@@ -1,15 +1,12 @@
-// path: server/routes/manager/ManagerAnalyticsControllerRoutes.js
 const express = require("express");
 const router = express.Router();
-const Employee = require("../../models/employees"); // Model for employees 
-const Branch = require("../../models/branches"); // Model for branches 
-const Sale = require("../../models/sale"); // Model for sales 
-const Product = require("../../models/products"); // Model for products 
-const Order = require("../../models/orders"); // Model for orders 
-const { protect, authorize } = require('../../middleware/authMiddleware'); // Assuming middleware path
-const User = require('../../models/User'); // Assuming User model for finding emp_id
+const Employee = require("../../models/employees"); 
+const Branch = require("../../models/branches"); 
+const Sale = require("../../models/sale"); 
+const User = require('../../models/User'); 
+const { protect, authorize } = require('../../middleware/authMiddleware'); 
 
-// --- Helper Functions (From original salesmanager.js) ---
+// --- Helper Functions ---
 
 // Helper to get Manager and Branch for authorization
 const getManagerAuth = async (userId) => {
@@ -34,66 +31,51 @@ const getManagerAuth = async (userId) => {
     return { employee, branch };
 };
 
-// Helper function to calculate profit (extracted from salesmanager.js) 
-async function calculateProfit(sales, branchId, startDate) {
-    let totalSalesAmount = 0;
-    let totalRetailCost = 0;
-    let totalOrderPurchaseCost = 0;
-
-    for (const sale of sales) {
-        totalSalesAmount += sale.sold_price * sale.quantity;
-        const product = await Product.findOne({ prod_id: sale.product_id });
-        if (product && product.Retail_price != null) {
-            totalRetailCost += sale.quantity * parseFloat(product.Retail_price);
-        }
-    }
-
-    const orders = await Order.find({
+async function calculateProfit(branchId, startDate, endDate) {
+    // 1. Fetch Sales for this branch in date range
+    const sales = await Sale.find({
         branch_id: branchId,
-        status: "accepted",
-        ordered_date: { $gte: startDate } // Use ordered_date for orders 
+        sales_date: { $gte: startDate, $lt: endDate }
+    }).lean();
+
+    let totalSalesRevenue = 0;
+    let totalCostPrice = 0;
+    let totalSalesmanComm = 0;
+    let totalManagerComm = 0;
+
+    // 2. Calculate Revenue & Commissions
+    sales.forEach(sale => {
+        totalSalesRevenue += (sale.sold_price * sale.quantity);
+        totalCostPrice += (sale.purchased_price * sale.quantity);
+        
+        // Logic from ProfitController: 
+        // 2% for Salesman, 1% for Manager based on Sold Price
+        totalSalesmanComm += (sale.sold_price * sale.quantity * 0.02);
+        totalManagerComm += (sale.sold_price * sale.quantity * 0.01);
     });
 
-    for (const order of orders) {
-        const product = await Product.findOne({ prod_id: order.product_id });
-        if (product && product.Purchase_price != null) {
-            totalOrderPurchaseCost += order.quantity * parseFloat(product.Purchase_price);
-        }
-    }
+    const grossProfit = totalSalesRevenue - totalCostPrice;
 
-    // Calculate Salaries: Only include salaries from startDate onwards
-    const salesmen = await Employee.find({
+    // 3. Calculate Salaries
+    // Fetch active employees (Manager/Salesman) hired before end of this period
+    // Matches ProfitController logic exactly
+    const employees = await Employee.find({
         bid: branchId,
-        role: "salesman",
-        status: "active"
-    });
-    const totalSalesmenSalaries = salesmen.reduce((sum, salesman) => {
-        // Only include salary if hired before or on the start date of the period
-        if (salesman.hiredAt && salesman.hiredAt > startDate) {
-            return sum;
-        }
-        return sum + (salesman.base_salary || 0);
-    }, 0);
+        status: "active",
+        role: { $in: ["manager", "salesman", "Sales Manager", "Salesman"] },
+        hiredAt: { $lte: endDate }
+    }).lean();
 
-    const branch = await Branch.findOne({ bid: branchId, active: "active" });
-    let salesManagerSalary = 0;
-    if (branch && branch.manager_id) {
-        const salesManager = await Employee.findOne({ _id: branch.manager_id, status: "active" });
-        if (salesManager && (!salesManager.hiredAt || salesManager.hiredAt <= startDate)) {
-            salesManagerSalary = salesManager.base_salary || 0;
-        }
-    }
+    const totalSalaries = employees.reduce((sum, emp) => sum + (emp.base_salary || 0), 0);
 
-    // Profit = Total Sales - (Retail Cost + Order Purchase Cost + Total Salaries)
-    const profit = totalSalesAmount - (totalRetailCost + totalOrderPurchaseCost + totalSalesmenSalaries + salesManagerSalary);
-    return profit;
+    // 4. Net Profit Calculation
+    const totalExpenses = totalSalaries + totalSalesmanComm + totalManagerComm;
+    const netProfit = grossProfit - totalExpenses;
+
+    return netProfit;
 }
 
-// --- Controller Logic (getDashboardData) ---
 
-// @desc    Get Manager Dashboard Data (Cumulative, Previous Month Profit)
-// @route   GET /api/manager/analytics/dashboard-data
-// @access  Private (Manager)
 const getDashboardData = async (req, res) => {
     try {
         const { branch } = await getManagerAuth(req.user.id);
@@ -102,31 +84,32 @@ const getDashboardData = async (req, res) => {
         const now = new Date();
         const currentYear = now.getUTCFullYear();
         const currentMonth = now.getUTCMonth();
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
         // 1. Calculate Previous Month Dates
         const previousMonthStart = new Date(Date.UTC(currentYear, currentMonth - 1, 1));
-        const previousMonthEnd = new Date(Date.UTC(currentYear, currentMonth, 0));
-        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const previousMonthEnd = new Date(Date.UTC(currentYear, currentMonth, 0)); // Last day of prev month
         const previousMonthName = monthNames[previousMonthStart.getUTCMonth()];
 
-        // 2. Fetch Sales for Previous Month
-        const previousMonthSales = await Sale.find({
-            branch_id: branchId,
-            sales_date: { $gte: previousMonthStart, $lte: previousMonthEnd }
-        });
+        // 2. Calculate Profits using the new helper
+        // Previous Month Profit
+        // We pass 'previousMonthEnd' as the cutoff for salaries/sales
+        // Note: For 'end date' in logic $lt, we might need the first day of next month to include the last day fully, 
+        // or ensure previousMonthEnd includes time. 
+        // ProfitController uses $lt endDate. 
+        // So for "Jan", we want $gte Jan 1 and $lt Feb 1.
+        
+        // Adjusting dates to match ProfitController expectation (Start of month to Start of next month)
+        const prevMonthCalcStart = new Date(Date.UTC(currentYear, currentMonth - 1, 1));
+        const prevMonthCalcEnd = new Date(Date.UTC(currentYear, currentMonth, 1)); // 1st of current month
 
-        // 3. Fetch Cumulative Sales (up to end of previous month)
-        const cumulativeSales = await Sale.find({
-            branch_id: branchId,
-            sales_date: { $lte: previousMonthEnd }
-        });
+        const previousMonthProfit = await calculateProfit(branchId, prevMonthCalcStart, prevMonthCalcEnd);
 
-        // 4. Calculate Profits
-        const previousMonthProfit = await calculateProfit(previousMonthSales, branchId, previousMonthStart);
-        // Cumulative profit considers everything from the start of time (Date(0))
-        const cumulativeProfit = await calculateProfit(cumulativeSales, branchId, new Date(0));
+        // Cumulative Profit (Start of time -> Start of current month)
+        // This covers everything up to the end of the previous month
+        const cumulativeProfit = await calculateProfit(branchId, new Date(0), prevMonthCalcEnd);
 
-        // 5. Generate month list for dropdown (last 7 months including previous month)
+        // 3. Generate month list for dropdown (last 7 months)
         const months = [];
         for (let i = 7; i >= 1; i--) {
             const date = new Date(Date.UTC(currentYear, currentMonth - i, 1));
@@ -176,18 +159,13 @@ const getProfitByMonth = async (req, res) => {
 
         const [year, month] = monthKey.split('-').map(Number);
 
-        // Get start date of the requested month
-        const monthStart = new Date(Date.UTC(year, month - 1, 1));
-        // Get end date of the requested month
-        const monthEnd = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999)); 
+        // Calculate Start and End dates for the helper
+        // Start: 1st of the requested month
+        const startDate = new Date(Date.UTC(year, month - 1, 1));
+        // End: 1st of the NEXT month (so $lt covers the full requested month)
+        const endDate = new Date(Date.UTC(year, month, 1)); 
 
-        // Fetch sales for the requested month
-        const monthlySales = await Sale.find({
-            branch_id: branchId,
-            sales_date: { $gte: monthStart, $lte: monthEnd }
-        });
-
-        const monthlyProfit = await calculateProfit(monthlySales, branchId, monthStart);
+        const monthlyProfit = await calculateProfit(branchId, startDate, endDate);
 
         res.json({
             success: true,
@@ -202,15 +180,11 @@ const getProfitByMonth = async (req, res) => {
 
 
 // --- Route Definition ---
-// Apply protection and authorization middleware
 router.use(protect, authorize('manager'));
 
-// Routes:
-// 1. Main Dashboard Data
 router.route('/dashboard-data')
     .get(getDashboardData);
 
-// 2. Profit by Month
 router.route('/profit-by-month')
     .get(getProfitByMonth);
 

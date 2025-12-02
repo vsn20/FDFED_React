@@ -1,7 +1,6 @@
-// path: client/src/pages/manager/Salary/ManagerSalaryPage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
-import api from '../../../api/api'; // Assumed path to your Axios instance
-import styles from './Salary.module.css'; // New CSS file
+import api from '../../../api/api'; 
+import styles from './Salary.module.css'; 
 
 const ManagerSalaryPage = () => {
     const [monthOptions, setMonthOptions] = useState([]);
@@ -90,9 +89,9 @@ const ManagerSalaryPage = () => {
                                     <span className={styles.role}>{s.role}</span>
                                 </div>
                                 <div className={styles.entryDetails}>
-                                    <div><span className={styles.label}>Base Salary:</span> ${s.baseSalary}</div>
-                                    <div><span className={styles.label}>Commission ({selectedMonthYear}):</span> ${s.commission}</div>
-                                    <div className={styles.total}><span className={styles.label}>Total Salary:</span> ${s.totalSalary}</div>
+                                    <div><span className={styles.label}>Base Salary:</span> ₹{s.baseSalary}</div>
+                                    <div><span className={styles.label}>Commission ({selectedMonthYear}):</span> ₹{s.commission}</div>
+                                    <div className={styles.total}><span className={styles.label}>Total Salary:</span> ₹{s.totalSalary}</div>
                                     {s.note && <div className={styles.note}><span className={styles.label}>Note:</span> {s.note}</div>}
                                 </div>
                             </div>

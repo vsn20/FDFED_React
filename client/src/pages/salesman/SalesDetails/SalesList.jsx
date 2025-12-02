@@ -97,9 +97,9 @@ const SalesList = () => {
                   <td data-label="Sale ID">{sale.sales_id}</td>
                   <td data-label="Product">{sale.product_name}</td>
                   <td data-label="Company">{sale.company_name}</td>
-                  <td data-label="Price">${parseFloat(sale.total_amount).toFixed(2)}</td>
+                  <td data-label="Price">₹{parseFloat(sale.total_amount).toFixed(2)}</td>
                   <td data-label="Profit" style={{ color: sale.profit_or_loss >= 0 ? 'green' : 'red' }}>
-                    ${parseFloat(sale.profit_or_loss).toFixed(2)}
+                    ₹{parseFloat(sale.profit_or_loss).toFixed(2)}
                   </td>
                   <td data-label="Sale Date">{new Date(sale.saledate).toLocaleDateString()}</td>
                 </tr>

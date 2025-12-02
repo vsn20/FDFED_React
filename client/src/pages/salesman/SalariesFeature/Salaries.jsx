@@ -92,16 +92,16 @@ const Salaries = () => {
                 </div>
                 <div className={styles.salaryRow}>
                     <span className={styles.label}>Base Salary:</span>
-                    <span className={styles.value}>${salaryData.base_salary.toFixed(2)}</span>
+                    <span className={styles.value}>₹{salaryData.base_salary.toFixed(2)}</span>
                 </div>
                 <div className={styles.salaryRow}>
                     <span className={styles.label}>Commission:</span>
-                    <span className={styles.value}>${salaryData.commission.toFixed(2)}</span>
+                    <span className={styles.value}>₹{salaryData.commission.toFixed(2)}</span>
                 </div>
                 <div className={styles.divider}></div>
                 <div className={`${styles.salaryRow} ${styles.totalRow}`}>
                     <span className={styles.label}>Total Salary:</span>
-                    <span className={styles.value}>${salaryData.total_salary.toFixed(2)}</span>
+                    <span className={styles.value}>₹{salaryData.total_salary.toFixed(2)}</span>
                 </div>
                 
                 {salaryData.note && (
