@@ -79,6 +79,7 @@ app.use('/api/manager/inventory', require('./routes/manager/managerInventoryRout
 app.use('/api/manager/sales', require('./routes/manager/SalesRoutes'));
 app.use('/api/manager/salary', require('./routes/manager/salaryRoutes'));
 app.use('/api/manager/analytics', require('./routes/manager/ManagerAnalyticsControllerRoutes'));
+app.use('/api/manager/messages', require('./routes/manager/managerMessageRoutes'));
 // Public routes
 app.use('/api/our-branches', require('./routes/publicroutes'));
 

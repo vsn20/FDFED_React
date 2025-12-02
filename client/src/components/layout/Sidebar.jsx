@@ -107,11 +107,17 @@ const Sidebar = () => {
                     <span>📝</span> Orders
                 </Link>
             </li>
+            
             <li className={activeLink === "/manager/inventory" ? "active" : ""}>
             <Link to="/manager/inventory" onClick={() => handleLinkClick("/manager/inventory")}>
                 <span>📦</span> Inventory
             </Link>
         </li>
+            <li className={activeLink === "/manager/messages" ? "active" : ""}>
+                <Link to="/manager/messages" onClick={() => handleLinkClick("/manager/messages")}>
+                    <span>✉</span> messages
+                </Link>
+            </li>
         </>
     );
 
@@ -155,6 +161,11 @@ const Sidebar = () => {
             <li className={activeLink === "/company/products" ? "active" : ""}>
                 <Link to="/company/products" onClick={() => handleLinkClick("/company/products")}>
                     <span>📦</span> Products
+                </Link>
+            </li>
+            <li className={activeLink === "/company/sales" ? "active" : ""}>
+                <Link to="/company/sales" onClick={() => handleLinkClick("/company/sales")}>
+                    <span>💰</span> Sales
                 </Link>
             </li>
             <li className={activeLink === "/company/orders" ? "active" : ""}>
