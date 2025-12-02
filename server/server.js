@@ -104,7 +104,7 @@ app.use('/api/customer/reviews', require('./routes/Customer/ReviewRoute'));
 app.use('/api/our-branches', require('./routes/publicroutes'));
 app.use('/api/newproducts', require('./routes/newProductsRoutes'));
 app.use('/api/ourproducts', require('./routes/OurProductsRoutes'));
-//app.use('/api/topproducts', require('./routes/TopPoductsRoutes'));
+app.use('/api/topproducts', require('./routes/TopPoductsRoutes'));
 app.use('/api/contact', require('./routes/ContactUsRoute'));
 
 // 5. Socket.io Connection Logic (Debug logs)
