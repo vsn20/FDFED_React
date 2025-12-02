@@ -1,4 +1,3 @@
-// path: client/src/pages/manager/Analytics/ManagerAnalyticsPage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../../api/api'; // Assuming your configured axios instance
 import styles from './ManagerAnalytics.module.css'; 
@@ -58,7 +57,7 @@ const ManagerAnalyticsPage = () => {
             const res = await api.get(`/manager/analytics/profit-by-month?month=${monthKey}`);
             const profit = parseFloat(res.data.profit);
             
-            setSelectedMonthProfit(`$${profit.toFixed(2)}`);
+            setSelectedMonthProfit(`₹${profit.toFixed(2)}`);
             setProfitStatus(profit >= 0 ? 'profit' : 'na'); // Check for non-negative profit
 
         } catch (error) {
@@ -88,7 +87,7 @@ const ManagerAnalyticsPage = () => {
     const formatProfit = (value) => {
         if (value === null || isNaN(value)) return 'N/A';
         const floatValue = parseFloat(value);
-        return `$${floatValue.toFixed(2)}`;
+        return `₹${floatValue.toFixed(2)}`;
     };
 
     const getProfitClassName = (value) => {

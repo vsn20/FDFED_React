@@ -79,11 +79,11 @@ const SaleDetails = ({ saleId, handleBack }) => {
                 <div className="form-row">
                     <div className="form-group">
                         <label>Purchased Price</label>
-                        <input type="text" value={`$${sale.purchased_price?.toFixed(2)}`} readOnly />
+                        <input type="text" value={`₹${sale.purchased_price?.toFixed(2)}`} readOnly />
                     </div>
                     <div className="form-group">
                         <label>Sold Price</label>
-                        <input type="text" value={`$${sale.sold_price?.toFixed(2)}`} readOnly />
+                        <input type="text" value={`₹${sale.sold_price?.toFixed(2)}`} readOnly />
                     </div>
                     <div className="form-group">
                         <label>Quantity</label>
@@ -94,7 +94,7 @@ const SaleDetails = ({ saleId, handleBack }) => {
                 <div className="form-row">
                     <div className="form-group">
                         <label>Profit/Loss</label>
-                        <input type="text" value={`$${sale.profit_or_loss?.toFixed(2)}`} readOnly />
+                        <input type="text" value={`₹${sale.profit_or_loss?.toFixed(2)}`} readOnly />
                     </div>
                     <div className="form-group">
                         <label>Phone Number</label>
