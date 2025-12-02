@@ -10,31 +10,56 @@ const AddBranch = ({ handleBack }) => {
         b_name: '',
         address: ''
     });
+    const [error, setError] = useState(''); // State for validation errors
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        if (error) setError(''); // Clear error when user types
+    };
+
+    const validateForm = () => {
+        const name = formData.b_name.trim();
+        const address = formData.address.trim();
+
+        if (!name) return "Branch Name is required.";
+        if (/^\d/.test(name)) return "Branch Name cannot start with a number.";
+        if (name.length < 3) return "Branch Name must be at least 3 characters.";
+        
+        if (!address) return "Address is required.";
+        if (address.length < 5) return "Address must be at least 5 characters.";
+
+        return null;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        const validationError = validateForm();
+        if (validationError) {
+            setError(validationError);
+            return;
+        }
+
         try {
-            // Dispatch the Redux action
-            // unwrap() allows us to catch errors or wait for success in the component
             await dispatch(createBranch({
-                b_name: formData.b_name,
-                address: formData.address
+                b_name: formData.b_name.trim(),
+                address: formData.address.trim()
             })).unwrap();
             
-            handleBack(); // Go back to list on success
+            handleBack(); 
         } catch (err) {
             console.error("Error adding branch:", err);
-            alert("Failed to add branch");
+            setError(typeof err === 'string' ? err : "Failed to add branch. Try again.");
         }
     };
 
     return (
         <div className={styles.formContainer}>
             <h2>Add Branch</h2>
+            
+            {/* Error Message Display */}
+            {error && <div className={styles.errorMessage}>{error}</div>}
+
             <form onSubmit={handleSubmit} className={styles.formWrapper}>
                 <div className={styles.formSection}>
                     <h3 className={styles.sectionTitle}>Branch Information</h3>

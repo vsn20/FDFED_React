@@ -1,19 +1,27 @@
-/* Styles copied directly from companylogin.ejs */
+/* Styles copied directly from companylogin.ejs with height adjustments */
 .pageWrapper {
-    padding-top: 80px; /* From .content-wrapper */
+    /* Changed from 100vh to 80vh to fit under Topbar */
+    min-height: 80vh;
     background-color: #f4f4f4;
-    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
 .mainContainer {
     display: flex;
-    min-height: 80vh;
+    /* Changed from 75vh to 600px to match other login cards */
+    min-height: 600px;
+    width: 100%;
     max-width: 1200px;
-    margin: 50px auto;
+    margin: 0 auto;
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     transition: all 0.5s ease;
+    background: #fff;
 }
 
 .imageSection {
@@ -21,6 +29,7 @@
     position: relative;
     overflow: hidden;
 }
+
 .order1 { order: 1; }
 .order2 { order: 2; }
 
@@ -57,13 +66,15 @@
     position: relative;
     text-transform: uppercase;
     letter-spacing: 2px;
+    text-align: center; /* Centered for better look */
 }
 
 .authContainer h2:after {
     content: '';
     position: absolute;
     bottom: -10px;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%); /* Centered underline */
     width: 50px;
     height: 3px;
     background: linear-gradient(135deg, #34495E, #2C3E50);
@@ -143,9 +154,22 @@
 @media (max-width: 768px) {
     .mainContainer {
         flex-direction: column;
-        margin: 20px;
+        margin: 20px 0;
+        min-height: auto;
     }
     .imageSection {
-        min-height: 300px;
+        min-height: 200px;
+        order: 1 !important;
+    }
+    /* Ensure form is below image on mobile if needed */
+    .authContainerWrapper {
+        order: 2 !important;
+        padding: 30px 20px;
+    }
+    .authContainer input, 
+    .authContainer button,
+    .linkContainer,
+    .errorMessage {
+        width: 90%;
     }
 }

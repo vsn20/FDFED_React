@@ -1,6 +1,7 @@
+// client/src/pages/owner/Company/CompanyDetails.jsx
 import React, { useState, useEffect } from 'react';
 import api from '../../../api/api';
-import styles from './Company.module.css'; // Import CSS module
+import styles from './Company.module.css';
 
 const CompanyDetails = ({ id, handleback }) => {
     const [formdata, setFormData] = useState({
@@ -9,6 +10,7 @@ const CompanyDetails = ({ id, handleback }) => {
         phone: '',
         address: ''
     });
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchCompanyDetails = async () => {
@@ -17,7 +19,7 @@ const CompanyDetails = ({ id, handleback }) => {
                 setFormData(res.data);
             } catch (error) {
                 console.log('Error fetching company details:', error);
-                alert('Failed to fetch company details. Please try again.');
+                setError('Failed to fetch company details.');
             }
         };
 
@@ -31,16 +33,46 @@ const CompanyDetails = ({ id, handleback }) => {
             ...formdata,
             [e.target.name]: e.target.value
         });
+        if (error) setError('');
+    };
+
+    const validateForm = () => {
+        const cname = formdata.cname.trim();
+        const phone = formdata.phone.trim();
+        const email = formdata.email.trim();
+        const address = formdata.address.trim();
+
+        if (!cname) return "Company Name is required.";
+        if (/^\d/.test(cname)) return "Company Name cannot start with a number.";
+        if (cname.length < 3) return "Company Name must be at least 3 characters.";
+
+        if (!email) return "Email is required.";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Invalid email format.";
+
+        if (!phone) return "Phone number is required.";
+        if (!/^\d{10}$/.test(phone)) return "Phone number must be exactly 10 digits.";
+
+        if (!address) return "Address is required.";
+        if (address.length < 5) return "Address must be at least 5 characters.";
+
+        return null;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        const validationError = validateForm();
+        if (validationError) {
+            setError(validationError);
+            return;
+        }
+
         try {
             await api.put(`/companies/${id}`, formdata);
             handleback();
         } catch (error) {
             console.error('Error updating company details:', error);
-            alert('Failed to update details. Please try again.');
+            setError('Failed to update details. Please try again.');
         }
     };
 
@@ -48,6 +80,9 @@ const CompanyDetails = ({ id, handleback }) => {
         <div className={styles.formContainer}>
             <form onSubmit={handleSubmit} className={styles.formWrapper}>
                 <h2>Edit Company Details</h2>
+                
+                {error && <div className={styles.errorMessage}>{error}</div>}
+
                 <div className={styles.formSection}>
                     <div className={styles.fieldGroup}>
                         <div>

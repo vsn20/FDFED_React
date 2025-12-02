@@ -7,7 +7,6 @@ import styles from './Branch.module.css';
 const BranchDetails = ({ bid, handleBack }) => {
     const dispatch = useDispatch();
     
-    // Find the specific branch from the Redux store
     const branchFromStore = useSelector(state => 
         state.branches.items.find(b => b.bid === bid)
     );
@@ -20,8 +19,8 @@ const BranchDetails = ({ bid, handleBack }) => {
         manager_ph_no: '',
         address: ''
     });
+    const [error, setError] = useState('');
 
-    // Populate form when component mounts or branchFromStore changes
     useEffect(() => {
         if (branchFromStore) {
             setFormData({
@@ -30,30 +29,52 @@ const BranchDetails = ({ bid, handleBack }) => {
                 manager_name: branchFromStore.manager_name,
                 manager_email: branchFromStore.manager_email,
                 manager_ph_no: branchFromStore.manager_ph_no,
-                address: branchFromStore.location // Note: backend uses 'location', frontend form uses 'address'
+                address: branchFromStore.location 
             });
         }
     }, [branchFromStore]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        if (error) setError('');
+    };
+
+    const validateForm = () => {
+        const name = formData.b_name.trim();
+        const address = formData.address.trim();
+
+        if (!name) return "Branch Name is required.";
+        if (/^\d/.test(name)) return "Branch Name cannot start with a number.";
+        if (name.length < 3) return "Branch Name must be at least 3 characters.";
+        
+        if (!address) return "Address is required.";
+        if (address.length < 5) return "Address must be at least 5 characters.";
+
+        return null;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const validationError = validateForm();
+        if (validationError) {
+            setError(validationError);
+            return;
+        }
+
         try {
             await dispatch(updateBranch({
                 bid: formData.bid,
                 branchData: {
-                    b_name: formData.b_name,
-                    address: formData.address
+                    b_name: formData.b_name.trim(),
+                    address: formData.address.trim()
                 }
             })).unwrap();
             
             handleBack();
         } catch (err) {
             console.error("Error updating branch:", err);
-            alert("Failed to update branch");
+            setError("Failed to update branch. Please try again.");
         }
     };
 
@@ -64,6 +85,10 @@ const BranchDetails = ({ bid, handleBack }) => {
     return (
         <div className={styles.formContainer}>
             <h2>Edit Branch</h2>
+            
+            {/* Error Message Display */}
+            {error && <div className={styles.errorMessage}>{error}</div>}
+
             <form onSubmit={handleSubmit} className={styles.formWrapper}>
                 <div className={styles.formSection}>
                     <h3 className={styles.sectionTitle}>Branch Information</h3>

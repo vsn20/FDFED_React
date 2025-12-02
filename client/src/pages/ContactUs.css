@@ -1,21 +1,24 @@
 .contact-page-wrapper {
-  padding-top: 80px;
-  min-height: 100vh;
+  /* Adjusted to match Login/Customer pages */
+  min-height: 80vh; 
   background-color: #f0f2f5;
   display: flex;
   justify-content: center;
+  align-items: center; /* Vertically center the card */
+  padding: 20px;
 }
 
 .contact-container {
   display: flex;
-  width: 90%;
-  max-width: 900px;
+  width: 100%;
+  max-width: 1200px; /* Standardized width */
   background: white;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  margin: 50px 0;
-  min-height: 500px;
+  margin: 0 auto;
+  /* Standardized height to match Login cards */
+  min-height: 600px; 
 }
 
 .form-side {
@@ -145,12 +148,13 @@ textarea.form-input {
 @media (max-width: 768px) {
   .contact-container {
     flex-direction: column;
-    margin: 20px;
+    margin: 20px 0;
+    min-height: auto;
   }
   .image-side {
     min-height: 200px;
   }
   .form-side {
-    padding: 20px;
+    padding: 30px 20px;
   }
 }
