@@ -9,6 +9,7 @@ import PrivateLayout from './components/layout/PrivateLayout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import CustomerLoginPage from './pages/CustomerLoginPage';
 import PreviousPurchases from './pages/customer/PreviousPurchases';
+import ForgotPassword from './pages/ForgotPassword';
 
 import HomePage from './pages/HomePage';
 import ContactUs from './pages/contactus';
@@ -100,6 +101,7 @@ function App() {
                         <Route path="/companylogin" element={<CompanyLogin />} />
                         <Route path="/customerlogin" element={<CustomerLoginPage />} />
                         <Route path="/contact-us" element={<ContactUs/>} />
+                        <Route path="/forgot-password" element={<ForgotPassword/>} />
 
                     </Route>
 

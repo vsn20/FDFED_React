@@ -54,6 +54,7 @@ app.use((req, res, next) => {
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/auth/company', require('./routes/companyAuthRoutes'));
 app.use('/api/auth/customer', require('./routes/customerAuthRoutes'));
+app.use('/api/forgot-password', require('./routes/forgotPasswordRoutes'));
 
 // Owner/Admin Routes
 app.use('/api/companies', require('./routes/owner/companyRoutes'));
