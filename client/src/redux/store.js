@@ -4,6 +4,7 @@ import employeeReducer from './slices/employeeSlice';
 import saleReducer from './slices/saleSlice'; 
 import salesmanSalesReducer from './slices/salesmanSalesSlice';
 import managerEmployeeReducer from './slices/managerEmployeeSlice';
+import companyProductReducer from './slices/companyproductsslice'; 
 
 const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
         salesmanSales: salesmanSalesReducer, 
         sales: saleReducer,
         managerEmployees: managerEmployeeReducer,
+        companyProducts: companyProductReducer, 
     },
 });
 

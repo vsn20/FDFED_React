@@ -1,45 +1,31 @@
+// client/src/pages/company/products/CompanyProducts.jsx
 import React, { useState, useEffect, useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import AuthContext from '../../../context/AuthContext';
-import styles from './Products.module.css'; // Importing the CSS module
+import styles from './Products.module.css'; 
 
-// API base URL
-const API_BASE_URL = 'http://localhost:5001/api';
+// Import actions from the slice created in the previous step
+import { 
+  fetchCompanyProducts, 
+  addCompanyProduct, 
+  fetchCompanyProductDetails, 
+  updateStockAvailability,
+  resetActionStatus,
+  clearCurrentProduct
+} from '../../../redux/slices/companyproductsslice';
 
 // --- Products List Component ---
 const ProductsList = ({ onAddProduct, onViewDetails }) => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { token } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  // Select data from Redux store
+  const { items: products, status, error } = useSelector((state) => state.companyProducts);
 
+  // Fetch products on mount
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    dispatch(fetchCompanyProducts());
+  }, [dispatch]);
 
-  const fetchProducts = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/company/products`, {
-        headers: {
-          'x-auth-token': token,
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      setProducts(data.products || []);
-      setLoading(false);
-    } catch (err) {
-      console.error('Fetch error:', err);
-      setError(err.message);
-      setLoading(false);
-    }
-  };
-
-  // Slideshow Logic
+  // Slideshow Logic (UI Logic kept local)
   useEffect(() => {
     if (products.length === 0) return;
 
@@ -65,8 +51,8 @@ const ProductsList = ({ onAddProduct, onViewDetails }) => {
     return () => intervals.forEach(interval => clearInterval(interval));
   }, [products]);
 
-  if (loading) return <div className={styles.contentArea}><p>Loading...</p></div>;
-  if (error) return <div className={styles.contentArea}><p className={styles.errorMessage}>Error: {error}</p></div>;
+  if (status === 'loading') return <div className={styles.contentArea}><p>Loading...</p></div>;
+  if (status === 'failed') return <div className={styles.contentArea}><p className={styles.errorMessage}>Error: {error}</p></div>;
 
   return (
     <div className={styles.contentArea}>
@@ -128,7 +114,12 @@ const ProductsList = ({ onAddProduct, onViewDetails }) => {
 
 // --- Add Product Form Component ---
 const AddProductForm = ({ onBack }) => {
-  const { user, token } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const { user } = useContext(AuthContext); // Used for displaying C_ID
+  
+  // Select action status from Redux
+  const { actionStatus, actionError } = useSelector((state) => state.companyProducts);
+
   const [formData, setFormData] = useState({
     Prod_name: '',
     Model_no: '',
@@ -143,8 +134,12 @@ const AddProductForm = ({ onBack }) => {
     installationcharge: ''
   });
   const [files, setFiles] = useState([]);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [validationError, setValidationError] = useState('');
+
+  // Reset status when component mounts
+  useEffect(() => {
+    dispatch(resetActionStatus());
+  }, [dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -169,9 +164,58 @@ const AddProductForm = ({ onBack }) => {
     setFiles(Array.from(e.target.files));
   };
 
+  // --- Validation Logic ---
+  const validateForm = () => {
+    if (!formData.Prod_name.trim()) return "Product Name is required.";
+    if (!formData.Model_no.trim()) return "Model Number is required.";
+    
+    const currentYear = new Date().getFullYear();
+    const yearRegex = /^\d{4}$/;
+    if (!yearRegex.test(formData.prod_year) || parseInt(formData.prod_year) < 1900 || parseInt(formData.prod_year) > currentYear + 1) {
+      return `Please enter a valid Production Year (4 digits, e.g., ${currentYear}).`;
+    }
+
+    if (!formData.stock || isNaN(formData.stock) || parseInt(formData.stock) < 0) {
+      return "Stock must be a valid non-negative number.";
+    }
+
+    if (!formData.Retail_price || isNaN(formData.Retail_price) || parseFloat(formData.Retail_price) <= 0) {
+      return "Selling Price must be a valid positive number.";
+    }
+
+    if (!formData.warrantyperiod.trim()) return "Warranty Period is required.";
+
+    if (!formData.installation) return "Please select whether installation is required.";
+    
+    if (formData.installation === 'Required') {
+      if (!formData.installationType) return "Please select the Installation Type (Paid/Free).";
+      
+      if (formData.installationType === 'Paid') {
+        if (!formData.installationcharge || isNaN(formData.installationcharge) || parseFloat(formData.installationcharge) < 0) {
+          return "Please enter a valid non-negative Installation Charge.";
+        }
+      }
+    }
+
+    if (!formData.prod_description.trim() || formData.prod_description.trim().length < 10) {
+      return "Product description is required and should be at least 10 characters.";
+    }
+
+    if (files.length === 0) {
+      return "Please upload at least one product photo.";
+    }
+
+    return null;
+  };
+
   const handleSubmit = async () => {
-    setError('');
-    setLoading(true);
+    setValidationError('');
+    
+    const vError = validateForm();
+    if (vError) {
+      setValidationError(vError);
+      return;
+    }
 
     const submitData = new FormData();
     Object.keys(formData).forEach(key => {
@@ -183,27 +227,14 @@ const AddProductForm = ({ onBack }) => {
     });
 
     try {
-      const response = await fetch(`${API_BASE_URL}/company/products/add`, {
-        method: 'POST',
-        headers: {
-          'x-auth-token': token,
-          'Authorization': `Bearer ${token}`
-        },
-        body: submitData
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        onBack();
-      } else {
-        setError(result.message || 'An error occurred while adding the product.');
-      }
+      // Dispatch the AsyncThunk
+      await dispatch(addCompanyProduct(submitData)).unwrap();
+      // If successful (no error thrown), go back and refresh list
+      dispatch(fetchCompanyProducts());
+      onBack();
     } catch (err) {
       console.error('Submit error:', err);
-      setError('Network error: ' + err.message);
-    } finally {
-      setLoading(false);
+      // Errors are handled in Redux state (actionError), but we catch here to prevent crash
     }
   };
 
@@ -257,11 +288,12 @@ const AddProductForm = ({ onBack }) => {
           <div className={styles.fieldWrapper}>
             <label className={styles.fieldLabel}>Production Year</label>
             <input
-              type="text"
+              type="number" 
               name="prod_year"
               value={formData.prod_year}
               onChange={handleChange}
               className={styles.fieldInput}
+              placeholder="YYYY"
               required
             />
           </div>
@@ -269,11 +301,12 @@ const AddProductForm = ({ onBack }) => {
           <div className={styles.fieldWrapper}>
             <label className={styles.fieldLabel}>Initial Stock</label>
             <input
-              type="text"
+              type="number"
               name="stock"
               value={formData.stock}
               onChange={handleChange}
               className={styles.fieldInput}
+              min="0"
               required
             />
           </div>
@@ -294,11 +327,12 @@ const AddProductForm = ({ onBack }) => {
           <div className={styles.fieldWrapper}>
             <label className={styles.fieldLabel}>Selling Price</label>
             <input
-              type="text"
+              type="number"
               name="Retail_price"
               value={formData.Retail_price}
               onChange={handleChange}
               className={styles.fieldInput}
+              min="0"
               required
             />
           </div>
@@ -311,6 +345,7 @@ const AddProductForm = ({ onBack }) => {
               value={formData.warrantyperiod}
               onChange={handleChange}
               className={styles.fieldInput}
+              placeholder="e.g. 2 Years"
               required
             />
           </div>
@@ -348,12 +383,13 @@ const AddProductForm = ({ onBack }) => {
           <div className={styles.fieldWrapper}>
             <label className={styles.fieldLabel}>Installation Charge</label>
             <input
-              type="text"
+              type="number"
               name="installationcharge"
               value={formData.installationcharge}
               onChange={handleChange}
               className={formData.installationType === 'Paid' ? styles.fieldInput : styles.fieldInputDisabled}
               disabled={formData.installationType !== 'Paid'}
+              min="0"
             />
           </div>
 
@@ -387,79 +423,59 @@ const AddProductForm = ({ onBack }) => {
       <button 
         onClick={handleSubmit}
         className={styles.submitBtn}
-        disabled={loading}
+        disabled={actionStatus === 'loading'}
       >
-        {loading ? 'Adding Product...' : 'Add Product'}
+        {actionStatus === 'loading' ? 'Adding Product...' : 'Add Product'}
       </button>
 
-      {error && <div className={styles.errorMessage}>{error}</div>}
+      {validationError && <div className={styles.errorMessage}>{validationError}</div>}
+      {actionError && <div className={styles.errorMessage}>{actionError}</div>}
     </div>
   );
 };
 
 // --- Product Details Component ---
 const ProductDetails = ({ productId, onBack }) => {
-  const { token } = useContext(AuthContext);
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
+  const dispatch = useDispatch();
+  // Select current product and status from Redux
+  const { currentProduct: product, status, error } = useSelector((state) => state.companyProducts);
+  
   const [stockAvailability, setStockAvailability] = useState('');
+  const [message, setMessage] = useState('');
 
+  // Fetch details on mount
   useEffect(() => {
-    fetchProductDetails();
-  }, [productId]);
+    dispatch(fetchCompanyProductDetails(productId));
+    // Cleanup to clear current product when leaving view
+    return () => {
+      dispatch(clearCurrentProduct());
+    };
+  }, [dispatch, productId]);
 
-  const fetchProductDetails = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/company/products/details/${productId}`, {
-        headers: {
-          'x-auth-token': token,
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (!response.ok) throw new Error('Failed to fetch product details');
-      
-      const data = await response.json();
-      setProduct(data.product);
-      setStockAvailability(data.product.stockavailability);
-      setLoading(false);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
+  // Sync local state with fetched product
+  useEffect(() => {
+    if (product) {
+      setStockAvailability(product.stockavailability);
     }
-  };
+  }, [product]);
 
   const handleUpdateAvailability = async () => {
-    setError('');
     setMessage('');
-
     try {
-      const response = await fetch(`${API_BASE_URL}/company/products/update-stockavailability/${productId}`, {
-        method: 'POST',
-        headers: {
-          'x-auth-token': token,
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ stockavailability: stockAvailability })
-      });
+      const resultAction = await dispatch(updateStockAvailability({ 
+        productId, 
+        stockavailability: stockAvailability 
+      }));
 
-      const result = await response.json();
-
-      if (result.success) {
+      if (updateStockAvailability.fulfilled.match(resultAction)) {
         setMessage('Stock availability updated successfully!');
-        fetchProductDetails();
-      } else {
-        setError(result.message || 'An error occurred.');
       }
     } catch (err) {
-      setError('Network error: ' + err.message);
+      // Error handled by redux state, but local try/catch prevents crash
     }
   };
 
-  if (loading) return <div className={styles.contentArea}><p>Loading...</p></div>;
+  if (status === 'loading') return <div className={styles.contentArea}><p>Loading...</p></div>;
   if (!product) return <div className={styles.contentArea}><p className={styles.errorMessage}>Product not found.</p></div>;
 
   return (

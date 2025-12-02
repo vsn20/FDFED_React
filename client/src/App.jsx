@@ -61,6 +61,7 @@ import ManagerAnalyticsPage from './pages/manager/Analytics/ManagerAnalyticsPage
 import Admin_Inventory from './pages/owner/Inventory/Admin_Inventory';
 import { Admin_salary } from './pages/owner/Salary/Admin_salary';
 import { Admin_Profits } from './pages/owner/Profits/Admin_Profits';
+import SalesmanMessages from './pages/salesman/messages/SalesmanMessages';
 
 import OurProducts from './pages/OurProducts';
 const PostLoginRedirect = () => {
@@ -144,6 +145,7 @@ function App() {
                         <Route path='/salesman/sales/*' element={<ProtectedRoute roles={['salesman']}><Sales/></ProtectedRoute>} />
                         <Route path='/salesman/inventory' element={<ProtectedRoute roles={['salesman']}><Inventory/></ProtectedRoute>} />
                         <Route path='/salesman/salaries' element={<ProtectedRoute roles={['salesman']}><Salaries/></ProtectedRoute>} /> 
+                        <Route path='/salesman/messages' element={<ProtectedRoute roles={['salesman']}><SalesmanMessages/></ProtectedRoute>} /> 
 
                         <Route path="/company/analytics" element={
                             <ProtectedRoute roles={['company']}>
