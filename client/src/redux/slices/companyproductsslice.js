@@ -1,6 +1,6 @@
 // client/src/redux/slices/companyProductSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import api from '../../api/api'; // Using your existing axios instance
+import api from '../../api/api'; 
 
 // --- Thunks (Async Actions) ---
 
@@ -10,7 +10,6 @@ export const fetchCompanyProducts = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get('/company/products');
-      // Adjust depending on whether your API returns { products: [...] } or just [...]
       return response.data.products || response.data; 
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
@@ -18,13 +17,17 @@ export const fetchCompanyProducts = createAsyncThunk(
   }
 );
 
-// 2. Add New Product (Handles FormData for images)
+// 2. Add New Product (Updated for File Upload)
 export const addCompanyProduct = createAsyncThunk(
   'companyProducts/add',
   async (productFormData, { rejectWithValue }) => {
     try {
-      // Axios automatically sets 'Content-Type': 'multipart/form-data' when body is FormData
-      const response = await api.post('/company/products/add', productFormData);
+      // FIX: Explicitly set the header to multipart/form-data
+      const response = await api.post('/company/products/add', productFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', 
+        },
+      });
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
@@ -61,19 +64,17 @@ export const updateStockAvailability = createAsyncThunk(
 );
 
 // --- Slice ---
-
 const companyProductSlice = createSlice({
   name: 'companyProducts',
   initialState: {
     items: [],
-    currentProduct: null, // For the details view
-    status: 'idle',       // 'idle' | 'loading' | 'succeeded' | 'failed'
-    actionStatus: 'idle', // Specific status for Create/Update actions
+    currentProduct: null, 
+    status: 'idle',       
+    actionStatus: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
     error: null,
     actionError: null
   },
   reducers: {
-    // Optional: Reset action status when leaving the form
     resetActionStatus: (state) => {
       state.actionStatus = 'idle';
       state.actionError = null;
@@ -84,7 +85,7 @@ const companyProductSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // --- Fetch All ---
+      // Fetch All
       .addCase(fetchCompanyProducts.pending, (state) => {
         state.status = 'loading';
         state.error = null;
@@ -98,22 +99,20 @@ const companyProductSlice = createSlice({
         state.error = action.payload || action.error.message;
       })
 
-      // --- Add Product ---
+      // Add Product
       .addCase(addCompanyProduct.pending, (state) => {
         state.actionStatus = 'loading';
         state.actionError = null;
       })
       .addCase(addCompanyProduct.fulfilled, (state) => {
         state.actionStatus = 'succeeded';
-        // Note: We typically don't push to items here if we redirect to list 
-        // and re-fetch, but you can if you want immediate UI update without refetch.
       })
       .addCase(addCompanyProduct.rejected, (state, action) => {
         state.actionStatus = 'failed';
         state.actionError = action.payload || action.error.message;
       })
 
-      // --- Fetch Details ---
+      // Fetch Details
       .addCase(fetchCompanyProductDetails.pending, (state) => {
         state.status = 'loading';
         state.currentProduct = null;
@@ -128,14 +127,12 @@ const companyProductSlice = createSlice({
         state.error = action.payload || action.error.message;
       })
 
-      // --- Update Stock ---
+      // Update Stock
       .addCase(updateStockAvailability.fulfilled, (state, action) => {
-        // Update the item in the list if it exists there
         const listIndex = state.items.findIndex(p => p.prod_id === action.payload.productId);
         if (listIndex !== -1) {
           state.items[listIndex].stockavailability = action.payload.stockavailability;
         }
-        // Update current product if it's the one being viewed
         if (state.currentProduct && state.currentProduct.prod_id === action.payload.productId) {
             state.currentProduct.stockavailability = action.payload.stockavailability;
         }
