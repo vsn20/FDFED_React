@@ -34,6 +34,8 @@ import ManagerEmployeeDetails from './pages/manager/Employees/ManagerEmployeeDet
 import ManagerProfileEdit from './pages/manager/Profile/ManagerProfileEdit';
 import CompanyProducts from './pages/company/products/CompanyProducts';
 import Companymessages from './pages/company/messages/Companymessages';
+import CompanySales from './pages/company/sales/CompanySales';
+import CompanySaleDetails from './pages/company/sales/CompanySaleDetails';
 import Products from './pages/owner/Products/Products';
 import Sales from './pages/salesman/SalesDetails/sales';
 import Inventory from './pages/salesman/Inventory/Inventory';
@@ -157,6 +159,17 @@ function App() {
                             <ProtectedRoute roles={['company']}>
                                 <CompanyComplaints/>
                                 
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/company/sales" element={
+                            <ProtectedRoute roles={['company']}>
+                                <CompanySales/>
+                            </ProtectedRoute>
+                        } />
+                        
+                        <Route path="/company/sales/:id" element={
+                            <ProtectedRoute roles={['company']}>
+                                <CompanySaleDetails/>
                             </ProtectedRoute>
                         } />
                         <Route path="/company/messages" element={

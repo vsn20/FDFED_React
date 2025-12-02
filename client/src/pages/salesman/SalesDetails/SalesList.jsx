@@ -1,57 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import api from '../../../api/api'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSales, resetStatus } from '../../../redux/slices/salesmanSalesSlice';
 import styles from './SalesList.module.css'; 
 
 const SalesList = () => {
-  const [sales, setSales] = useState([]);
-  const [filteredSales, setFilteredSales] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+
+  const { items, status, error } = useSelector((state) => state.salesmanSales);
 
   useEffect(() => {
     if (location.state?.successMessage) {
-      setSuccess(location.state.successMessage);
+      setSuccessMsg(location.state.successMessage);
       window.history.replaceState({}, document.title);
-      
-      const timer = setTimeout(() => setSuccess(''), 3000);
+      const timer = setTimeout(() => setSuccessMsg(''), 3000);
       return () => clearTimeout(timer);
     }
   }, [location]);
 
   useEffect(() => {
-    const fetchSales = async () => {
-      try {
-        setLoading(true);
-        const res = await api.get('/salesman/sales');
-        setSales(res.data);
-        setFilteredSales(res.data);
-        setError('');
-      } catch (err) {
-        console.error("Error fetching sales:", err);
-        setError(err.response?.data?.message || "Failed to load sales data");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSales();
-  }, []);
+    dispatch(fetchSales());
+    return () => { dispatch(resetStatus()); }
+  }, [dispatch]);
 
-  useEffect(() => {
-    const filter = searchTerm.toLowerCase();
-    const filtered = sales.filter(sale => 
-      sale.sales_id.toLowerCase().includes(filter)
-    );
-    setFilteredSales(filtered);
-  }, [searchTerm, sales]);
+  const filteredSales = items.filter(sale => 
+    sale.sales_id.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (status === 'loading') return <div>Loading...</div>;
 
   return (
     <div className={styles.salesContainer}>
@@ -60,8 +40,8 @@ const SalesList = () => {
         <Link to="/salesman/sales/add" className={styles.addButton}>Add Sale</Link>
       </div>
       
-      {error && <p className={styles.errorMessage}>{error}</p>}
-      {success && <p className={styles.successMessage}>{success}</p>}
+      {status === 'failed' && <p className={styles.errorMessage}>{error}</p>}
+      {successMsg && <p className={styles.successMessage}>{successMsg}</p>}
       
       <div className={styles.searchContainer}>
         <input
@@ -97,9 +77,10 @@ const SalesList = () => {
                   <td data-label="Sale ID">{sale.sales_id}</td>
                   <td data-label="Product">{sale.product_name}</td>
                   <td data-label="Company">{sale.company_name}</td>
-                  <td data-label="Price">₹{parseFloat(sale.total_amount).toFixed(2)}</td>
+                  {/* Using toFixed(0) to ensure Integer Display */}
+                  <td data-label="Price">₹{parseFloat(sale.total_amount).toFixed(0)}</td>
                   <td data-label="Profit" style={{ color: sale.profit_or_loss >= 0 ? 'green' : 'red' }}>
-                    ₹{parseFloat(sale.profit_or_loss).toFixed(2)}
+                    ₹{parseFloat(sale.profit_or_loss).toFixed(0)}
                   </td>
                   <td data-label="Sale Date">{new Date(sale.saledate).toLocaleDateString()}</td>
                 </tr>

@@ -1,46 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '../../../api/api'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSaleDetails, resetStatus } from '../../../redux/slices/salesmanSalesSlice';
 import styles from './SaleDetails.module.css';
 
 const SaleDetails = () => {
-  const [sale, setSale] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const { sales_id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { currentItem: sale, status, error } = useSelector((state) => state.salesmanSales);
 
   useEffect(() => {
-    const fetchSale = async () => {
-      try {
-        setLoading(true);
-        const res = await api.get(`/salesman/sales/${sales_id}`);
-        setSale(res.data);
-      } catch (err) {
-        console.error("Error fetching sale details:", err);
-        setError(err.response?.data?.message || "Failed to load sale details");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSale();
-  }, [sales_id]);
+    if (sales_id) {
+        dispatch(fetchSaleDetails(sales_id));
+    }
+    return () => { dispatch(resetStatus()); }
+  }, [sales_id, dispatch]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div className={styles.errorMessage}>{error}</div>;
-  }
-
-  if (!sale) {
-    return <div className={styles.errorMessage}>Sale not found.</div>;
-  }
+  if (status === 'loading') return <div>Loading...</div>;
+  if (status === 'failed') return <div className={styles.errorMessage}>{error}</div>;
+  if (!sale) return <div className={styles.errorMessage}>Sale not found.</div>;
   
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString();
-  };
+  const formatDate = (dateString) => new Date(dateString).toLocaleDateString();
 
   return (
     <div className={styles.formContainer}>
@@ -109,11 +91,12 @@ const SaleDetails = () => {
           <div className={styles.fieldGroup}>
             <div>
               <label className={styles.fieldLabel}>Purchased Price</label>
-              <input className={styles.fieldInput} type="text" value={`₹${sale.purchased_price.toFixed(2)}`} readOnly />
+              {/* Display rounded integer */}
+              <input className={styles.fieldInput} type="text" value={`₹${parseFloat(sale.purchased_price).toFixed(0)}`} readOnly />
             </div>
             <div>
               <label className={styles.fieldLabel}>Sold Price</label>
-              <input className={styles.fieldInput} type="text" value={`₹${sale.sold_price.toFixed(2)}`} readOnly />
+              <input className={styles.fieldInput} type="text" value={`₹${parseFloat(sale.sold_price).toFixed(0)}`} readOnly />
             </div>
             <div>
               <label className={styles.fieldLabel}>Quantity</label>
@@ -121,11 +104,11 @@ const SaleDetails = () => {
             </div>
             <div>
               <label className={styles.fieldLabel}>Total Amount</label>
-              <input className={styles.fieldInput} type="text" value={`₹${sale.amount.toFixed(2)}`} readOnly />
+              <input className={styles.fieldInput} type="text" value={`₹${parseFloat(sale.amount).toFixed(0)}`} readOnly />
             </div>
             <div>
               <label className={styles.fieldLabel}>Profit/Loss</label>
-              <input className={styles.fieldInput} type="text" value={`₹${sale.profit_or_loss.toFixed(2)}`} readOnly />
+              <input className={styles.fieldInput} type="text" value={`₹${parseFloat(sale.profit_or_loss).toFixed(0)}`} readOnly />
             </div>
           </div>
         </div>

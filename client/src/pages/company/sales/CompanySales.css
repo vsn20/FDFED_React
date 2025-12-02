@@ -1,0 +1,196 @@
+/* Container Layout */
+.company-sales-container, .details-container {
+    padding: 2rem;
+    background-color: #f4f7fe; /* Light modern background */
+    min-height: 100vh;
+    font-family: 'DM Sans', 'Segoe UI', sans-serif;
+    color: #2b3674;
+}
+
+/* Headers */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 20px;
+    box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
+}
+
+.header-section h1, .details-container h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    color: #1b2559;
+}
+
+/* Search Input */
+.search-input {
+    padding: 12px 20px;
+    width: 350px;
+    border: 1px solid #e0e5f2;
+    border-radius: 30px;
+    background-color: #f4f7fe;
+    color: #1b2559;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #4318ff;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(67, 24, 255, 0.1);
+}
+
+/* Table Styling */
+.table-responsive {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
+    overflow-x: auto;
+}
+
+.sales-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.sales-table th {
+    text-align: left;
+    padding: 15px 20px;
+    color: #a3aed0;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid #e9edf7;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sales-table td {
+    padding: 16px 20px;
+    color: #1b2559;
+    font-size: 14px;
+    font-weight: 700;
+    border-bottom: 1px solid #f4f7fe;
+}
+
+.sales-table tr:hover td {
+    background-color: #f4f7fe;
+}
+
+.sales-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Buttons */
+.view-btn, .update-btn {
+    padding: 8px 16px;
+    background: #4318ff;
+    color: white;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.view-btn:hover, .update-btn:hover {
+    background: #3311db;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(67, 24, 255, 0.2);
+}
+
+/* Details Page Grid */
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0px 18px 40px rgba(112, 144, 176, 0.12);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #4318ff;
+    border-bottom: 2px solid #f4f7fe;
+    padding-bottom: 10px;
+}
+
+.card p {
+    margin: 12px 0;
+    font-size: 14px;
+    color: #707eae;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card p strong {
+    color: #1b2559;
+    font-weight: 600;
+}
+
+/* Status & Feedback */
+.status-update-box {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f4f7fe;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.status-update-box select {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #e0e5f2;
+    background: white;
+    color: #1b2559;
+    font-weight: 500;
+    outline: none;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #707eae;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: #4318ff;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-badge.completed { background-color: #e6fdf2; color: #05cd99; }
+.status-badge.pending { background-color: #fff8e6; color: #ffb547; }
+.status-badge.none { background-color: #f4f7fe; color: #a3aed0; }

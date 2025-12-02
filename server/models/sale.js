@@ -99,5 +99,5 @@ const SaleSchema = new mongoose.Schema({
   } // Creation timestamp
 });
 
-const Sale = mongoose.model("Sale", SaleSchema);
+const Sale = mongoose.models.Sale || mongoose.model("Sale", SaleSchema);
 module.exports = Sale;

@@ -29,6 +29,12 @@ const {
   sendMessage
 } = require("../controllers/company/messages_controller");
 
+const {
+  getCompanySales,
+  getSaleDetails,
+  updateInstallationStatus
+} = require("../controllers/company/sales_controller");
+
 // --- 1. Multer Configuration (REQUIRED for File Uploads) ---
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -74,6 +80,10 @@ router.put("/orders/:order_id", updateOrderStatus);
 // --- COMPLAINT ROUTES ---
 router.get("/complaints", getCompanyComplaints);
 router.put("/complaints/:complaint_id/status", updateComplaintStatus);
+
+router.get("/sales", getCompanySales);
+router.get("/sales/:id", getSaleDetails);
+router.put("/sales/:id/installation", updateInstallationStatus);
 
 // --- MESSAGE ROUTES ---
 router.get("/messages/inbox", getInbox);

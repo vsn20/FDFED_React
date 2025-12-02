@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { 
+    fetchCompanies, 
+    fetchProductsByCompany, 
+    createSale, 
+    clearProducts, 
+    resetStatus 
+} from '../../../redux/slices/salesmanSalesSlice';
 import api from '../../../api/api'; 
 import styles from './AddSale.module.css';
 
 const AddSale = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Redux State
+  const { companies, products, status, error, success } = useSelector((state) => state.salesmanSales);
+
   const [formData, setFormData] = useState({
     customer_name: '',
     sales_date: new Date().toISOString().split('T')[0],
@@ -16,34 +29,34 @@ const AddSale = () => {
     quantity: 1,
     phone_number: '',
     address: '',
-    // Read-only fields
     installation: '',
     installationType: '',
     installationcharge: ''
   });
   
-  const [companies, setCompanies] = useState([]);
-  const [products, setProducts] = useState([]);
   const [errors, setErrors] = useState({});
-  const [formMessage, setFormMessage] = useState({ type: '', message: '' });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState('');
 
-  // Fetch companies on load
+  // 1. Initial Load
   useEffect(() => {
-    const fetchCompanies = async () => {
-      try {
-        const res = await api.get('/salesman/sales/helpers/companies');
-        setCompanies(res.data);
-      } catch (err) {
-        setFormMessage({ type: 'error', message: 'Failed to load companies' });
-      }
-    };
-    fetchCompanies();
-  }, []);
+    dispatch(fetchCompanies());
+    return () => {
+        dispatch(resetStatus());
+        dispatch(clearProducts());
+    }
+  }, [dispatch]);
 
-  // Fetch products when company changes
+  // 2. Handle Success Navigation
   useEffect(() => {
-    // Reset product-dependent fields
+    if (success) {
+        navigate('/salesman/sales', { state: { successMessage: 'Sale added successfully!' } });
+        dispatch(resetStatus());
+    }
+  }, [success, navigate, dispatch]);
+
+  // 3. Handle Company Change -> Fetch Products
+  useEffect(() => {
+    // Reset product fields when company changes
     setFormData(f => ({
       ...f,
       product_id: '',
@@ -54,32 +67,26 @@ const AddSale = () => {
     }));
 
     if (formData.company_id) {
-      const fetchProducts = async () => {
-        try {
-          const res = await api.get(`/salesman/sales/helpers/products-by-company/${formData.company_id}`);
-          setProducts(res.data);
-        } catch (err) {
-          setFormMessage({ type: 'error', message: 'Failed to load products' });
-        }
-      };
-      fetchProducts();
+      dispatch(fetchProductsByCompany(formData.company_id));
     } else {
-      setProducts([]); // Clear products if no company is selected
+      dispatch(clearProducts());
     }
-  }, [formData.company_id]);
+  }, [formData.company_id, dispatch]);
   
-  // Update read-only fields when product changes
+  // 4. Handle Product Change -> Auto-fill Details
   useEffect(() => {
     if (formData.product_id) {
       const selectedProduct = products.find(p => p.prod_id === formData.product_id);
       if (selectedProduct) {
         setFormData(f => ({
           ...f,
-          purchased_price: selectedProduct.Retail_price || 0,
+          purchased_price: Math.round(selectedProduct.Retail_price || 0), // Ensure integer here too
           installation: selectedProduct.installation || 'Not Required',
           installationType: selectedProduct.installationType || '',
           installationcharge: selectedProduct.installationcharge || ''
         }));
+        // Re-validate quantity when product changes (inventory check)
+        validateField('quantity', formData.quantity, formData.product_id, formData.company_id);
       }
     } else {
        setFormData(f => ({
@@ -96,51 +103,72 @@ const AddSale = () => {
     const { name, value } = e.target;
     setFormData(f => ({ ...f, [name]: value }));
     
+    // Clear simple errors immediately
     if (errors[name]) {
       setErrors(e => ({ ...e, [name]: null }));
     }
   };
 
-  const validateField = async (name, value) => {
+  // --- DYNAMIC VALIDATION LOGIC ---
+  const validateField = async (name, value, productIdOverride = null, companyIdOverride = null) => {
     let error = null;
-    
+    const productId = productIdOverride || formData.product_id;
+    const companyId = companyIdOverride || formData.company_id;
+
     switch (name) {
       case 'customer_name':
         if (!value) error = 'Customer name is required';
-        else if (!/^[a-zA-Z\s]+$/.test(value)) error = 'Must contain only letters and spaces';
+        else if (!/^[a-zA-Z\s]+$/.test(value)) error = 'Name must contain only letters and spaces';
+        else if (value.trim().length < 4) error = 'Name must be at least 4 characters long';
         break;
+        
       case 'sales_date':
         if (!value) error = 'Sales date is required';
-        else if (new Date(value) > new Date()) error = 'Sales date cannot be in the future';
         break;
+        
       case 'unique_code':
         if (!value) error = 'Unique code is required';
         else {
-          try {
-            const res = await api.post('/salesman/sales/helpers/check-unique-code', { unique_code: value });
-            if (!res.data.isUnique) error = 'This unique code already exists';
-          } catch (err) {
-            error = 'Error checking unique code';
+          const specialCharCount = (value.match(/[^a-zA-Z0-9\s]/g) || []).length;
+          if (value.length < 5) {
+            error = 'Unique code must be at least 5 characters long';
+          } else if (specialCharCount < 2) {
+            error = 'Unique code must contain at least 2 special characters';
+          } else {
+            try {
+              const res = await api.post('/salesman/sales/helpers/check-unique-code', { unique_code: value });
+              if (!res.data.isUnique) error = 'This unique code already exists';
+            } catch (err) {
+              error = 'Error checking unique code';
+            }
           }
         }
         break;
+        
       case 'company_id':
         if (!value) error = 'Company is required';
         break;
+        
       case 'product_id':
         if (!value) error = 'Product is required';
         break;
+        
       case 'sold_price':
-        if (!value || parseFloat(value) <= 0) error = 'Must be a positive number';
-        else if (parseFloat(value) < formData.purchased_price) error = 'Sold price cannot be less than purchased price';
+        if (!value) error = 'Sold price is required';
+        else if (!/^\d+$/.test(value)) error = 'Sold price must be a whole number (no decimals)';
+        else if (parseInt(value) <= 0) error = 'Must be a positive number';
+        else if (parseInt(value) < formData.purchased_price) error = 'Sold price cannot be less than purchased price';
         break;
+        
       case 'quantity':
-        if (!value || parseInt(value) <= 0) error = 'Must be at least 1';
-        else if (formData.product_id && formData.company_id) {
+        if (!value) error = 'Quantity is required';
+        else if (!/^\d+$/.test(value)) error = 'Quantity must be a whole number';
+        else if (parseInt(value) <= 0) error = 'Must be at least 1';
+        else if (productId && companyId) {
           try {
             const res = await api.post('/salesman/sales/helpers/check-inventory', { 
-              product_id: formData.product_id, 
-              company_id: formData.company_id, 
+              product_id: productId, 
+              company_id: companyId, 
               quantity: value 
             });
             if (!res.data.isAvailable) error = `Insufficient stock (Available: ${res.data.availableQuantity})`;
@@ -149,12 +177,16 @@ const AddSale = () => {
           }
         }
         break;
+        
       case 'phone_number':
-        if (value && !/^\d{10}$/.test(value)) error = 'Must be 10 digits';
+        if (value && !/^\d{10}$/.test(value)) error = 'Phone number must be exactly 10 digits';
         break;
+        
       case 'address':
         if (!value) error = 'Address is required';
+        else if (value.trim().length < 3) error = 'Address must be at least 3 characters long';
         break;
+        
       default:
         break;
     }
@@ -170,44 +202,31 @@ const AddSale = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormMessage({ type: '', message: '' });
+    setFormError('');
     
-    // Validate all fields first
     const fieldsToValidate = ['customer_name', 'sales_date', 'unique_code', 'company_id', 'product_id', 'sold_price', 'quantity', 'phone_number', 'address'];
     let hasErrors = false;
+    
     for (const name of fieldsToValidate) {
-      const error = await validateField(name, formData[name]);
-      if (error) hasErrors = true;
+      const fieldError = await validateField(name, formData[name]);
+      if (fieldError) hasErrors = true;
     }
     
     if (hasErrors) {
-      setFormMessage({ type: 'error', message: 'Please correct the errors in the form' });
+      setFormError('Please correct the errors in the form');
       return;
     }
     
-    setIsSubmitting(true);
-    try {
-      const res = await api.post('/salesman/sales', formData);
-      if (res.data.success) {
-        // Redirect to sales list with a success message
-        navigate('/salesman/sales', { state: { successMessage: 'Sale added successfully!' } });
-      } else {
-        setFormMessage({ type: 'error', message: res.data.message || 'An unknown error occurred' });
-      }
-    } catch (err) {
-      setFormMessage({ type: 'error', message: err.response?.data?.message || 'Failed to add sale' });
-    } finally {
-      setIsSubmitting(false);
-    }
+    dispatch(createSale(formData));
   };
 
   return (
     <div className={styles.formContainer}>
       <h1>Add New Sale</h1>
       
-      {formMessage.message && (
-        <p className={formMessage.type === 'error' ? styles.errorMessage : styles.successMessage}>
-          {formMessage.message}
+      {(status === 'failed' || formError) && (
+        <p className={styles.errorMessage}>
+          {error || formError}
         </p>
       )}
 
@@ -226,6 +245,7 @@ const AddSale = () => {
                   value={formData.customer_name}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  placeholder="Name"
                 />
                 {errors.customer_name && <p className={styles.fieldError}>{errors.customer_name}</p>}
               </div>
@@ -250,6 +270,7 @@ const AddSale = () => {
                   value={formData.unique_code}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  placeholder="Unique Code"
                 />
                 {errors.unique_code && <p className={styles.fieldError}>{errors.unique_code}</p>}
               </div>
@@ -268,6 +289,7 @@ const AddSale = () => {
                   value={formData.phone_number}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  placeholder="Phone Number"
                 />
                 {errors.phone_number && <p className={styles.fieldError}>{errors.phone_number}</p>}
               </div>
@@ -280,6 +302,7 @@ const AddSale = () => {
                   value={formData.address}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  placeholder="Address"
                 />
                 {errors.address && <p className={styles.fieldError}>{errors.address}</p>}
               </div>
@@ -328,7 +351,7 @@ const AddSale = () => {
                 <label className={styles.fieldLabel}>Purchased Price</label>
                 <input
                   className={`${styles.fieldInput} ${styles.disabledField}`}
-                  type="number"
+                  type="text" 
                   name="purchased_price"
                   value={formData.purchased_price}
                   readOnly
@@ -343,8 +366,9 @@ const AddSale = () => {
                   value={formData.sold_price}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  step="0.01"
+                  step="1" 
                   min="0"
+                  placeholder=""
                 />
                 {errors.sold_price && <p className={styles.fieldError}>{errors.sold_price}</p>}
               </div>
@@ -357,6 +381,7 @@ const AddSale = () => {
                   value={formData.quantity}
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  step="1"
                   min="1"
                 />
                 {errors.quantity && <p className={styles.fieldError}>{errors.quantity}</p>}
@@ -386,8 +411,8 @@ const AddSale = () => {
             <button type="button" className={styles.backButton} onClick={() => navigate('/salesman/sales')}>
               Cancel
             </button>
-            <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-              {isSubmitting ? 'Submitting...' : 'Add Sale'}
+            <button type="submit" className={styles.submitButton} disabled={status === 'loading'}>
+              {status === 'loading' ? 'Submitting...' : 'Add Sale'}
             </button>
           </div>
         </div>
