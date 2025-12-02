@@ -34,9 +34,24 @@ const Sidebar = () => {
                     <span>📦</span> Products
                 </Link>
             </li>
+            <li className={activeLink === "/owner/inventory" ? "active" : ""}>
+                <Link to="/owner/inventory" onClick={() => handleLinkClick("/owner/inventory")}>
+                    <span>📊</span> Inventory
+                </Link>
+            </li>
             <li className={activeLink === "/owner/employees" ? "active" : ""}>
                 <Link to="/owner/employees" onClick={() => handleLinkClick("/owner/employees")}>
                     <span>👥</span> Employees
+                </Link>
+            </li>
+             <li className={activeLink === "/owner/salaries" ? "active" : ""}>
+                <Link to="/owner/salaries" onClick={() => handleLinkClick("/owner/salaries")}>
+                    <span>👥</span> Salaries
+                </Link>
+            </li>
+             <li className={activeLink === "/owner/profits" ? "active" : ""}>
+                <Link to="/owner/profits" onClick={() => handleLinkClick("/owner/profits")}>
+                    <span>🌐</span> Profits
                 </Link>
             </li>
             <li className={activeLink === "/owner/companies" ? "active" : ""}>
@@ -47,6 +62,11 @@ const Sidebar = () => {
             <li className={activeLink === "/owner/branches" ? "active" : ""}>
                 <Link to="/owner/branches" onClick={() => handleLinkClick("/owner/branches")}>
                     <span>🌐</span> Branches
+                </Link>
+            </li>
+            <li className={activeLink === "/owner/messages" ? "active" : ""}>
+                <Link to="/owner/messages" onClick={() => handleLinkClick("/owner/messages")}>
+                    <span>🌐</span> message
                 </Link>
             </li>
         </>
@@ -117,7 +137,11 @@ const Sidebar = () => {
                     <span>👤</span> Sales
                 </Link>
             </li>
-            
+            <li className={activeLink === "/salesman/salaries" ? "active" : ""}>
+                <Link to="/salesman/salaries" onClick={() => handleLinkClick("/salesman/salaries")}>
+                    <span>💰</span> Salaries
+                </Link>
+            </li>
         </>
     );
 
@@ -143,6 +167,35 @@ const Sidebar = () => {
                     <span>👥</span> complaints
                 </Link>
             </li>
+            <li className={activeLink === "/company/messages" ? "active" : ""}>
+                <Link to="/company/messages" onClick={() => handleLinkClick("/company/messages")}>
+                    <span>👥</span> messages
+                </Link>
+            </li>
+        </>
+    );
+    const customerLinks = (
+        <>
+            <li className={activeLink === "/customer/previouspurchases" ? "active" : ""}>
+                <Link to="/customer/previouspurchases" onClick={() => handleLinkClick("/customer/previouspurchases")}>
+                    <span>💸</span> Previous Purchases
+                </Link>
+            </li>
+            <li className={activeLink === "/customer/complaints" ? "active" : ""}>
+                <Link to="/customer/complaints" onClick={() => handleLinkClick("/customer/complaints")}>
+                    <span>💰</span> Complaints
+                </Link>
+            </li>
+            <li className={activeLink === "/customer/review" ? "active" : ""}>
+                <Link to="/customer/review" onClick={() => handleLinkClick("/customer/review")}>
+                    <span>🏬</span> Reviews
+                </Link>
+            </li>
+            <li className={activeLink === "/customer/blogs" ? "active" : ""}>
+                <Link to="/customer/blogs" onClick={() => handleLinkClick("/customer/blogs")}>
+                    <span>🏬</span> Blogs
+                </Link>
+            </li>
         </>
     );
 
@@ -156,6 +209,7 @@ const Sidebar = () => {
                 {user.role === 'manager' && managerLinks}
                 {user.role === 'salesman' && salesmanLinks}
                 {user.role === 'company' && companyLinks}
+                {user.role === 'customer' && customerLinks}
             </ul>
         </div>
     );

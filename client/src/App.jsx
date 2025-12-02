@@ -7,6 +7,8 @@ import AuthState from './context/AuthState';
 import PublicLayout from './components/layout/PublicLayout';
 import PrivateLayout from './components/layout/PrivateLayout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import CustomerLoginPage from './pages/CustomerLoginPage';
+import PreviousPurchases from './pages/customer/PreviousPurchases';
 
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -17,6 +19,7 @@ import SalesmanAnalyticsPage from './pages/salesman/SalesmanAnalyticsPage';
 import NotFoundPage from './pages/NotFoundPage';
 import CompanyPage from './pages/owner/CompanyPage';
 import BranchPage from './pages/owner/Branches/BranchPage';
+import Admin_messages from './pages/owner/messages/OwnerMessages';
 import Details from './pages/salesman/EmployeeDetails/Details';
 import CompanyLogin from './pages/CompanyLogin';
 import companyproducts from './pages/company/products/CompanyProducts';
@@ -29,19 +32,27 @@ import ManagerEmployeesPage from './pages/manager/Employees/ManagerEmployeesPage
 import ManagerEmployeeDetails from './pages/manager/Employees/ManagerEmployeeDetails';
 import ManagerProfileEdit from './pages/manager/Profile/ManagerProfileEdit';
 import CompanyProducts from './pages/company/products/CompanyProducts';
+import Companymessages from './pages/company/messages/Companymessages';
 import Products from './pages/owner/Products/Products';
 import Sales from './pages/salesman/SalesDetails/sales';
 import Inventory from './pages/salesman/Inventory/Inventory';
+import Salaries from './pages/salesman/SalariesFeature/Salaries';
 
 
 import ManagerOrdersPage from './pages/manager/Orders/ManagerOrdersPage';
 import ManagerOrderDetails from './pages/manager/Orders/ManagerOrderDetails';
 import OwnerSales from './pages/owner/Sales/Sales';
 import ManagerInventoryPage from './pages/manager/Inventory/ManagerInventoryPage';
+
+import NewProducts from './pages/NewProducts';
+
 import Manager_Sales from './pages/manager/Sales/Manager_Sales';
 import ManagerSalaryPage from './pages/manager/Salary/ManagerSalaryPage';
 import AdminOrders from './pages/owner/Orders/AdminOrders';
 import ManagerAnalyticsPage from './pages/manager/Analytics/ManagerAnalyticsPage';
+import Admin_Inventory from './pages/owner/Inventory/Admin_Inventory';
+import { Admin_salary } from './pages/owner/Salary/Admin_salary';
+import { Admin_Profits } from './pages/owner/Profits/Admin_Profits';
 const PostLoginRedirect = () => {
     const { user } = useContext(AuthContext);
 
@@ -59,6 +70,8 @@ const PostLoginRedirect = () => {
             return <Navigate to="/salesman/analytics" />;
         case 'company':
             return <Navigate to="/company/analytics" />;
+        case 'customer':
+            return <Navigate to="/customer/previouspurchases" />;
         default:
             return <Navigate to="/login" />;
     }
@@ -73,10 +86,12 @@ function App() {
                     {/* Public Routes */}
                     <Route element={<PublicLayout />}>
                         <Route path="/" element={<HomePage />} />
+                        <Route path="/newproducts" element={<NewProducts />} />
                         <Route path="/login" element={<LoginPage />} /> 
                         <Route path="/our-branches" element={<OurBranches />} />
                         <Route path="/about-us" element={<AboutUs />} />
                         <Route path="/companylogin" element={<CompanyLogin />} />
+                        <Route path="/customerlogin" element={<CustomerLoginPage />} />
                     </Route>
 
                     {/* Redirect after login */}
@@ -92,6 +107,10 @@ function App() {
                         <Route path="/owner/products" element={<ProtectedRoute roles={['owner']}><Products /></ProtectedRoute>} />
                         <Route path="/owner/sales" element={<ProtectedRoute roles={['owner']}><OwnerSales/></ProtectedRoute>} />
                         <Route path="/owner/orders" element={<ProtectedRoute roles={['owner']}><AdminOrders /></ProtectedRoute>} />
+                        <Route path="/owner/inventory" element={<ProtectedRoute roles={['owner']}><Admin_Inventory /></ProtectedRoute>} />
+                        <Route path="/owner/salaries" element={<ProtectedRoute roles={['owner']}><Admin_salary /></ProtectedRoute>} />
+                        <Route path="/owner/profits" element={<ProtectedRoute roles={['owner']}><Admin_Profits /></ProtectedRoute>} />
+                        <Route path="/owner/messages" element={<ProtectedRoute roles={['owner']}><Admin_messages /></ProtectedRoute>} />
 
                         {/* Manager Routes */}
                         <Route path="/manager/employees" element={<ProtectedRoute roles={['manager']}><ManagerEmployeesPage /></ProtectedRoute>} /> 
@@ -108,7 +127,7 @@ function App() {
                         <Route path='/salesman/profile' element={<ProtectedRoute roles={['salesman']}><Details/></ProtectedRoute>} />
                         <Route path='/salesman/sales/*' element={<ProtectedRoute roles={['salesman']}><Sales/></ProtectedRoute>} />
                         <Route path='/salesman/inventory' element={<ProtectedRoute roles={['salesman']}><Inventory/></ProtectedRoute>} />
-
+                        <Route path='/salesman/salaries' element={<ProtectedRoute roles={['salesman']}><Salaries/></ProtectedRoute>} /> 
 
                         <Route path="/company/analytics" element={
                             <ProtectedRoute roles={['company']}>
@@ -131,6 +150,18 @@ function App() {
                                 
                             </ProtectedRoute>
                         } />
+                        <Route path="/company/messages" element={
+                            <ProtectedRoute roles={['company']}>
+                                <Companymessages/>
+                            </ProtectedRoute>
+                        } />
+
+                        <Route path="/customer/previouspurchases" element={
+                            <ProtectedRoute roles={['customer']}>
+                                <PreviousPurchases />
+                            </ProtectedRoute>
+                        } />
+
                     </Route>
 
                     {/* Not Found */}

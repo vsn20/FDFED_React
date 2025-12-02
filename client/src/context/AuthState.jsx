@@ -118,6 +118,20 @@ const AuthState = (props) => {
             throw err; // Re-throw error for the component to catch
         }
     };
+    const customerLogin = async (mobileNumber) => {
+        try {
+            const res = await api.post('/auth/customer/login', { mobileNumber });
+            dispatch({
+                type: 'LOGIN_SUCCESS',
+                payload: res.data, 
+            });
+            navigate('/customer/previouspurchases'); // Redirect immediately
+        } catch (err) {
+            console.error(err.response?.data?.message);
+            // We throw the error so the Login Page can catch it and show the error message
+            throw new Error(err.response?.data?.message || 'Login failed');
+        }
+    };
 
     // Logout User
     const logout = () => {
@@ -136,6 +150,7 @@ const AuthState = (props) => {
                 logout,
                 companyLogin,
                 companySignup,
+                customerLogin, // <--- Add this
             }}
         >
             {props.children}

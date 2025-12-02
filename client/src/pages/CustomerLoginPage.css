@@ -1,0 +1,156 @@
+.customer-login-body {
+    min-height: 80vh;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.cl-main-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    min-height: 600px;
+}
+
+.cl-image-section {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.cl-image-section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.cl-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.cl-auth-container {
+    flex: 1;
+    background: #fff;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.cl-auth-container h2 {
+    color: #2C3E50;
+    margin-bottom: 30px;
+    font-size: 2em;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+.cl-auth-container h2:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(135deg, #34495E, #2C3E50);
+}
+
+.cl-form {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.cl-input {
+    width: 90%;
+    padding: 15px;
+    margin: 15px auto;
+    border: none;
+    border-radius: 25px;
+    background: #f5f6fa;
+    box-shadow: inset 4px 4px 8px #e0e1e5, inset -4px -4px 8px #ffffff;
+    transition: all 0.3s ease;
+    display: block;
+    font-size: 16px;
+}
+
+.cl-input:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(52, 73, 94, 0.3);
+}
+
+.cl-btn {
+    width: 90%;
+    padding: 15px;
+    margin: 20px auto;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #34495E, #2C3E50);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+}
+
+.cl-btn:hover {
+    background: linear-gradient(to right, rgb(66, 32, 70), rgb(30, 26, 71), rgb(77, 38, 44), #155217, #2E8B57);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.cl-btn:active, .cl-btn.clicked {
+    transform: scale(0.95);
+}
+
+.cl-error-message {
+    color: #e74c3c;
+    margin: 15px auto;
+    padding: 10px;
+    background: #ffebee;
+    border-radius: 5px;
+    width: 90%;
+    text-align: center;
+}
+
+.cl-change-number {
+    margin-top: 15px;
+    color: #34495E;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+    .cl-main-container {
+        flex-direction: column;
+        margin: 20px 0;
+    }
+    .cl-image-section {
+        min-height: 200px;
+        max-height: 300px;
+    }
+    .cl-auth-container {
+        padding: 20px;
+    }
+}
