@@ -8,37 +8,47 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* --- LAYOUT CONTAINERS --- */
+/* --- LAYOUT CONTAINERS (Updated for Sidebar Alignment) --- */
 .container {
-  margin-top: 90px;
+  margin-top: 20px; /* Aligned with sidebar margin */
   display: flex;
   flex: 1;
   gap: 25px;
   padding: 0 20px;
+  flex-direction: column;
+  min-height: 80vh; /* Ensures it stretches nicely with sidebar */
   max-width: 100%;
 }
 
+/* --- CONTENT AREA (Card Style) --- */
 .contentArea {
   background: #ffffff;
   border-radius: 15px;
-  padding: 20px;
+  padding: 25px; /* Consistent padding */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   flex: 1;
-  overflow-x: auto;
-  min-height: 80vh;
+  overflow-y: auto;
+  
+  /* Hide scrollbar logic */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.contentArea::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .contentArea h1 {
   color: #2d3436;
-  margin-bottom: 20px;
   font-size: 1.5rem;
-  text-align: center;
+  margin: 0 0 20px 0; /* Add bottom margin for title spacing */
+  text-align: left; /* Aligned left like standard pages */
 }
 
 /* --- HEADER & BUTTONS --- */
 .headerContainer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-end; /* Align Add button to right */
   align-items: center;
   margin-bottom: 20px;
 }
@@ -65,7 +75,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #ffffff;
+  background: #f8f9fa; /* Light grey background for filter bar */
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 20px;
@@ -86,11 +96,12 @@
   border-radius: 6px;
   font-size: 0.9rem;
   transition: border-color 0.2s;
+  background-color: white;
+  outline: none;
 }
 
 .searchInput:focus {
   border-color: #333;
-  outline: none;
 }
 
 .filterGroup {
@@ -107,11 +118,16 @@
   cursor: pointer;
   min-width: 140px;
   font-size: 0.9rem;
+  outline: none;
+}
+
+.filterSelect:focus {
+  border-color: #333;
 }
 
 .resetBtn {
   padding: 10px 20px;
-  background-color: #ef4444;
+  background-color: #181818; /* Red for Reset */
   color: white;
   border: none;
   border-radius: 6px;
@@ -121,7 +137,7 @@
 }
 
 .resetBtn:hover {
-  background-color: #dc2626;
+  background-color: #504e4e;
 }
 
 /* --- TABLE STYLES --- */
@@ -129,6 +145,8 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin-bottom: 20px;
+  border: 1px solid #e6e9f0;
+  border-radius: 10px;
 }
 
 .table {
@@ -136,8 +154,6 @@
   min-width: 800px;
   border-collapse: collapse;
   background: #ffffff;
-  border-radius: 10px;
-  border-spacing: 0;
 }
 
 .thead {
@@ -146,19 +162,24 @@
 
 .th {
   color: white;
-  padding: 12px;
+  padding: 15px;
   text-align: left;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
   border-bottom: 2px solid #ffffff;
+  white-space: nowrap;
 }
 
 .td {
-  padding: 12px;
+  padding: 15px;
   text-align: left;
   font-size: 0.9rem;
   border-bottom: 1px solid #e6e9f0;
   color: #2d3436;
+}
+
+.tr:last-child .td {
+  border-bottom: none;
 }
 
 .tr {
@@ -170,6 +191,7 @@
   background-color: #f8fafc;
 }
 
+/* --- STATUS BADGES --- */
 .statusBadge {
   padding: 4px 10px;
   border-radius: 12px;
@@ -189,7 +211,7 @@
   background-color: #fee2e2;
 }
 
-/* --- PAGINATION STYLES --- */
+/* --- PAGINATION --- */
 .paginationContainer {
   display: flex;
   justify-content: space-between;
@@ -242,6 +264,7 @@
   background: #f1f5f9;
   color: #cbd5e1;
   cursor: not-allowed;
+  border-color: #e2e8f0;
 }
 
 .pageBtn:hover:not(:disabled) {
@@ -256,7 +279,7 @@
   margin: 0 5px;
 }
 
-/* --- FORM STYLES (For Add/Edit Components) --- */
+/* --- FORM STYLES --- */
 .formContainer {
   max-width: 700px;
   margin: 0 auto;
@@ -308,6 +331,7 @@
 .fieldInput:focus {
   border-color: #333;
   outline: none;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
 }
 
 .disabledField {
@@ -334,17 +358,72 @@
   background-color: #555555;
 }
 
+/* --- RESPONSIVE DESIGN --- */
 @media (max-width: 768px) {
-  .container { flex-direction: column; padding: 0 10px; }
-  .contentArea { padding: 15px; }
-  .controlsContainer { flex-direction: column; align-items: stretch; }
-  .filterGroup { flex-direction: column; }
-  .filterSelect, .resetBtn { width: 100%; }
-  .table, .thead { display: none; }
-  .tr { display: flex; flex-direction: column; margin-bottom: 15px; border: 1px solid #e6e9f0; border-radius: 8px; padding: 15px; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-  .td { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #e6e9f0; }
-  .td:last-child { border-bottom: none; }
-  .td:before { content: attr(data-label); font-weight: bold; color: #4b5563; }
-  .paginationContainer { flex-direction: column; text-align: center; }
-  .fieldGroup > div { flex: 1 1 100%; }
+  .container {
+    flex-direction: column;
+    padding: 0 10px;
+  }
+  
+  .contentArea {
+    padding: 15px;
+  }
+
+  /* Stack controls vertically */
+  .controlsContainer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filterGroup {
+    flex-direction: column;
+  }
+  
+  .filterSelect, 
+  .resetBtn {
+    width: 100%;
+  }
+
+  /* Responsive Table (Card View) */
+  .table, .thead {
+    display: none;
+  }
+  
+  .tr {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    border: 1px solid #e6e9f0;
+    border-radius: 8px;
+    padding: 15px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  
+  .td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed #e6e9f0;
+  }
+  
+  .td:last-child {
+    border-bottom: none;
+  }
+  
+  .td:before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #4b5563;
+  }
+
+  /* Pagination Stacking */
+  .paginationContainer {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .fieldGroup > div {
+    flex: 1 1 100%;
+  }
 }

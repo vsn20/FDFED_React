@@ -1,0 +1,166 @@
+/* LoginPage.css */
+.login-page-body {
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centering for React view */
+    align-items: center;
+}
+
+.main-container {
+    display: flex;
+    min-height: 80vh;
+    width: 100%;
+    max-width: 1200px;
+    margin: 50px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: all 0.5s ease;
+    background: #fff;
+}
+
+.image-section {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.5s ease;
+}
+
+.image-section img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.auth-container {
+    flex: 1;
+    background: #fff;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: all 0.5s ease;
+}
+
+.auth-form-wrapper h2 {
+    color: #2C3E50;
+    margin-bottom: 30px;
+    font-size: 2em;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.auth-form-wrapper h2:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(135deg, #34495E, #2C3E50);
+}
+
+.form-input {
+    width: 70%;
+    padding: 12px;
+    margin: 15px auto;
+    border: none;
+    border-radius: 25px;
+    background: #f5f6fa;
+    box-shadow: inset 4px 4px 8px #e0e1e5, inset -4px -4px 8px #ffffff;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.form-input:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(52, 73, 94, 0.3);
+}
+
+.submit-btn {
+    width: 70%;
+    padding: 12px;
+    margin: 20px auto;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #34495E, #2C3E50);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(to right, rgb(66, 32, 70), rgb(30, 26, 71), rgb(77, 38, 44), #155217, #2E8B57);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.submit-btn:active {
+    background: linear-gradient(to left, rgb(66, 32, 70), rgb(30, 26, 71), rgb(77, 38, 44), #155217, #2E8B57);
+    transform: scale(0.95);
+}
+
+.link-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.link-container span, .link-container a {
+    text-decoration: none;
+    color: #34495E;
+    font-size: 14px;
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+.link-container span:hover, .link-container a:hover {
+    color: #2E8B57;
+}
+
+.error-message {
+    color: #e74c3c;
+    margin: 15px auto;
+    padding: 10px;
+    background: #ffebee;
+    border-radius: 5px;
+    width: 70%;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        margin: 20px;
+    }
+    .image-section {
+        min-height: 300px;
+        order: 1 !important;
+    }
+    .auth-container {
+        order: 2 !important;
+    }
+}

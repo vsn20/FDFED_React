@@ -3,13 +3,15 @@ import branchReducer from './slices/branchSlice';
 import employeeReducer from './slices/employeeSlice';
 import saleReducer from './slices/saleSlice'; 
 import salesmanSalesReducer from './slices/salesmanSalesSlice';
+import managerEmployeeReducer from './slices/managerEmployeeSlice';
 
 const store = configureStore({
     reducer: {
         branches: branchReducer,
         employees: employeeReducer,
-        sales: saleReducer, 
         salesmanSales: salesmanSalesReducer, 
+        sales: saleReducer,
+        managerEmployees: managerEmployeeReducer,
     },
 });
 

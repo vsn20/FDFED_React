@@ -87,6 +87,21 @@ const AuthState = (props) => {
             dispatch({ type: 'LOGIN_FAIL' });
         }
     };
+    const signup = async (formData) => {
+        try {
+            const res = await api.post('/auth/signup', formData);
+            dispatch({
+                type: 'LOGIN_SUCCESS',
+                payload: res.data,
+            });
+            navigate('/dashboard');
+        } catch (err) {
+            const errorMsg = err.response?.data?.message || 'Signup failed';
+            console.error(errorMsg);
+            dispatch({ type: 'AUTH_ERROR' });
+            throw new Error(errorMsg); // Throw so component can handle UI alert
+        }
+    };
 
     const companyLogin = async (formData) => {
         try {
@@ -147,10 +162,11 @@ const AuthState = (props) => {
                 loading: state.loading,
                 user: state.user,
                 login,
+                signup,
                 logout,
                 companyLogin,
                 companySignup,
-                customerLogin, // <--- Add this
+                customerLogin,
             }}
         >
             {props.children}

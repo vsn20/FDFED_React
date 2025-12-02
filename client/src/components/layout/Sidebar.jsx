@@ -21,12 +21,12 @@ const Sidebar = () => {
             </li>
             <li className={activeLink === "/owner/sales" ? "active" : ""}>
                 <Link to="/owner/sales" onClick={() => handleLinkClick("/owner/sales")}>
-                    <span>📊</span> Sales
+                    <span>💰</span> Sales
                 </Link>
             </li>
                 <li className={activeLink === "/owner/orders" ? "active" : ""}>
                 <Link to="/owner/orders" onClick={() => handleLinkClick("/owner/orders")}>
-                    <span>🌐</span> Orders
+                    <span>📝</span> Orders
                 </Link>
             </li>    
              <li className={activeLink === "/owner/products" ? "active" : ""}>
@@ -36,7 +36,7 @@ const Sidebar = () => {
             </li>
             <li className={activeLink === "/owner/inventory" ? "active" : ""}>
                 <Link to="/owner/inventory" onClick={() => handleLinkClick("/owner/inventory")}>
-                    <span>📊</span> Inventory
+                    <span>🏬</span> Inventory
                 </Link>
             </li>
             <li className={activeLink === "/owner/employees" ? "active" : ""}>
@@ -46,12 +46,12 @@ const Sidebar = () => {
             </li>
              <li className={activeLink === "/owner/salaries" ? "active" : ""}>
                 <Link to="/owner/salaries" onClick={() => handleLinkClick("/owner/salaries")}>
-                    <span>👥</span> Salaries
+                    <span>💸</span> Salaries
                 </Link>
             </li>
              <li className={activeLink === "/owner/profits" ? "active" : ""}>
                 <Link to="/owner/profits" onClick={() => handleLinkClick("/owner/profits")}>
-                    <span>🌐</span> Profits
+                    <span>📈</span> Profits
                 </Link>
             </li>
             <li className={activeLink === "/owner/companies" ? "active" : ""}>
@@ -66,7 +66,7 @@ const Sidebar = () => {
             </li>
             <li className={activeLink === "/owner/messages" ? "active" : ""}>
                 <Link to="/owner/messages" onClick={() => handleLinkClick("/owner/messages")}>
-                    <span>🌐</span> message
+                    <span>✉</span> Messages
                 </Link>
             </li>
         </>
@@ -79,24 +79,8 @@ const Sidebar = () => {
                     <span>📈</span> Analytics
                 </Link>
             </li>
-            
-            <li className={activeLink === "/manager/employees" ? "active" : ""}>
-                <Link to="/manager/employees" onClick={() => handleLinkClick("/manager/employees")}>
-                    <span>👥</span> Salesmen
-                </Link>
-            </li>
-            <li className={activeLink === "/manager/salary" ? "active" : ""}> {/* NEW SALARY LINK */}
-                <Link to="/manager/salary" onClick={() => handleLinkClick("/manager/salary")}>
-                    <span>💸</span> Salary
-                </Link>
-            </li>
-            <li className={activeLink === "/manager/profile" ? "active" : ""}>
-                <Link to="/manager/profile" onClick={() => handleLinkClick("/manager/profile")}>
-                    <span>👤</span> Profile
-                </Link>
-            </li>
 
-             <li className={activeLink === "/manager/sales" ? "active" : ""}>
+            <li className={activeLink === "/manager/sales" ? "active" : ""}>
                 <Link to="/manager/sales" onClick={() => handleLinkClick("/manager/sales")}>
                     <span>💰</span> Sales
                 </Link>
@@ -111,7 +95,23 @@ const Sidebar = () => {
             <Link to="/manager/inventory" onClick={() => handleLinkClick("/manager/inventory")}>
                 <span>📦</span> Inventory
             </Link>
-        </li>
+           </li>
+            
+            <li className={activeLink === "/manager/employees" ? "active" : ""}>
+                <Link to="/manager/employees" onClick={() => handleLinkClick("/manager/employees")}>
+                    <span>👥</span> Salesmen
+                </Link>
+            </li>
+            <li className={activeLink === "/manager/salary" ? "active" : ""}> {/* NEW SALARY LINK */}
+                <Link to="/manager/salary" onClick={() => handleLinkClick("/manager/salary")}>
+                    <span>💸</span> Salaries
+                </Link>
+            </li>
+            <li className={activeLink === "/manager/profile" ? "active" : ""}>
+                <Link to="/manager/profile" onClick={() => handleLinkClick("/manager/profile")}>
+                    <span>👤</span> Profile
+                </Link>
+            </li>          
         </>
     );
 
@@ -122,9 +122,9 @@ const Sidebar = () => {
                     <span>📊</span> Analytics
                 </Link>
             </li>
-            <li className={activeLink === "/salesman/profile" ? "active" : ""}>
-                <Link to="/salesman/profile" onClick={() => handleLinkClick("/salesman/profile")}>
-                    <span>👥</span> Profile
+             <li className={activeLink === "/salesman/sales" ? "active" : ""}>
+                <Link to="/salesman/sales" onClick={() => handleLinkClick("/salesman/sales")}>
+                    <span>💰</span> Sales
                 </Link>
             </li>
             <li className={activeLink === "/salesman/inventory" ? "active" : ""}>
@@ -132,14 +132,14 @@ const Sidebar = () => {
                     <span>📦</span> Inventory
                 </Link>
             </li>
-            <li className={activeLink === "/salesman/sales" ? "active" : ""}>
-                <Link to="/salesman/sales" onClick={() => handleLinkClick("/salesman/sales")}>
-                    <span>👤</span> Sales
+            <li className={activeLink === "/salesman/profile" ? "active" : ""}>
+                <Link to="/salesman/profile" onClick={() => handleLinkClick("/salesman/profile")}>
+                    <span>👥</span> Profile
                 </Link>
-            </li>
+            </li>           
             <li className={activeLink === "/salesman/salaries" ? "active" : ""}>
                 <Link to="/salesman/salaries" onClick={() => handleLinkClick("/salesman/salaries")}>
-                    <span>💰</span> Salaries
+                    <span>💸</span> Salary
                 </Link>
             </li>
         </>
@@ -164,17 +164,17 @@ const Sidebar = () => {
             </li>
             <li className={activeLink === "/company/orders" ? "active" : ""}>
                 <Link to="/company/orders" onClick={() => handleLinkClick("/company/orders")}>
-                    <span>👥</span> orders
+                    <span>📝</span> orders
                 </Link>
             </li>
             <li className={activeLink === "/company/complaints" ? "active" : ""}>
                 <Link to="/company/complaints" onClick={() => handleLinkClick("/company/complaints")}>
-                    <span>👥</span> complaints
+                    <span>📢</span> complaints
                 </Link>
             </li>
             <li className={activeLink === "/company/messages" ? "active" : ""}>
                 <Link to="/company/messages" onClick={() => handleLinkClick("/company/messages")}>
-                    <span>👥</span> messages
+                    <span>✉</span> messages
                 </Link>
             </li>
         </>
@@ -183,22 +183,22 @@ const Sidebar = () => {
         <>
             <li className={activeLink === "/customer/previouspurchases" ? "active" : ""}>
                 <Link to="/customer/previouspurchases" onClick={() => handleLinkClick("/customer/previouspurchases")}>
-                    <span>💸</span> Previous Purchases
+                    <span>🛒</span> Previous Purchases
                 </Link>
             </li>
             <li className={activeLink === "/customer/complaints" ? "active" : ""}>
                 <Link to="/customer/complaints" onClick={() => handleLinkClick("/customer/complaints")}>
-                    <span>💰</span> Complaints
+                    <span>📢</span> Complaints
                 </Link>
             </li>
             <li className={activeLink === "/customer/review" ? "active" : ""}>
                 <Link to="/customer/review" onClick={() => handleLinkClick("/customer/review")}>
-                    <span>🏬</span> Reviews
+                    <span>⭐</span> Reviews
                 </Link>
             </li>
             <li className={activeLink === "/customer/blogs" ? "active" : ""}>
                 <Link to="/customer/blogs" onClick={() => handleLinkClick("/customer/blogs")}>
-                    <span>🏬</span> Blogs
+                    <span>✉</span> Blogs
                 </Link>
             </li>
         </>

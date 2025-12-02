@@ -39,7 +39,7 @@ const BranchPage = () => {
 
     // --- Unified Filter Logic ---
     useEffect(() => {
-        let result = allBranches;
+        let result = allBranches || [];
 
         if (searchQuery.trim()) {
             const query = searchQuery.toLowerCase();
@@ -97,9 +97,11 @@ const BranchPage = () => {
         setSingleBranchId(null);
     };
 
+    // FIX: Re-fetch data on back to refresh the list
     const handleBack = () => {
         setAddBranchMode(false);
         setSingleBranchId(null);
+        dispatch(fetchBranches()); 
     };
 
     const handleRowClick = (bid) => {

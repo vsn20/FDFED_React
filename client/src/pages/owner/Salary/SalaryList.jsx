@@ -16,8 +16,8 @@ const SalaryList = () => {
 
     // Pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [rowsInput, setRowsInput] = useState("10");
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [rowsInput, setRowsInput] = useState("5");
 
     // 1. Initialize Options (Months & Branches)
     useEffect(() => {
@@ -107,11 +107,10 @@ const SalaryList = () => {
 
     return (
         <div className="content-area">
-            <div className="page-header">
-                <h1>Salaries</h1>
-                <div className="salary-subtitle">
-                    {selectedMonth ? `${selectedMonth.replace('-', ' ')} Report` : 'Select Month'}
-                </div>
+             <h2>Salaries</h2>
+            <div className="page-header">             
+               
+                  <h2>{selectedMonth ? `${selectedMonth.replace('-', ' ')} Report` : 'Select Month'}</h2>  
             </div>
 
             {/* Filters Bar */}
@@ -127,11 +126,6 @@ const SalaryList = () => {
                         <option key={opt} value={opt}>{opt.replace('-', ' ')}</option>
                     ))}
                 </select>
-
-                <button className="btn-generate" onClick={handleGenerate}>
-                    Refresh Data
-                </button>
-
                 {/* Search */}
                 <input 
                     type="text" 
@@ -152,6 +146,10 @@ const SalaryList = () => {
                         <option key={b._id} value={b.bid}>{b.b_name}</option>
                     ))}
                 </select>
+                 <button className="btn-generate" onClick={handleGenerate}>
+                    Reset
+                </button>
+
             </div>
 
             {/* Table */}

@@ -66,32 +66,41 @@ const AboutUs = () => {
           </div>
         </div>
 
-        {/* --- TEAM SECTION:*/}
+        {/* --- TEAM SECTION --- */}
         <div className="team-section">
-          <h2 >Meet Our Team</h2>
+          <h2>Meet Our Team & Contributions</h2>
           <div className="team-grid-container">
+            
+            {/* Row 1: 2 People */}
             <div className="team-row team-row-2">
               <div className="team-card">
-                <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Sai Chand" />
+                <img src="./saichand.jpg" alt="Sai Chand" />
                 <h3>Sai Chand</h3>
+                <p>Company Dashboard, Messaging System (All Roles), Authentication & Top Products</p>
               </div>
               <div className="team-card">
-                <img src="https://images.pexels.com/photos/837358/pexels-photo-837358.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Naman" />
+                <img src="./SaiNaman.jpg" alt="Naman" />
                 <h3>Vuppala Sai Naman</h3>
+                <p>Admin Dashboard, Our Branches & Our Products Pages</p>
               </div>
             </div>
+
+            {/* Row 2: 3 People */}
             <div className="team-row team-row-3">
               <div className="team-card">
-                <img src="https://images.pexels.com/photos/846741/pexels-photo-846741.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Hema Sai" />
+                <img src="./hema.jpg" alt="Hema Sai" />
                 <h3>Hema Sai</h3>
+                <p>Salesman Dashboard & New Products Page</p>
               </div>
               <div className="team-card">
-                <img src="https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Narayana" />
+                <img src="./narayana.jpg" alt="Narayana" />
                 <h3>Narayana</h3>
+                <p>Sales Manager Dashboard & Homepage</p>
               </div>
               <div className="team-card">
-                <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Jahnavi" />
+                <img src="./jahanavi.png" alt="Jahnavi" />
                 <h3>Jahnavi</h3>
+                <p>Customer Dashboard & Contact Us Page</p>
               </div>
             </div>
 
