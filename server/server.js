@@ -87,6 +87,8 @@ app.use('/api/salesman/profile', require('./routes/salesman/detailsRoutes'));
 app.use('/api/salesman/sales', require('./routes/salesman/salesRoutes'));
 app.use('/api/salesman/inventory', require('./routes/salesman/inventoryRoutes'));
 app.use('/api/salesman/salaries', require('./routes/salesman/salaryRoutes'));
+app.use('/api/salesman/analytics', require('./routes/salesman/dashboardRoutes'));
+// Company routes - with products
 
 // Company Routes
 app.use('/api/company', require('./routes/company'));
