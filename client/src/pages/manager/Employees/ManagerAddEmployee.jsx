@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import AuthContext from '../../../context/AuthContext';
+import { useDispatch } from 'react-redux'; // NEW: Redux Hook
+import { addEmployeeSuccess } from '../../../redux/slices/managerEmployeeSlice'; // NEW: Redux Action
 import api from '../../../api/api';
 import styles from './Details.module.css';
 
 const ManagerAddEmployee = ({ handleBack, manager }) => {
+    const dispatch = useDispatch(); // NEW: Initialize dispatch
     const [formData, setFormData] = useState({
         f_name: '',
         last_name: '',
@@ -53,6 +55,7 @@ const ManagerAddEmployee = ({ handleBack, manager }) => {
         if (!formData.bankname.trim()) {
             errors.bankname = 'Bank name is required.';
         }
+        // Salary Validation (Already present)
         if (!formData.base_salary.trim()) {
             errors.base_salary = 'Monthly salary is required.';
         } else {
@@ -87,13 +90,18 @@ const ManagerAddEmployee = ({ handleBack, manager }) => {
         setSuccess('');
 
         try {
-            await api.post('/manager/employees', {
+            const newEmployeeData = {
                 ...formData,
                 role: 'salesman',
                 bid: manager.bid,
                 status: 'active' // Default
-            });
+            };
+            const res = await api.post('/manager/employees', newEmployeeData);
             setSuccess('Salesman added successfully!');
+            
+            // NEW: Dispatch action to add employee to Redux state
+            dispatch(addEmployeeSuccess(res.data)); // Assuming res.data contains the full new employee object
+
             setTimeout(() => handleBack(), 1500); // Auto back after success
         } catch (err) {
             console.error("Error adding salesman:", err);
@@ -126,7 +134,7 @@ const ManagerAddEmployee = ({ handleBack, manager }) => {
                                 aria-invalid={!!validationErrors.f_name}
                                 minLength={2}
                             />
-                            {validationErrors.f_name && <span className={styles.validationError} style={{ color: 'red' }}>{validationErrors.f_name}</span>}
+                            {validationErrors.f_name && <span className={styles.validationError}>{validationErrors.f_name}</span>}
                         </div>
                         <div>
                             <label className={styles.fieldLabel}>Last Name *</label>
@@ -142,7 +150,7 @@ const ManagerAddEmployee = ({ handleBack, manager }) => {
                                 aria-invalid={!!validationErrors.last_name}
                                 minLength={2}
                             />
-                            {validationErrors.last_name && <span className={styles.validationError} style={{ color: 'red' }}>{validationErrors.last_name}</span>}
+                            {validationErrors.last_name && <span className={styles.validationError}>{validationErrors.last_name}</span>}
                         </div>
                         <div>
                             <label className={styles.fieldLabel}>Role</label>
@@ -177,7 +185,7 @@ const ManagerAddEmployee = ({ handleBack, manager }) => {
                                 aria-label="Email"
                                 aria-invalid={!!validationErrors.email}
                             />
-                            {validationErrors.email && <span className={styles.validationError} style={{ color: 'red' }}>{validationErrors.email}</span>}
+                            {validationErrors.email && <span className={styles.validationError}>{validationErrors.email}</span>}
                         </div>
                         <div>
                             <label className={styles.fieldLabel}>Phone Number *</label>
@@ -194,7 +202,7 @@ const ManagerAddEmployee = ({ handleBack, manager }) => {
                                 aria-invalid={!!validationErrors.phone_no}
                                 maxLength={10}
                             />
-                            {validationErrors.phone_no && <span className={styles.validationError} style={{ color: 'red' }}>{validationErrors.phone_no}</span>}
+                            {validationErrors.phone_no && <span className={styles.validationError}>{validationErrors.phone_no}</span>}
                         </div>
                     </div>
                 </div>
@@ -215,7 +223,7 @@ const ManagerAddEmployee = ({ handleBack, manager }) => {
                                 aria-label="Account Number"
                                 aria-invalid={!!validationErrors.acno}
                             />
-                            {validationErrors.acno && <span className={styles.validationError} style={{ color: 'red' }}>{validationErrors.acno}</span>}
+                            {validationErrors.acno && <span className={styles.validationError}>{validationErrors.acno}</span>}
                         </div>
                         <div>
                             <label className={styles.fieldLabel}>IFSC Code *</label>
@@ -231,7 +239,7 @@ const ManagerAddEmployee = ({ handleBack, manager }) => {
                                 maxLength={11}
                                 aria-invalid={!!validationErrors.ifsc}
                             />
-                            {validationErrors.ifsc && <span className={styles.validationError} style={{ color: 'red' }}>{validationErrors.ifsc}</span>}
+                            {validationErrors.ifsc && <span className={styles.validationError}>{validationErrors.ifsc}</span>}
                         </div>
                         <div>
                             <label className={styles.fieldLabel}>Bank Name *</label>
@@ -246,7 +254,7 @@ const ManagerAddEmployee = ({ handleBack, manager }) => {
                                 aria-label="Bank Name"
                                 aria-invalid={!!validationErrors.bankname}
                             />
-                            {validationErrors.bankname && <span className={styles.validationError} style={{ color: 'red' }}>{validationErrors.bankname}</span>}
+                            {validationErrors.bankname && <span className={styles.validationError}>{validationErrors.bankname}</span>}
                         </div>
                         <div>
                             <label className={styles.fieldLabel}>Monthly Salary *</label>
@@ -263,7 +271,7 @@ const ManagerAddEmployee = ({ handleBack, manager }) => {
                                 aria-label="Monthly Salary"
                                 aria-invalid={!!validationErrors.base_salary}
                             />
-                            {validationErrors.base_salary && <span className={styles.validationError} style={{ color: 'red' }}>{validationErrors.base_salary}</span>}
+                            {validationErrors.base_salary && <span className={styles.validationError}>{validationErrors.base_salary}</span>}
                         </div>
                         <div>
                             <label className={styles.fieldLabel}>Address</label>
