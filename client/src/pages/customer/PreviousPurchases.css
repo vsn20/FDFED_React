@@ -8,7 +8,7 @@
 .reset-btn { padding: 10px 20px; background-color: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; }
 .sales-table-wrapper { background: white; border-radius: 8px; overflow-x: auto; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 .sales-table { width: 100%; border-collapse: collapse; min-width: 800px; }
-.sales-table th { background-color: #f1f5f9; color: #475569; padding: 15px; text-align: left; }
+.sales-table th { background-color: #f1f5f9; color: #695947; padding: 15px; text-align: left; }
 .sales-table td { padding: 15px; border-bottom: 1px solid #e2e8f0; color: #334155; }
 .clickable-row { cursor: pointer; transition: background 0.2s; }
 .clickable-row:hover { background-color: #f8fafc; }

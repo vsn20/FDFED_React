@@ -185,8 +185,9 @@ const PreviousPurchases = () => {
                         {currentSales.length > 0 ? (
                             currentSales.map((sale) => (
                                 <tr key={sale.sales_id} onClick={() => setSelectedSale(sale)} className="clickable-row">
-                                    <td>{sale.sales_id}</td>
+                                    <td >{sale.sales_id}</td>
                                     <td>{sale.product_name}</td>
+
                                     <td>{sale.company_name}</td>
                                     <td>{sale.branch_name}</td>
                                     <td className="amount-cell">₹{sale.amount.toLocaleString()}</td>
