@@ -1,0 +1,25 @@
+.sales-container { padding: 20px; background-color: #f8f9fa; min-height: 80vh; }
+.sales-title { font-size: 24px; color: #333; border-bottom: 3px solid #3b82f6; display: inline-block; padding-bottom: 5px; margin-bottom: 20px; }
+.filters-wrapper { background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 15px; }
+.search-group { flex: 1; min-width: 250px; }
+.sales-search-input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+.dropdown-group { display: flex; gap: 10px; flex-wrap: wrap; }
+.filter-select { padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+.reset-btn { padding: 10px 20px; background-color: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; }
+.sales-table-wrapper { background: white; border-radius: 8px; overflow-x: auto; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.sales-table { width: 100%; border-collapse: collapse; min-width: 800px; }
+.sales-table th { background-color: #f1f5f9; color: #695947; padding: 15px; text-align: left; }
+.sales-table td { padding: 15px; border-bottom: 1px solid #e2e8f0; color: #334155; }
+.clickable-row { cursor: pointer; transition: background 0.2s; }
+.clickable-row:hover { background-color: #f8fafc; }
+.amount-cell { font-weight: bold; color: #059669; }
+.status-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.85rem; }
+.status-badge.success { background-color: #d1fae5; color: #065f46; }
+.status-badge.pending { background-color: #fee2e2; color: #991b1b; }
+.pagination-container { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; border-radius: 8px; }
+.pagination-btn { padding: 8px 16px; border: 1px solid #cbd5e1; background: white; border-radius: 6px; cursor: pointer; }
+.pagination-btn:disabled { background-color: #f8fafc; cursor: not-allowed; }
+.detail-card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.detail-item label { font-weight: bold; color: #64748b; display: block; margin-bottom: 5px; }
+.detail-item span { display: block; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; }

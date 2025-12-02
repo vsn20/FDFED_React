@@ -65,6 +65,7 @@ app.use('/api/owner/orders', require('./routes/owner/OrderRoutes'));
 app.use('/api/owner/inventory', require('./routes/owner/InventoryRoutes'));
 app.use('/api/owner/salaries', require('./routes/owner/SalariesRoutes'));
 app.use('/api/owner/profits', require('./routes/owner/profitRoutes'));
+app.use('/api/owner/analytics', require('./routes/owner/ownerDashboardRoutes'));
 
 // *** MESSAGING ROUTE ***
 // Ensure your Frontend fetches from: http://localhost:5001/api/owner/messages
@@ -76,21 +77,35 @@ app.use('/api/manager/orders', require('./routes/managerOrderRoutes'));
 app.use('/api/manager/inventory', require('./routes/manager/managerInventoryRoutes'));
 app.use('/api/manager/sales', require('./routes/manager/SalesRoutes'));
 app.use('/api/manager/salary', require('./routes/manager/salaryRoutes'));
+app.use('/api/manager/analytics', require('./routes/manager/ManagerAnalyticsControllerRoutes'));
+// Public routes
+app.use('/api/our-branches', require('./routes/publicroutes'));
+
+// Salesman
+
 
 // Salesman Routes
 app.use('/api/salesman/profile', require('./routes/salesman/detailsRoutes'));
 app.use('/api/salesman/sales', require('./routes/salesman/salesRoutes'));
 app.use('/api/salesman/inventory', require('./routes/salesman/inventoryRoutes'));
 app.use('/api/salesman/salaries', require('./routes/salesman/salaryRoutes'));
+app.use('/api/salesman/analytics', require('./routes/salesman/dashboardRoutes'));
+// Company routes - with products
 
 // Company Routes
 app.use('/api/company', require('./routes/company'));
+
+// Customer Routes
+app.use('/api/customer/previouspurchases', require('./routes/customer/previousPurchasesRoutes'));
+app.use('/api/customer/complaints', require('./routes/Customer/Complaint_Routes'));
+app.use('/api/customer/reviews', require('./routes/Customer/ReviewRoute'));
 
 // Public Routes
 app.use('/api/our-branches', require('./routes/publicroutes'));
 app.use('/api/newproducts', require('./routes/newProductsRoutes'));
 app.use('/api/ourproducts', require('./routes/OurProductsRoutes'));
 //app.use('/api/topproducts', require('./routes/TopPoductsRoutes'));
+app.use('/api/contact', require('./routes/ContactUsRoute'));
 
 // 5. Socket.io Connection Logic (Debug logs)
 io.on("connection", (socket) => {

@@ -1,0 +1,174 @@
+/* path: client/src/pages/manager/Analytics/ManagerAnalytics.module.css */
+
+/* --- Variables (Light Theme) --- */
+:root {
+    --bg-light: #f8f9fa; /* Very Light Grey Background */
+    --card-light: #ffffff; /* White Card Background */
+    --primary-text: #212529; /* Dark Black/Grey Text for contrast */
+    --secondary-text: #6c757d; /* Medium Grey Text */
+    --accent-blue: #007bff; /* Standard Blue Accent */
+    --success-green: #28a745; /* High-Contrast Success Green */
+    --danger-red: #dc3545; /* High-Contrast Danger Red */
+    --border-color: #e9ecef; /* Very Light Border */
+}
+
+.container {
+    margin-top: 5px; 
+    padding: 30px;
+    min-height: calc(100vh - 30px); /* Adjusted min-height calculation */
+    background-color: var(--bg-light);
+}
+
+.contentArea {
+    background: var(--card-light);
+    border-radius: 12px;
+    padding: 30px;
+    /* Elevated shadow on light background */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+    max-width: 1400px;
+    margin: 0 auto;
+    border: 1px solid var(--border-color);
+}
+
+.contentArea h1 {
+    color: var(--primary-text);
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.welcomeMessage {
+    color: var(--secondary-text);
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* --- Profit Section --- */
+.profitSection {
+    margin-top: 20px;
+}
+
+.profitSection h2 {
+    color: var(--primary-text);
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+/* --- Profit Cards Grid --- */
+.profitCards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+    gap: 30px;
+}
+
+.profitCard {
+    background: var(--card-light); /* White inner background */
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profitCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15); /* More prominent shadow on hover */
+}
+
+.profitCard h3 {
+    color: var(--secondary-text);
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.profitValue {
+    color: var(--success-green); 
+    font-size: 3rem; 
+    font-weight: 800;
+    margin: 0;
+    text-shadow: none;
+}
+
+.na {
+    color: var(--danger-red); 
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+/* Full Width Card (Profit by Month) */
+.profitCardFull {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px;
+}
+
+/* --- Month Selector --- */
+.monthSelectorWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.profitCard select {
+    padding: 15px 20px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--card-light);
+    color: var(--primary-text);
+    cursor: pointer;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23212529%22%20d%3D%22M287%2069.9L146.2%20210.8%205.4%2069.9z%22%2F%3E%3C%2Fsvg%3E'); 
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 10px;
+    transition: border-color 0.3s ease;
+}
+
+.profitCard select:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.selectedMonthProfit {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--secondary-text);
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Loading and Error States --- */
+.loading {
+    color: var(--accent-blue);
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 50px 0;
+}
+
+.error {
+    color: var(--danger-red);
+    font-size: 1.1rem;
+    font-weight: 500;
+    background-color: #fff0f0;
+    border: 1px solid var(--danger-red);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin: 30px 0;
+}

@@ -126,7 +126,7 @@ const Manager_Sales = () => {
                                             <td>{sale.unique_code}</td>
                                             <td>{sale.customer_name}</td>
                                             <td>{sale.product_name}</td>
-                                            <td>${sale.amount?.toFixed(2)}</td>
+                                            <td>₹{sale.amount?.toFixed(2)}</td>
                                             <td>{new Date(sale.sales_date).toLocaleDateString()}</td>
                                         </tr>
                                     ))

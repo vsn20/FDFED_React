@@ -1,0 +1,89 @@
+.container {
+  margin-top: 90px;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  padding: 0 20px;
+  max-width: 100%;
+}
+
+.contentArea {
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 1200px;
+}
+
+.contentArea h1 {
+  color: #2d3436;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+}
+
+.subtitle {
+  color: #636e72;
+  font-size: 1rem;
+  margin-bottom: 30px;
+}
+
+.graphContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: space-between;
+}
+
+.graphCard {
+  flex: 1 1 45%;
+  min-width: 300px;
+  background: #f8f9fd;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eef2f7;
+}
+
+.loading, .error {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.error {
+  color: #e74c3c;
+}
+
+@media (max-width: 768px) {
+  .graphContainer {
+    flex-direction: column;
+  }
+  .graphCard {
+    width: 100%;
+  }
+}
+
+/* ... existing styles ... */
+
+.graphCard {
+  flex: 1 1 45%;
+  min-width: 300px;
+  background: #f8f9fd;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eef2f7;
+  /* Add height to ensure charts don't squash */
+  min-height: 400px; 
+  display: flex;
+  flex-direction: column;
+}
+
+.chartWrapper {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+}
