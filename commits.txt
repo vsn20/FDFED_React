@@ -1,5 +1,25 @@
-<<<<<<< HEAD
-=======
+small change in sidebar 2 sales in sidebar - vuppalasainaman@gmail.com
+Merge branch 'main' of https://github.com/vsn20/FDFED_React - “[venkatahemasaibhimineni@gmail.com]”
+Merge branch 'main' of https://github.com/vsn20/FDFED_React - “[venkatahemasaibhimineni@gmail.com]”
+Merge branch 'main' of https://github.com/vsn20/FDFED_React - vuppalasainaman@gmail.com
+all the css of homepage,login,company,customer page was done(height alignment) and form css was changed in admin dashboard - vuppalasainaman@gmail.com
+Merge branch 'main' of https://github.com/vsn20/FDFED_React - saichandavula2005@gmail.com
+manager messages done - saichandavula2005@gmail.com
+Sai Chand: Done company sales - “[venkatahemasaibhimineni@gmail.com]”
+Merge branch 'main' of https://github.com/vsn20/FDFED_React - vuppalasainaman@gmail.com
+changed about us to add contributions and photos. changed admin role features css to align with sidebar and made sidebar css good,align with features - vuppalasainaman@gmail.com
+redux added in employees feature and added form validation - “narayanamurthychikkala6@gmail.com”
+Merge branch 'main' of https://github.com/vsn20/FDFED_React - saichandavula2005@gmail.com
+Forget paswords controllers routes and frotn end and employess signup done - saichandavula2005@gmail.com
+import Topproducts added - vuppalasainaman@gmail.com
+some changes - vuppalasainaman@gmail.com
+Merge branch 'main' of https://github.com/vsn20/FDFED_React - vuppalasainaman@gmail.com
+redux is added in owner sales,branch and employee features then all the css is changed - vuppalasainaman@gmail.com
+Merge branch 'main' of https://github.com/vsn20/FDFED_React - saichandavula2005@gmail.com
+top proudcts front end and controllers and routes are crated for top products - saichandavula2005@gmail.com
+Merge pull request #15 from vsn20/hemasai - venkatahemasaibhimineni@gmail.com
+added rupees symbol - “[venkatahemasaibhimineni@gmail.com]”
+commits file created - saichandavula2005@gmail.com
 git commit check - saichandavula2005@gmail.com
 Merge branch 'main' of https://github.com/vsn20/FDFED_React - “[venkatahemasaibhimineni@gmail.com]”
 Naman's work: Done owner's analytics pages - “[venkatahemasaibhimineni@gmail.com]”
@@ -12,6 +32,7 @@ reviews feature in customer done - sadujahnavi3016@gmail.com
 previous  purchases changed to react - sadujahnavi3016@gmail.com
 complaint feature in customer is done - sadujahnavi3016@gmail.com
 previous purchases feature done in customer dashboard - sadujahnavi3016@gmail.com
+Ourproducts in home page has been completed - vuppalasainaman@gmail.com
 Merge pull request #13 from vsn20/Narayana - narayanamurthychikkala6@gmail.com
 Merge branch 'main' into Narayana - narayanamurthychikkala6@gmail.com
 changes made in css of employee, inevntory, salary features - “narayanamurthychikkala6@gmail.com”
@@ -136,14 +157,14 @@ all changes - vuppalasainaman@gmail.com
 Merge branch 'main' of https://github.com/vsn20/FDFED_React - vuppalasainaman@gmail.com
 some changes - vuppalasainaman@gmail.com
 packages - “saichandavula2005@gmail.com”
-react app downloaded - vuppalasainaman@gmail.com---------------- SUMMARY ----------------
-    28	vsn_20 <vuppalasainaman@gmail.com>
-    27	“Narayana <“narayanamurthychikkala6@gmail.com”>
-    24	saichand-avula <saichandavula2005@gmail.com>
-    22	“[VenkataHemaSai]” <“[venkatahemasaibhimineni@gmail.com]”>
+react app downloaded - vuppalasainaman@gmail.com
+---------------- SUMMARY ----------------
+    38	vsn_20 <vuppalasainaman@gmail.com>
+    31	saichand-avula <saichandavula2005@gmail.com>
+    28	“Narayana <“narayanamurthychikkala6@gmail.com”>
+    26	“[VenkataHemaSai]” <“[venkatahemasaibhimineni@gmail.com]”>
     13	“saichand-avula” <“saichandavula2005@gmail.com”>
      7	vsn20 <vuppalasainaman@gmail.com>
      6	Jahnavi Sadu <sadujahnavi3016@gmail.com>
+     6	VenkataHemaSai <venkatahemasaibhimineni@gmail.com>
      5	Narayana Murthy <narayanamurthychikkala6@gmail.com>
-     5	VenkataHemaSai <venkatahemasaibhimineni@gmail.com>
->>>>>>> 0a48007be090d2cf4df1317e47e157a3acae623f
