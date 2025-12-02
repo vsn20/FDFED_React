@@ -13,7 +13,6 @@ import LoginPage from './pages/LoginPage';
 import AboutUs from './pages/AboutUs'
 import OwnerAnalyticsPage from './pages/owner/OwnerAnalyticsPage';
 import EmployeesPage from './pages/owner/Employees/EmployeesPage';
-import ManagerAnalyticsPage from './pages/manager/ManagerAnalyticsPage';
 import SalesmanAnalyticsPage from './pages/salesman/SalesmanAnalyticsPage';
 import NotFoundPage from './pages/NotFoundPage';
 import CompanyPage from './pages/owner/CompanyPage';
@@ -42,6 +41,7 @@ import ManagerInventoryPage from './pages/manager/Inventory/ManagerInventoryPage
 import Manager_Sales from './pages/manager/Sales/Manager_Sales';
 import ManagerSalaryPage from './pages/manager/Salary/ManagerSalaryPage';
 import AdminOrders from './pages/owner/Orders/AdminOrders';
+import ManagerAnalyticsPage from './pages/manager/Analytics/ManagerAnalyticsPage';
 const PostLoginRedirect = () => {
     const { user } = useContext(AuthContext);
 
@@ -94,7 +94,6 @@ function App() {
                         <Route path="/owner/orders" element={<ProtectedRoute roles={['owner']}><AdminOrders /></ProtectedRoute>} />
 
                         {/* Manager Routes */}
-                        <Route path="/manager/analytics" element={<ProtectedRoute roles={['manager']}><ManagerAnalyticsPage /></ProtectedRoute>} />
                         <Route path="/manager/employees" element={<ProtectedRoute roles={['manager']}><ManagerEmployeesPage /></ProtectedRoute>} /> 
                         <Route path="/manager/employees/:e_id" element={<ProtectedRoute roles={['manager']}><ManagerEmployeeDetails /></ProtectedRoute>} />
                         <Route path="/manager/profile" element={<ProtectedRoute roles={['manager']}><ManagerProfileEdit /></ProtectedRoute>} />
@@ -102,7 +101,8 @@ function App() {
                         <Route path="/manager/orders/:id" element={<ProtectedRoute roles={['manager']}><ManagerOrderDetails /></ProtectedRoute>} />
                         <Route path='/manager/inventory' element={<ProtectedRoute roles={['manager']}><ManagerInventoryPage/></ProtectedRoute>} />
                         <Route path='/manager/sales' element={<ProtectedRoute roles={['manager']}><Manager_Sales/></ProtectedRoute>} />
-                        <Route path="/manager/salary" element={ <ProtectedRoute roles={['manager']}><ManagerSalaryPage /> {/* NEW SALARY PAGE */}</ProtectedRoute>} />
+                        <Route path="/manager/salary" element={ <ProtectedRoute roles={['manager']}><ManagerSalaryPage /></ProtectedRoute>} />
+                        <Route path="/manager/analytics" element={<ProtectedRoute roles={['manager']}><ManagerAnalyticsPage /></ProtectedRoute>} />
                         {/* Salesman Routes */}
                         <Route path="/salesman/analytics" element={<ProtectedRoute roles={['salesman']}><SalesmanAnalyticsPage /></ProtectedRoute>} />
                         <Route path='/salesman/profile' element={<ProtectedRoute roles={['salesman']}><Details/></ProtectedRoute>} />
