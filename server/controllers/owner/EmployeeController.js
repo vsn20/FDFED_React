@@ -3,7 +3,10 @@ const Branch = require("../../models/branches");
 
 exports.getEmployees = async (req, res) => {
   try {
-    const employees = await Employee.find({ status: "active" });
+    const employees = await Employee.find({
+  status: { $in: ["active", "resigned", "fired"] }
+});
+
     res.json(employees);
   } catch (err) {
     console.error(err.message);

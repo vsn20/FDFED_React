@@ -165,7 +165,6 @@ function App() {
                                 <PreviousPurchases />
                             </ProtectedRoute>
                         } />
-
                     </Route>
 
                     {/* Not Found */}
