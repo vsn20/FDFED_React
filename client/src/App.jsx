@@ -11,7 +11,7 @@ import CustomerLoginPage from './pages/CustomerLoginPage';
 import PreviousPurchases from './pages/customer/PreviousPurchases';
 
 import HomePage from './pages/HomePage';
-import contactus from './pages/contactus';
+import ContactUs from './pages/ContactUs';
 import LoginPage from './pages/LoginPage';
 import AboutUs from './pages/AboutUs'
 import OwnerAnalyticsPage from './pages/owner/OwnerAnalyticsPage';
@@ -56,6 +56,7 @@ import ManagerAnalyticsPage from './pages/manager/Analytics/ManagerAnalyticsPage
 import Admin_Inventory from './pages/owner/Inventory/Admin_Inventory';
 import { Admin_salary } from './pages/owner/Salary/Admin_salary';
 import { Admin_Profits } from './pages/owner/Profits/Admin_Profits';
+import ContactUs from './pages/ContactUs';
 const PostLoginRedirect = () => {
     const { user } = useContext(AuthContext);
 
@@ -95,7 +96,7 @@ function App() {
                         <Route path="/about-us" element={<AboutUs />} />
                         <Route path="/companylogin" element={<CompanyLogin />} />
                         <Route path="/customerlogin" element={<CustomerLoginPage />} />
-                        <Route path="/contact-us" element={<contactus />} />
+                        <Route path="/contact-us" element={<ContactUs/>} />
 
                     </Route>
 

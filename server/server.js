@@ -99,6 +99,7 @@ app.use('/api/customer/reviews', require('./routes/Customer/ReviewRoute'));
 // Public Routes
 app.use('/api/our-branches', require('./routes/publicroutes'));
 app.use('/api/newproducts', require('./routes/newProductsRoutes'));
+app.use('/api/contact', require('./routes/ContactUsRoute'));
 
 // 5. Socket.io Connection Logic (Debug logs)
 io.on("connection", (socket) => {
