@@ -91,6 +91,9 @@ app.use('/api/salesman/salaries', require('./routes/salesman/salaryRoutes'));
 // Company Routes
 app.use('/api/company', require('./routes/company'));
 
+// Customer Routes
+app.use('/api/customer/previouspurchases', require('./routes/customer/previousPurchasesRoutes'));
+
 // Public Routes
 app.use('/api/our-branches', require('./routes/publicroutes'));
 app.use('/api/newproducts', require('./routes/newProductsRoutes'));
