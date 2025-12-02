@@ -1,0 +1,154 @@
+/* client/src/pages/customer/Reviews/Reviews.module.css */
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.contentArea {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+.header {
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+.card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  background: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+.productName {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #1e293b;
+  margin-bottom: 5px;
+}
+.saleId {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+.statusBadge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.reviewed {
+  background: #dcfce7;
+  color: #166534;
+}
+.pending {
+  background: #f1f5f9;
+  color: #64748b;
+}
+.ratingDisplay {
+  color: #eab308; /* Yellow */
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
+.reviewText {
+  font-size: 0.9rem;
+  color: #475569;
+  font-style: italic;
+  background: #f8fafc;
+  padding: 10px;
+  border-radius: 6px;
+}
+.btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.btnPrimary {
+  background: #2563eb;
+  color: white;
+}
+.btnPrimary:hover {
+  background: #1d4ed8;
+}
+/* Modal/Form Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modalContent {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+.starRating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  gap: 5px;
+  margin: 20px 0;
+}
+.starRating input {
+  display: none;
+}
+.starRating label {
+  font-size: 2rem;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.starRating input:checked ~ label,
+.starRating label:hover,
+.starRating label:hover ~ label {
+  color: #eab308;
+}
+.textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  min-height: 100px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+.modalActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.btnSecondary {
+  background: #e2e8f0;
+  color: #475569;
+}
