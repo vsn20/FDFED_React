@@ -26,7 +26,7 @@ import CompanyLogin from './pages/CompanyLogin';
 import companyproducts from './pages/company/products/CompanyProducts';
 import CompanyOrders from './pages/company/orders/CompanyOrders';
 import CompanyComplaints from './pages/company/complaints/CompanyComplaints';
-
+import TopProducts from './pages/TopProducts';
 import CompanyAnalytics from './pages/company/CompanyAnalytics';
 import OurBranches from './pages/OurBranches';
 import ManagerEmployeesPage from './pages/manager/Employees/ManagerEmployeesPage';
