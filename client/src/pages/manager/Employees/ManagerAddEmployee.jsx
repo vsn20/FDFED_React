@@ -283,7 +283,7 @@ const ManagerAddEmployee = ({ handleBack, manager }) => {
                 <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
                     {isSubmitting ? 'Adding...' : 'Add Salesman'}
                 </button>
-                <button type="button" className={styles.backButton} onClick={handleBack} disabled={isSubmitting}>
+                <button type="button" className={styles.submitButton} onClick={handleBack} disabled={isSubmitting}>
                     Back to List
                 </button>
             </form>
