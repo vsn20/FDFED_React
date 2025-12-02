@@ -101,6 +101,7 @@ app.use('/api/company', require('./routes/company'));
 app.use('/api/customer/previouspurchases', require('./routes/customer/previousPurchasesRoutes'));
 app.use('/api/customer/complaints', require('./routes/Customer/Complaint_Routes'));
 app.use('/api/customer/reviews', require('./routes/Customer/ReviewRoute'));
+app.use('/api/customer/blogs', require('./routes/Customer/blogsRoutes'));
 
 // Public Routes
 app.use('/api/our-branches', require('./routes/publicroutes'));

@@ -5,6 +5,8 @@ const path = require('path');
 const { protect, authorize } = require("../middleware/authMiddleware");
 
 // Import Controllers
+const { getDashboardData } = require("../controllers/company/dashboard");
+
 const {
   companyproducts_display,
   getProductById,
@@ -90,5 +92,8 @@ router.get("/messages/inbox", getInbox);
 router.get("/messages/sent", getSent);
 router.get("/messages/sales-managers", getSalesManagers);
 router.post("/messages/send", sendMessage);
+
+router.get("/analytics/data", getDashboardData);
+
 
 module.exports = router;

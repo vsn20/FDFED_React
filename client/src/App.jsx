@@ -28,7 +28,7 @@ import companyproducts from './pages/company/products/CompanyProducts';
 import CompanyOrders from './pages/company/orders/CompanyOrders';
 import CompanyComplaints from './pages/company/complaints/CompanyComplaints';
 import TopProducts from './pages/TopProducts';
-import CompanyAnalytics from './pages/company/CompanyAnalytics';
+import CompanyAnalyticsPage from './pages/company/analytics/CompanyAnalyticsPage';
 import OurBranches from './pages/OurBranches';
 import ManagerEmployeesPage from './pages/manager/Employees/ManagerEmployeesPage';
 import ManagerEmployeeDetails from './pages/manager/Employees/ManagerEmployeeDetails';
@@ -42,6 +42,7 @@ import Sales from './pages/salesman/SalesDetails/sales';
 import Inventory from './pages/salesman/Inventory/Inventory';
 import Salaries from './pages/salesman/SalariesFeature/Salaries';
 import Reviews from './pages/customer/Reviews/Review';
+import CustomerBlogs from './pages/customer/CustomerBlogs'
 
 
 import ManagerOrdersPage from './pages/manager/Orders/ManagerOrdersPage';
@@ -146,7 +147,7 @@ function App() {
 
                         <Route path="/company/analytics" element={
                             <ProtectedRoute roles={['company']}>
-                               <CompanyAnalytics/>
+                                <CompanyAnalyticsPage/> 
                             </ProtectedRoute>
                         } />
                         <Route path="/company/products" element={
@@ -195,6 +196,11 @@ function App() {
                         <Route path="/customer/review" element={
                             <ProtectedRoute roles={['customer']}>
                                 <Reviews />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/customer/blogs" element={
+                            <ProtectedRoute roles={['customer']}>
+                                <CustomerBlogs/>
                             </ProtectedRoute>
                         } />
 
