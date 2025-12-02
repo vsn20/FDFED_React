@@ -262,7 +262,7 @@ const ManagerEmployeeDetails = () => {
                                 Update Details
                             </button>
                         )}
-                        <button className={styles.backButton} onClick={() => navigate('/manager/employees')}>
+                        <button className={styles.submitButton} onClick={() => navigate('/manager/employees')}>
                             Back to List
                         </button>
                     </div>

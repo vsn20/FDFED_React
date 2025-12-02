@@ -11,11 +11,11 @@ import CustomerLoginPage from './pages/CustomerLoginPage';
 import PreviousPurchases from './pages/customer/PreviousPurchases';
 
 import HomePage from './pages/HomePage';
+import ContactUs from './pages/contactus';
 import LoginPage from './pages/LoginPage';
 import AboutUs from './pages/AboutUs'
 import OwnerAnalyticsPage from './pages/owner/OwnerAnalyticsPage';
 import EmployeesPage from './pages/owner/Employees/EmployeesPage';
-import ManagerAnalyticsPage from './pages/manager/ManagerAnalyticsPage';
 import SalesmanAnalyticsPage from './pages/salesman/SalesmanAnalyticsPage';
 import NotFoundPage from './pages/NotFoundPage';
 import CompanyPage from './pages/owner/CompanyPage';
@@ -38,6 +38,7 @@ import Products from './pages/owner/Products/Products';
 import Sales from './pages/salesman/SalesDetails/sales';
 import Inventory from './pages/salesman/Inventory/Inventory';
 import Salaries from './pages/salesman/SalariesFeature/Salaries';
+import Reviews from './pages/customer/Reviews/Review';
 
 
 import ManagerOrdersPage from './pages/manager/Orders/ManagerOrdersPage';
@@ -46,13 +47,16 @@ import OwnerSales from './pages/owner/Sales/Sales';
 import ManagerInventoryPage from './pages/manager/Inventory/ManagerInventoryPage';
 
 import NewProducts from './pages/NewProducts';
+import Complaints_Customer from './pages/customer/Complaints_Customer';
 
 import Manager_Sales from './pages/manager/Sales/Manager_Sales';
 import ManagerSalaryPage from './pages/manager/Salary/ManagerSalaryPage';
 import AdminOrders from './pages/owner/Orders/AdminOrders';
+import ManagerAnalyticsPage from './pages/manager/Analytics/ManagerAnalyticsPage';
 import Admin_Inventory from './pages/owner/Inventory/Admin_Inventory';
 import { Admin_salary } from './pages/owner/Salary/Admin_salary';
 import { Admin_Profits } from './pages/owner/Profits/Admin_Profits';
+
 const PostLoginRedirect = () => {
     const { user } = useContext(AuthContext);
 
@@ -92,6 +96,8 @@ function App() {
                         <Route path="/about-us" element={<AboutUs />} />
                         <Route path="/companylogin" element={<CompanyLogin />} />
                         <Route path="/customerlogin" element={<CustomerLoginPage />} />
+                        <Route path="/contact-us" element={<ContactUs/>} />
+
                     </Route>
 
                     {/* Redirect after login */}
@@ -113,7 +119,6 @@ function App() {
                         <Route path="/owner/messages" element={<ProtectedRoute roles={['owner']}><Admin_messages /></ProtectedRoute>} />
 
                         {/* Manager Routes */}
-                        <Route path="/manager/analytics" element={<ProtectedRoute roles={['manager']}><ManagerAnalyticsPage /></ProtectedRoute>} />
                         <Route path="/manager/employees" element={<ProtectedRoute roles={['manager']}><ManagerEmployeesPage /></ProtectedRoute>} /> 
                         <Route path="/manager/employees/:e_id" element={<ProtectedRoute roles={['manager']}><ManagerEmployeeDetails /></ProtectedRoute>} />
                         <Route path="/manager/profile" element={<ProtectedRoute roles={['manager']}><ManagerProfileEdit /></ProtectedRoute>} />
@@ -121,7 +126,8 @@ function App() {
                         <Route path="/manager/orders/:id" element={<ProtectedRoute roles={['manager']}><ManagerOrderDetails /></ProtectedRoute>} />
                         <Route path='/manager/inventory' element={<ProtectedRoute roles={['manager']}><ManagerInventoryPage/></ProtectedRoute>} />
                         <Route path='/manager/sales' element={<ProtectedRoute roles={['manager']}><Manager_Sales/></ProtectedRoute>} />
-                        <Route path="/manager/salary" element={ <ProtectedRoute roles={['manager']}><ManagerSalaryPage /> {/* NEW SALARY PAGE */}</ProtectedRoute>} />
+                        <Route path="/manager/salary" element={ <ProtectedRoute roles={['manager']}><ManagerSalaryPage /></ProtectedRoute>} />
+                        <Route path="/manager/analytics" element={<ProtectedRoute roles={['manager']}><ManagerAnalyticsPage /></ProtectedRoute>} />
                         {/* Salesman Routes */}
                         <Route path="/salesman/analytics" element={<ProtectedRoute roles={['salesman']}><SalesmanAnalyticsPage /></ProtectedRoute>} />
                         <Route path='/salesman/profile' element={<ProtectedRoute roles={['salesman']}><Details/></ProtectedRoute>} />
@@ -159,6 +165,16 @@ function App() {
                         <Route path="/customer/previouspurchases" element={
                             <ProtectedRoute roles={['customer']}>
                                 <PreviousPurchases />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/customer/complaints" element={
+                            <ProtectedRoute roles={['customer']}>
+                                <Complaints_Customer />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/customer/review" element={
+                            <ProtectedRoute roles={['customer']}>
+                                <Reviews />
                             </ProtectedRoute>
                         } />
 

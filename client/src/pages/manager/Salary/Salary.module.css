@@ -1,167 +1,183 @@
+/* --- Standardized Variables (Based on Previous Light Theme) --- */
+:root {
+    --bg-light: #f8f9fa; /* Very Light Grey Background */
+    --card-light: #ffffff; /* White Card Background */
+    --primary-text: #212529; /* Dark Black/Grey Text for contrast */
+    --secondary-text: #6c757d; /* Medium Grey Text */
+    --accent-blue: #007bff; /* Standard Blue Accent */
+    --accent-yellow: #ffc107; /* Adopted Yellow Accent for roles/highlights */
+    --success-green: #28a745; /* High-Contrast Success Green */
+    --danger-red: #dc3545; /* High-Contrast Danger Red */
+    --border-color: #e9ecef; /* Very Light Border */
+}
+
 .pageContainer {
-    /* Remove padding and max-width/margin to allow contentArea to manage its space */
-    padding: 0;
-    margin: 0;
-    /* Ensure it takes up available space next to the sidebar */
-    width: 100%;
-    /* Added to match the visual padding of the entire content area */
+    /* Using the standardized background color */
+    background-color: var(--bg-light); 
     padding: 20px; 
+    margin: 0;
+    width: 100%;
 }
 
 .contentArea {
-    /* Increased max-width for the main calculation card, making it wider than 900px */
     max-width: 1200px; 
-    width: 100%; /* Ensure it's responsive up to max-width */
-    margin: 0 auto; /* Center the card within the pageContainer padding */
+    width: 100%; 
+    margin: 0 auto; 
     
-    background: #ffffff;
+    background: var(--card-light);
     border-radius: 12px;
-    padding: 30px; /* Increased padding inside the card */
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08); /* Slightly more prominent shadow */
-    border: none; /* Removed the light border, relying on shadow */
+    padding: 30px; 
+    /* Standardized shadow for the main card */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+    border: 1px solid var(--border-color); /* Added back a subtle border */
 }
 
 .title {
-    color: #333;
-    /* Updated border color to match the subtle line in the screenshot */
-    border-bottom: 1px solid #ebedf0; 
+    color: var(--primary-text);
+    /* Standardized border color */
+    border-bottom: 1px solid var(--border-color); 
     padding-bottom: 15px;
     margin-bottom: 25px;
-    font-size: 1.8em;
-    font-weight: 600;
+    font-size: 2.2rem; /* Slightly larger heading */
+    font-weight: 700;
 }
 
 .controls {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 20px; /* Slightly increased gap */
+    margin-bottom: 30px; /* Increased bottom margin */
 }
 
 .label {
-    font-weight: 500; /* Slightly less bold */
-    color: #555;
-    font-size: 1em;
+    font-weight: 500;
+    color: var(--secondary-text);
+    font-size: 1rem;
 }
 
 .selectInput {
     padding: 10px 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px; /* Slightly more rounded */
-    font-size: 16px;
-    background-color: #fcfcfc;
+    border: 1px solid var(--border-color);
+    border-radius: 8px; /* Consistent rounded corners */
+    font-size: 1rem;
+    color: var(--primary-text);
+    background-color: var(--card-light);
     cursor: pointer;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .selectInput:focus {
-    border-color: #ffc107;
+    /* Use the accent color for focus state */
+    border-color: var(--accent-yellow);
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.4); 
     outline: none;
 }
 
 .dateRange {
-    /* Changed color to a darker tone for main heading and reduced margin */
-    color: #333; 
+    color: var(--primary-text); 
     margin-bottom: 15px;
-    margin-top: 20px;
-    font-size: 1.4em;
+    margin-top: 25px;
+    font-size: 1.6rem;
     font-weight: 600;
 }
 
 .loadingMessage,
 .errorMessage {
-    padding: 15px;
-    border-radius: 6px;
+    padding: 18px; /* Increased padding */
+    border-radius: 8px;
     text-align: center;
-    font-weight: 500;
-    margin-top: 20px;
+    font-weight: 600;
+    margin-top: 25px;
+    font-size: 1.1rem;
 }
 
 .loadingMessage {
-    background-color: #e8f7ff;
-    color: #007bff;
+    background-color: #e6f7ff; /* Light blue */
+    color: var(--accent-blue);
 }
 
 .errorMessage {
     background-color: #fcebeb; /* Light red */
-    color: #dc3545;
+    color: var(--danger-red);
     border: 1px solid #f9dcdc;
 }
 
 .salaryList {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 25px; /* Increased gap between entries */
 }
 
 .salaryEntry {
-    padding: 20px;
-    /* subtle border for separation */
-    border: 1px solid #e0e0e0; 
-    border-radius: 8px; /* More rounded corners */
-    background-color: #ffffff; /* White background for entries */
-    transition: box-shadow 0.2s, border-color 0.2s;
+    padding: 25px; /* Increased padding inside entry */
+    border: 1px solid var(--border-color); 
+    border-radius: 10px; 
+    background-color: var(--card-light);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05); /* Very light initial shadow */
+    transition: box-shadow 0.3s, border-color 0.3s, transform 0.2s;
 }
 
 .salaryEntry:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-color:#ffc107; /* Highlight on hover */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); /* Lift and shadow on hover */
+    border-color: var(--accent-yellow); 
+    transform: translateY(-2px);
 }
 
 .entryHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* Solid, light gray line */
-    border-bottom: 1px solid #eeeeee; 
-    padding-bottom: 12px;
-    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-color); 
+    padding-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 .employeeName {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #333;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-text);
 }
 
 .role {
-    /* Using the manager/salesman colors from the screenshot */
-    background-color: #ffc107; 
-    color: #333;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 0.85em;
+    /* Use the adopted yellow accent for the role tag */
+    background-color: var(--accent-yellow); 
+    color: var(--primary-text); /* Keep text dark for contrast */
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
     font-weight: 600;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .entryDetails > div {
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     display: flex;
-    justify-content: space-between; /* Align values right */
+    justify-content: space-between;
 }
 
 .label {
-    /* Restore the label style for internal details */
+    /* Overwrite local label use to be slightly darker than generic secondary text for details */
     font-weight: 500;
-    color: #555;
+    color: #495057; 
 }
 
 .total {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #008000;
-    padding-top: 10px;
-    border-top: 1px solid #f0f0f0; /* Lighter separator */
-    margin-top: 10px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--success-green); /* High-contrast green for total */
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color); 
+    margin-top: 15px;
     display: flex;
     justify-content: space-between;
 }
 
 .note {
-    color: #dc3545;
+    color: var(--danger-red);
     font-style: italic;
     margin-top: 10px;
-    padding-top: 5px;
-    border-top: 1px solid #f0f0f0;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.95rem;
 }

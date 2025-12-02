@@ -11,20 +11,27 @@
   margin-top: 40px;
   display: flex;
   flex: 1;
-  justify-content: center;
+  /* Centering is usually handled by the contentArea itself when a max-width is set */
+  /* If this container is the page wrapper, padding is okay */
   padding: 0 20px;
   max-width: 100%;
+  overflow: hidden;
 }
 
 /* MATCH SALES PAGE CONTENT AREA */
 .contentArea {
+  /* Set a standard wide width for all manager content pages */
+  max-width: 1200px;
+  width: 100%;
+  /* Center the content area within its parent (the container) */
+  margin: 0 auto;
+  /* Removed the fixed margin-left: 20px to allow it to be centered */
+
   background: #ffffff;
   border-radius: 15px;
-  padding: 25px;
+  padding: 30px; /* Increased padding inside the card */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   flex: 1;
-  width: 100%;
-  margin-left: 20px;
   overflow-y: auto;
   min-height: 80vh;
 }
@@ -99,6 +106,8 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   background: #ffffff;
   padding-bottom: 10px;
+  /* ✨ FIX: Hide any potential horizontal overflow caused by scaling */
+  overflow-x: hidden; 
 }
 
 /* ---------------- TABLE ---------------- */
@@ -133,12 +142,15 @@
 /* TARGET RAW <tr> FOR HOVER */
 .table tbody tr {
   transition: 0.2s ease;
+  /* Optional: Add position relative to make scaling more predictable */
+  position: relative; 
 }
 
 .table tbody tr:hover {
   background-color: #f8f9fd;
   cursor: pointer;
-  transform: scale(1.01);
+  /* Reduced scale slightly to 1.005 for stability */
+  transform: scale(1.005); 
 }
 
 /* ---------------- PAGINATION ---------------- */
@@ -201,7 +213,8 @@
 
 /* ---------------- RESPONSIVE ---------------- */
 @media (max-width: 768px) {
-  .contentArea { margin-left: 0; padding: 20px; }
+  /* Removed margin-left: 0; as contentArea is now centered */
+  .contentArea { padding: 20px; }
   .searchInput { width: 100%; }
   .pageButton, .addButton { width: 100%; }
   .fieldGroup > div { flex: 1 1 100%; }
