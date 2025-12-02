@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 git commit check - saichandavula2005@gmail.com
 Merge branch 'main' of https://github.com/vsn20/FDFED_React - “[venkatahemasaibhimineni@gmail.com]”
 Naman's work: Done owner's analytics pages - “[venkatahemasaibhimineni@gmail.com]”
@@ -144,3 +146,4 @@ react app downloaded - vuppalasainaman@gmail.com---------------- SUMMARY -------
      6	Jahnavi Sadu <sadujahnavi3016@gmail.com>
      5	Narayana Murthy <narayanamurthychikkala6@gmail.com>
      5	VenkataHemaSai <venkatahemasaibhimineni@gmail.com>
+>>>>>>> 0a48007be090d2cf4df1317e47e157a3acae623f

@@ -1,8 +1,11 @@
+// client/src/pages/owner/Branches/AddBranch.jsx
 import React, { useState } from 'react';
-import api from '../../../api/api';
-import styles from './Branch.module.css'; // Import CSS module
+import { useDispatch } from 'react-redux';
+import { createBranch } from '../../../redux/slices/branchSlice';
+import styles from './Branch.module.css';
 
 const AddBranch = ({ handleBack }) => {
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         b_name: '',
         address: ''
@@ -15,13 +18,17 @@ const AddBranch = ({ handleBack }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await api.post('/branches', {
+            // Dispatch the Redux action
+            // unwrap() allows us to catch errors or wait for success in the component
+            await dispatch(createBranch({
                 b_name: formData.b_name,
                 address: formData.address
-            });
-            handleBack();
+            })).unwrap();
+            
+            handleBack(); // Go back to list on success
         } catch (err) {
             console.error("Error adding branch:", err);
+            alert("Failed to add branch");
         }
     };
 

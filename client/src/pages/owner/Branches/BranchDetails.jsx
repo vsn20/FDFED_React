@@ -1,8 +1,17 @@
+// client/src/pages/owner/Branches/BranchDetails.jsx
 import React, { useState, useEffect } from 'react';
-import api from '../../../api/api';
-import styles from './Branch.module.css'; // Import CSS module
+import { useDispatch, useSelector } from 'react-redux';
+import { updateBranch } from '../../../redux/slices/branchSlice';
+import styles from './Branch.module.css';
 
 const BranchDetails = ({ bid, handleBack }) => {
+    const dispatch = useDispatch();
+    
+    // Find the specific branch from the Redux store
+    const branchFromStore = useSelector(state => 
+        state.branches.items.find(b => b.bid === bid)
+    );
+
     const [formData, setFormData] = useState({
         bid: '',
         b_name: '',
@@ -11,27 +20,20 @@ const BranchDetails = ({ bid, handleBack }) => {
         manager_ph_no: '',
         address: ''
     });
-    const [notFound, setNotFound] = useState(false);
 
+    // Populate form when component mounts or branchFromStore changes
     useEffect(() => {
-        const fetchBranch = async () => {
-            try {
-                const res = await api.get(`/branches/${bid}`);
-                setFormData({
-                    bid: res.data.bid,
-                    b_name: res.data.b_name,
-                    manager_name: res.data.manager_name,
-                    manager_email: res.data.manager_email,
-                    manager_ph_no: res.data.manager_ph_no,
-                    address: res.data.location
-                });
-            } catch (err) {
-                console.error("Error fetching branch:", err);
-                setNotFound(true);
-            }
-        };
-        fetchBranch();
-    }, [bid]);
+        if (branchFromStore) {
+            setFormData({
+                bid: branchFromStore.bid,
+                b_name: branchFromStore.b_name,
+                manager_name: branchFromStore.manager_name,
+                manager_email: branchFromStore.manager_email,
+                manager_ph_no: branchFromStore.manager_ph_no,
+                address: branchFromStore.location // Note: backend uses 'location', frontend form uses 'address'
+            });
+        }
+    }, [branchFromStore]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,18 +42,23 @@ const BranchDetails = ({ bid, handleBack }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await api.put(`/branches/${bid}`, {
-                b_name: formData.b_name,
-                address: formData.address
-            });
+            await dispatch(updateBranch({
+                bid: formData.bid,
+                branchData: {
+                    b_name: formData.b_name,
+                    address: formData.address
+                }
+            })).unwrap();
+            
             handleBack();
         } catch (err) {
             console.error("Error updating branch:", err);
+            alert("Failed to update branch");
         }
     };
 
-    if (notFound) {
-        return <div className={styles.errorMessage}>Branch not found.</div>;
+    if (!branchFromStore) {
+        return <div className={styles.errorMessage}>Branch not found in records.</div>;
     }
 
     return (

@@ -27,7 +27,7 @@ import CompanyLogin from './pages/CompanyLogin';
 import companyproducts from './pages/company/products/CompanyProducts';
 import CompanyOrders from './pages/company/orders/CompanyOrders';
 import CompanyComplaints from './pages/company/complaints/CompanyComplaints';
-
+import TopProducts from './pages/TopProducts';
 import CompanyAnalytics from './pages/company/CompanyAnalytics';
 import OurBranches from './pages/OurBranches';
 import ManagerEmployeesPage from './pages/manager/Employees/ManagerEmployeesPage';
@@ -58,6 +58,7 @@ import Admin_Inventory from './pages/owner/Inventory/Admin_Inventory';
 import { Admin_salary } from './pages/owner/Salary/Admin_salary';
 import { Admin_Profits } from './pages/owner/Profits/Admin_Profits';
 
+import OurProducts from './pages/OurProducts';
 const PostLoginRedirect = () => {
     const { user } = useContext(AuthContext);
 
@@ -92,6 +93,8 @@ function App() {
                     <Route element={<PublicLayout />}>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/newproducts" element={<NewProducts />} />
+                        <Route path="/ourproducts" element={<OurProducts />} />
+                        <Route path="/topproducts" element={<TopProducts />} />
                         <Route path="/login" element={<LoginPage />} /> 
                         <Route path="/our-branches" element={<OurBranches />} />
                         <Route path="/about-us" element={<AboutUs />} />

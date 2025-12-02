@@ -81,19 +81,33 @@ const AddSale = ({ handleBack }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
+   const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
+
+        // Create a copy of the data
+        const payload = { ...formData };
+
+        // FIX: If installationType is empty, explicitly set it to 'Not Required'
+        if (!payload.installationType) {
+            payload.installationType = 'Free';
+        }
+
+        // Optional: specific safety for installationcharge (usually empty string fails for numbers)
+        if (payload.installationcharge === '') {
+            payload.installationcharge = 0; 
+        }
+
         try {
-            await api.post('/manager/sales', formData);
+            await api.post('/manager/sales', payload);
             handleBack();
         } catch (err) {
+            console.error(err);
             setError(err.response?.data?.message || "Error adding sale");
             setLoading(false);
         }
     };
-
     return (
         <div className={styles.formContainer}>
             <div className={styles.headerContainer}>
