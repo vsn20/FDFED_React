@@ -1,3 +1,55 @@
+git commit check - saichandavula2005@gmail.com
+Merge branch 'main' of https://github.com/vsn20/FDFED_React - “[venkatahemasaibhimineni@gmail.com]”
+Naman's work: Done owner's analytics pages - “[venkatahemasaibhimineni@gmail.com]”
+Merge pull request #14 from vsn20/hemasai - venkatahemasaibhimineni@gmail.com
+Merge branch 'main' into hemasai - venkatahemasaibhimineni@gmail.com
+salesman anayltics done - “[venkatahemasaibhimineni@gmail.com]”
+fixed  app.jsx exra import - sadujahnavi3016@gmail.com
+contact us done - sadujahnavi3016@gmail.com
+reviews feature in customer done - sadujahnavi3016@gmail.com
+previous  purchases changed to react - sadujahnavi3016@gmail.com
+complaint feature in customer is done - sadujahnavi3016@gmail.com
+previous purchases feature done in customer dashboard - sadujahnavi3016@gmail.com
+Merge pull request #13 from vsn20/Narayana - narayanamurthychikkala6@gmail.com
+Merge branch 'main' into Narayana - narayanamurthychikkala6@gmail.com
+changes made in css of employee, inevntory, salary features - “narayanamurthychikkala6@gmail.com”
+analytics feature added in manager dashboard - “narayanamurthychikkala6@gmail.com”
+Merge pull request #12 from vsn20/saichand - saichandavula2005@gmail.com
+customer login backend work - saichandavula2005@gmail.com
+customer authentication front end related files - saichandavula2005@gmail.com
+company messages converted to socket io - saichandavula2005@gmail.com
+owner messages done by adding controllers and routes - saichandavula2005@gmail.com
+Merge pull request #11 from vsn20/saichand - saichandavula2005@gmail.com
+Merge branch 'main' into saichand - saichandavula2005@gmail.com
+company messages created by changing contolleres new jsx of message and server for socket io  products middle ware error fixed and updated company sidebar with message - saichandavula2005@gmail.com
+Merge pull request #10 from vsn20/hemasai - venkatahemasaibhimineni@gmail.com
+Merge branch 'main' into hemasai - venkatahemasaibhimineni@gmail.com
+Merge pull request #9 from vsn20/naman - vuppalasainaman@gmail.com
+Profit dashboard is done in admin - vuppalasainaman@gmail.com
+new products, backend - “[venkatahemasaibhimineni@gmail.com]”
+new products done in public, frontend - “[venkatahemasaibhimineni@gmail.com]”
+Merge pull request #8 from vsn20/naman - vuppalasainaman@gmail.com
+salary feature added in admin - vuppalasainaman@gmail.com
+Merge pull request #7 from vsn20/naman - vuppalasainaman@gmail.com
+admin invenotry is added - vuppalasainaman@gmail.com
+Merge pull request #6 from vsn20/Narayana - narayanamurthychikkala6@gmail.com
+Merge branch 'Narayana' of https://github.com/vsn20/FDFED_React into Narayana - “narayanamurthychikkala6@gmail.com”
+salaries feature added(backend) - “narayanamurthychikkala6@gmail.com”
+salaries feature in manager dashboard(frontend) - “narayanamurthychikkala6@gmail.com”
+Merge pull request #5 from vsn20/hemasai - venkatahemasaibhimineni@gmail.com
+salesman salary route, new one created - “[venkatahemasaibhimineni@gmail.com]”
+salary controller for salesman - “[venkatahemasaibhimineni@gmail.com]”
+server.js for salaries, salesman - “[venkatahemasaibhimineni@gmail.com]”
+salaries css for salesman - “[venkatahemasaibhimineni@gmail.com]”
+saleries.jsx frontend - “[venkatahemasaibhimineni@gmail.com]”
+sidebar updated for salaries in salesman - “[venkatahemasaibhimineni@gmail.com]”
+app.jsx updated for salaries features - “[venkatahemasaibhimineni@gmail.com]”
+commit check - saichandavula2005@gmail.com
+Merge pull request #4 from vsn20/Narayana - narayanamurthychikkala6@gmail.com
+Merge branch 'main' into Narayana - narayanamurthychikkala6@gmail.com
+search option and pagination logic included in sales manager some features - “narayanamurthychikkala6@gmail.com”
+sales feature added in salesmanager - “narayanamurthychikkala6@gmail.com”
+commits updated pdf - vuppalasainaman@gmail.com
 Merge pull request #3 from vsn20/naman - vuppalasainaman@gmail.com
 in admin orders. orders details will be displayed when i click on the order date and pagination logic search and filters were added, - vuppalasainaman@gmail.com
 in admin orders completed. till displaying all orders in list. - vuppalasainaman@gmail.com
@@ -82,13 +134,13 @@ all changes - vuppalasainaman@gmail.com
 Merge branch 'main' of https://github.com/vsn20/FDFED_React - vuppalasainaman@gmail.com
 some changes - vuppalasainaman@gmail.com
 packages - “saichandavula2005@gmail.com”
-react app downloaded - vuppalasainaman@gmail.com
-
----------------- SUMMARY ----------------
-
-    24	vsn_20 <vuppalasainaman@gmail.com>
-    20	“Narayana <“narayanamurthychikkala6@gmail.com”>
-    14	saichand-avula <saichandavula2005@gmail.com>
+react app downloaded - vuppalasainaman@gmail.com---------------- SUMMARY ----------------
+    28	vsn_20 <vuppalasainaman@gmail.com>
+    27	“Narayana <“narayanamurthychikkala6@gmail.com”>
+    24	saichand-avula <saichandavula2005@gmail.com>
+    22	“[VenkataHemaSai]” <“[venkatahemasaibhimineni@gmail.com]”>
     13	“saichand-avula” <“saichandavula2005@gmail.com”>
-    10	“[VenkataHemaSai]” <“[venkatahemasaibhimineni@gmail.com]”>
-     4	vsn20 <vuppalasainaman@gmail.com>
+     7	vsn20 <vuppalasainaman@gmail.com>
+     6	Jahnavi Sadu <sadujahnavi3016@gmail.com>
+     5	Narayana Murthy <narayanamurthychikkala6@gmail.com>
+     5	VenkataHemaSai <venkatahemasaibhimineni@gmail.com>
