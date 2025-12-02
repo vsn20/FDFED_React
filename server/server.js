@@ -89,6 +89,8 @@ app.use('/api/company', require('./routes/company'));
 // Public Routes
 app.use('/api/our-branches', require('./routes/publicroutes'));
 app.use('/api/newproducts', require('./routes/newProductsRoutes'));
+app.use('/api/ourproducts', require('./routes/OurProductsRoutes'));
+//app.use('/api/topproducts', require('./routes/TopPoductsRoutes'));
 
 // 5. Socket.io Connection Logic (Debug logs)
 io.on("connection", (socket) => {
