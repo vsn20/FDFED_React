@@ -107,7 +107,7 @@ function Home() {
                         <div className="feature-card">
                             <i className="fas fa-leaf"></i>
                             <h3>Eco-Friendly Innovation</h3>
-                            <p>We’re committed to sustainability. Our appliances are designed with energy-efficient technology to reduce your carbon footprint while saving you money on utility bills. Choose Electroland for environmentally conscious solutions that don’t compromise on performance.</p>
+                            <p>We're committed to sustainability. Our appliances are designed with energy-efficient technology to reduce your carbon footprint while saving you money on utility bills. Choose Electroland for environmentally conscious solutions that don’t compromise on performance.</p>
                         </div>
                     </div>
                 </div>

@@ -48,6 +48,7 @@ import ManagerOrdersPage from './pages/manager/Orders/ManagerOrdersPage';
 import ManagerOrderDetails from './pages/manager/Orders/ManagerOrderDetails';
 import OwnerSales from './pages/owner/Sales/Sales';
 import ManagerInventoryPage from './pages/manager/Inventory/ManagerInventoryPage';
+import ManagerMessages from './pages/manager/messages/ManagerMessages';
 
 import NewProducts from './pages/NewProducts';
 import Complaints_Customer from './pages/customer/Complaints_Customer';
@@ -135,6 +136,7 @@ function App() {
                         <Route path='/manager/sales' element={<ProtectedRoute roles={['manager']}><Manager_Sales/></ProtectedRoute>} />
                         <Route path="/manager/salary" element={ <ProtectedRoute roles={['manager']}><ManagerSalaryPage /></ProtectedRoute>} />
                         <Route path="/manager/analytics" element={<ProtectedRoute roles={['manager']}><ManagerAnalyticsPage /></ProtectedRoute>} />
+                        <Route path="/manager/messages" element={<ProtectedRoute roles={['manager']}><ManagerMessages /></ProtectedRoute>} />
                         {/* Salesman Routes */}
                         <Route path="/salesman/analytics" element={<ProtectedRoute roles={['salesman']}><SalesmanAnalyticsPage /></ProtectedRoute>} />
                         <Route path='/salesman/profile' element={<ProtectedRoute roles={['salesman']}><Details/></ProtectedRoute>} />

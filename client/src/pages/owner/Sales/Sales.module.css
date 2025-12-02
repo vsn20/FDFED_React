@@ -8,31 +8,30 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* --- MAIN LAYOUT (Matches AdminInventory.css structure) --- */
+/* --- MAIN LAYOUT --- */
 .container {
-  margin-top: 20px; /* Changed from 90px to match Inventory reference */
+  margin-top: 20px;
   display: flex;
   flex: 1;
   gap: 25px;
   padding: 0 20px;
   flex-direction: column;
-  min-height: 80vh; /* Aligns with sidebar height */
+  min-height: 80vh;
+  width: 100%; /* Ensure container takes full width */
 }
 
 .contentArea {
   background: #ffffff;
   border-radius: 15px;
-  padding: 25px; /* Matched Inventory padding */
+  padding: 30px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   flex: 1;
   overflow-y: auto;
-
-  /* Hide Scrollbar (Firefox) */
   scrollbar-width: none;
   -ms-overflow-style: none;
+  width: 100%; /* Ensure card takes full width of container */
 }
 
-/* Hide Scrollbar (Chrome/Safari) */
 .contentArea::-webkit-scrollbar {
   display: none;
 }
@@ -40,43 +39,147 @@
 .contentArea h1,
 .contentArea h2 {
   color: #2d3436;
-  font-size: 1.5rem;
-  margin: 0 0 20px 0;
-  text-align: left; /* Aligned left like standard pages, or center if preferred */
+  font-size: 1.8rem;
+  margin: 0 0 25px 0;
+  text-align: left;
+  font-weight: 700;
 }
 
-/* --- CONTROLS SECTION (Search & Filters) --- */
+/* --- DETAIL VIEW STYLES (WIDENED) --- */
+.detailViewContainer {
+  /* Increased max-width significantly to allow a wider form */
+  max-width: 1200px; 
+  margin: 0 auto;
+  width: 100%; /* Take up available space up to max-width */
+}
+
+.backBtn {
+  background: transparent;
+  color: #333;
+  border: 1px solid #333;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  margin-bottom: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.backBtn:hover {
+  background: #333;
+  color: white;
+}
+
+.detailSection {
+  margin-top: 30px;
+  background: #ffffff; /* Cleaner white background */
+  padding: 0; /* Remove internal padding to align with header */
+}
+
+.detailSectionTitle {
+  font-size: 1.4rem;
+  color: #2d3436;
+  font-weight: 700;
+  margin: 40px 0 20px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+/* --- FORM GRID SYSTEM (WIDER INPUTS) --- */
+.formRow {
+  display: grid;
+  /* Change to 2 columns by default for a wider look.
+     '1fr 1fr' means two equal columns that stretch.
+  */
+  grid-template-columns: 1fr 1fr; 
+  gap: 30px; /* Space between columns */
+  margin-bottom: 25px;
+  width: 100%; /* Ensure grid takes full width */
+}
+
+/* For sections with 3 items, you can create a specific class or let them wrap */
+.formRow.three-col {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Force group to fill grid cell */
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  color: #4b5563; /* Darker gray for better contrast */
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 14px 16px; /* Taller, more spacious input */
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #f9fafb; /* Light background for read-only feel */
+  color: #1f2937; /* Dark text */
+  outline: none;
+  font-weight: 500;
+  transition: border-color 0.2s;
+}
+
+/* Styling for Read-Only Inputs */
+.formGroup input:read-only {
+  background-color: #f3f4f6; 
+  cursor: text;
+  border-color: #e5e7eb;
+}
+
+.formGroup input:focus {
+  border-color: #333;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+}
+
+/* --- CONTROLS SECTION (Search & Filter) --- */
 .controlsContainer {
   display: flex;
   gap: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   flex-wrap: wrap;
   background: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
+  padding: 20px;
+  border-radius: 12px;
   border: 1px solid #e6e9f0;
   align-items: center;
 }
 
 .searchGroup {
   flex: 2;
-  min-width: 250px;
+  min-width: 300px;
 }
 
 .searchInput {
   width: 100%;
-  padding: 10px 15px;
-  border: 1px solid #e6e9f0;
-  border-radius: 5px;
-  font-size: 0.9rem;
+  padding: 12px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.95rem;
   background: #fff;
   color: #2d3436;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .searchInput:focus {
   border-color: #333;
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
 }
 
 .filterGroup {
@@ -88,11 +191,11 @@
 
 .filterSelect {
   flex: 1;
-  min-width: 140px;
-  padding: 10px;
-  border: 1px solid #e6e9f0;
-  border-radius: 5px;
-  font-size: 0.9rem;
+  min-width: 150px;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.95rem;
   background: #fff;
   color: #2d3436;
   outline: none;
@@ -107,51 +210,52 @@
   background-color: #141414;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 12px 24px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 600;
   transition: background 0.3s;
 }
 
 .resetBtn:hover {
-  background-color: #504e4e;
+  background-color: #333;
 }
 
 /* --- TABLE STYLES --- */
 .tableWrapper {
   overflow-x: auto;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid #e6e9f0;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .table {
   width: 100%;
-  min-width: 800px;
+  min-width: 900px;
   border-collapse: collapse;
   background: #ffffff;
 }
 
 .thead {
-  background: #333333;
+  background: #2d3436;
 }
 
 .th {
   color: white;
-  padding: 15px;
+  padding: 18px 20px;
   text-align: left;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   border-bottom: 2px solid #ffffff;
   white-space: nowrap;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .td {
-  padding: 15px;
+  padding: 18px 20px;
   text-align: left;
-  font-size: 0.9rem;
-  border-bottom: 1px solid #e6e9f0;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #f0f0f0;
   color: #2d3436;
 }
 
@@ -161,167 +265,102 @@
 }
 
 .tr:hover {
-  background-color: #f8f9fd;
+  background-color: #f8fafc;
 }
 
-/* Specific Cell Colors */
-.amountCell {
-  font-weight: 600;
-  color: #2d3436;
-}
+.amountCell { font-weight: 700; color: #2d3436; }
+.profitCell { color: #27ae60; font-weight: 700; }
+.lossCell { color: #c0392b; font-weight: 700; }
 
-.profitCell {
-  color: #27ae60;
-  font-weight: 600;
-}
-
-.lossCell {
-  color: #c0392b;
-  font-weight: 600;
-}
-
-/* --- PAGINATION (Matches structure) --- */
+/* --- PAGINATION --- */
 .paginationContainer {
-  margin-top: 20px;
+  margin-top: 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 20px;
 }
 
 .rowsPerPage {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 0.9rem;
+  gap: 12px;
+  font-size: 0.95rem;
   color: #64748b;
 }
 
 .rowsInput {
-  width: 60px;
-  padding: 5px;
+  width: 70px;
+  padding: 8px;
   text-align: center;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.95rem;
 }
 
 .paginationInfo {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: #64748b;
 }
 
 .paginationControls {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .pageBtn {
-  background-color: #333;
-  color: white;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  padding: 8px 16px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.85rem;
-  transition: background 0.2s;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.pageBtn:hover:not(:disabled) {
+  background-color: #f8f9fa;
+  border-color: #ccc;
 }
 
 .pageBtn:disabled {
-  background-color: #f1f5f9;
+  background-color: #f8f9fa;
   color: #cbd5e1;
   cursor: not-allowed;
 }
 
-.pageBtn:hover:not(:disabled) {
-  background-color: #555;
-}
-
 .pageIndicator {
-  margin: 0 10px;
-  font-size: 0.9rem;
-  font-weight: 500;
+  margin: 0 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
   color: #334155;
-}
-
-/* --- DETAIL VIEW STYLES --- */
-.detailViewContainer {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.backBtn {
-  background: transparent;
-  color: #333;
-  border: 1px solid #333;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s;
-  margin-bottom: 20px;
-}
-
-.backBtn:hover {
-  background: #333;
-  color: white;
-}
-
-.detailSection {
-  margin-top: 20px;
-}
-
-.detailSectionTitle {
-  font-size: 1.2rem;
-  color: #2d3436;
-  font-weight: 700;
-  margin: 20px 0 15px 0;
-  padding-bottom: 5px;
-  border-bottom: 1px solid #eee;
-}
-
-.formRow {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
-}
-
-.formGroup {
-  flex: 1 1 300px;
-  min-width: 200px;
-  display: flex;
-  flex-direction: column;
-}
-
-.formGroup label {
-  display: block;
-  margin-bottom: 5px;
-  color: #2d3436;
-  font-weight: 500;
-  font-size: 0.9rem;
-}
-
-.formGroup input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #e6e9f0;
-  border-radius: 5px;
-  font-size: 0.9rem;
-  background: #e9ecef;
-  color: #2d3436;
-  outline: none;
 }
 
 /* --- RESPONSIVE --- */
 @media (max-width: 768px) {
   .container {
-    padding: 0 10px;
+    padding: 0 15px;
   }
   
+  .contentArea {
+    padding: 20px;
+  }
+
+  .detailViewContainer {
+    width: 100%;
+  }
+
+  /* Stack inputs on mobile */
+  .formRow {
+    grid-template-columns: 1fr; 
+    gap: 15px;
+  }
+
   .controlsContainer {
     flex-direction: column;
     align-items: stretch;
@@ -334,5 +373,6 @@
   .paginationContainer {
     flex-direction: column;
     text-align: center;
+    gap: 20px;
   }
 }

@@ -1,21 +1,24 @@
 /* LoginPage.css */
 .login-page-body {
-    min-height: 100vh;
+    /* Changed from 100vh to 80vh to match Customer Login and fit under Topbar */
+    min-height: 80vh; 
     margin: 0;
     font-family: 'Arial', sans-serif;
     background-color: #f4f4f4;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centering for React view */
+    justify-content: center;
     align-items: center;
+    padding: 20px; /* Added padding like Customer Login */
 }
 
 .main-container {
     display: flex;
-    min-height: 80vh;
+    /* Changed from 80vh to 600px to match Customer Login card height */
+    min-height: 600px; 
     width: 100%;
     max-width: 1200px;
-    margin: 50px auto;
+    margin: 0 auto; /* Removed fixed 50px margin, let flexbox center it */
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -64,13 +67,15 @@
     position: relative;
     text-transform: uppercase;
     letter-spacing: 2px;
+    text-align: center; /* Centered title like Customer Login */
 }
 
 .auth-form-wrapper h2:after {
     content: '';
     position: absolute;
     bottom: -10px;
-    left: 0;
+    left: 50%; /* Center the underline */
+    transform: translateX(-50%);
     width: 50px;
     height: 3px;
     background: linear-gradient(135deg, #34495E, #2C3E50);
@@ -154,13 +159,18 @@
 @media (max-width: 768px) {
     .main-container {
         flex-direction: column;
-        margin: 20px;
+        margin: 20px 0;
+        min-height: auto; /* Allow flexible height on mobile */
     }
     .image-section {
-        min-height: 300px;
+        min-height: 200px;
         order: 1 !important;
     }
     .auth-container {
         order: 2 !important;
+        padding: 30px 20px;
+    }
+    .form-input, .submit-btn, .link-container, .error-message {
+        width: 90%;
     }
 }

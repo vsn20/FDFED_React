@@ -1,3 +1,4 @@
+// client/src/pages/owner/Employees/EmployeeDetails.jsx
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateEmployee } from '../../../redux/slices/employeeSlice';
@@ -7,12 +8,10 @@ import styles from './Employee.module.css';
 const EmployeeDetails = ({ e_id, handleBack }) => {
     const dispatch = useDispatch();
 
-    // 1. Select Employee from Store
     const employee = useSelector(state => 
         state.employees.items.find(emp => emp.e_id === e_id)
     );
     
-    // 2. Select Branches from Store
     const { items: branches, status: branchStatus } = useSelector((state) => state.branches);
 
     const [filteredBranches, setFilteredBranches] = useState([]);
@@ -23,14 +22,12 @@ const EmployeeDetails = ({ e_id, handleBack }) => {
     });
     const [error, setError] = useState('');
 
-    // Fetch branches if not loaded
     useEffect(() => {
         if (branchStatus === 'idle') {
             dispatch(fetchBranches());
         }
     }, [branchStatus, dispatch]);
 
-    // Populate Form Data from Redux Store Employee
     useEffect(() => {
         if (employee) {
             setFormData({
@@ -50,7 +47,6 @@ const EmployeeDetails = ({ e_id, handleBack }) => {
         }
     }, [employee]);
 
-    // Filter Branches Logic
     useEffect(() => {
         if (!branches.length || !employee) return;
 
@@ -68,16 +64,42 @@ const EmployeeDetails = ({ e_id, handleBack }) => {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-        setError(''); 
+        if (error) setError('');
+    };
+
+    const validateForm = () => {
+        const fname = formData.f_name.trim();
+        const lname = formData.last_name.trim();
+        const email = formData.email.trim();
+        const phone = formData.phone_no ? formData.phone_no.trim() : '';
+        const salary = parseFloat(formData.base_salary);
+
+        if (!fname) return "First Name is required.";
+        if (/^\d/.test(fname)) return "First Name cannot start with a number.";
+        
+        if (!lname) return "Last Name is required.";
+        if (/^\d/.test(lname)) return "Last Name cannot start with a number.";
+
+        if (!email) return "Email is required.";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Invalid email format.";
+
+        if (phone && !/^\d{10}$/.test(phone)) return "Phone number must be exactly 10 digits.";
+
+        if (!formData.acno) return "Account Number is required.";
+        if (!formData.ifsc) return "IFSC Code is required.";
+        if (!formData.bankname) return "Bank Name is required.";
+
+        if (isNaN(salary) || salary <= 0) return "Salary must be a positive number greater than 0.";
+
+        return null;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(''); 
-
-        const salaryValue = parseFloat(formData.base_salary);
-        if (isNaN(salaryValue) || salaryValue <= 0) {
-            setError('Monthly salary must be a number greater than 0.');
+        
+        const validationError = validateForm();
+        if (validationError) {
+            setError(validationError);
             return;
         }
 
@@ -102,7 +124,9 @@ const EmployeeDetails = ({ e_id, handleBack }) => {
     return (
         <div className={styles.formContainer}>
             <h2>Edit Employee Details</h2>
+            
             {error && <div className={styles.errorMessage}>{error}</div>}
+            
             <form onSubmit={handleSubmit} className={styles.formWrapper}>
                 <div className={styles.formSection}>
                     <h3 className={styles.sectionTitle}>Personal Details</h3>
