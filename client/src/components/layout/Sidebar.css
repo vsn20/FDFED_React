@@ -1,73 +1,138 @@
+/* Sidebar Container */
 .sidebar {
-  width: 240px;
-  height: calc(100vh - 60px); /* Stretch from below topbar to bottom of viewport */
-  background: #1e2a3a; /* Dark navy */
-  color: white;
-  padding: 20px 15px;
+  width: 250px;
+  /* Adjust height calculation to fit your layout (100vh - topbar) */
+  height: calc(100vh - 90px); 
+  background: linear-gradient(180deg, #2d3748, #1a2a44);
+  border-radius: 15px;
+  padding: 30px 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  
+  /* Positioning (Keep fixed to stay on screen) */
+  position: fixed;
+  top: 80px; /* Adjust based on your Navbar height */
+  left: 20px;
+  z-index: 900;
+  box-sizing: border-box;
+
+  /* Scrollbar logic from your snippet */
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+/* Hide Scrollbar for Chrome/Safari/Opera */
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Dashboard Title / Button */
+.sidebar-title {
+  display: block;
+  font-size: 1.5rem;
+  color: #fff;
+  background: linear-gradient(90deg, #4a5568, #2d3748);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+/* Gold Underline Effect */
+.sidebar-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 3px;
+  background: linear-gradient(to right, transparent, #FFD700, transparent);
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+.sidebar-title:hover {
+  background: linear-gradient(90deg, #636e72, #4a5568);
+  transform: scale(1.02);
+}
+
+/* Menu List Container */
+.sidebar-menu {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  position: fixed; /* Fix to stay in place */
-  top: 60px; /* Align below topbar (adjust if topbar height changes) */
-  left: 0;
-  border-radius: 16px;
-  margin: 20px 20px 20px 20px; /* Adjusted margin */
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
-  z-index: 900; /* Below topbar but above content */
-  box-sizing: border-box;
-}
-
-.sidebar-title {
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
-  color: #ffffff ;
-  background: #2c3e50;
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 15px;
-}
-
-.sidebar-menu {
+  gap: 10px;
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
+/* Individual List Items */
 .sidebar-menu li {
-  background: #2c3e50;
-  border-radius: 12px;
-  transition: 0.3s;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.1); /* Base transparent background */
+  cursor: pointer;
 }
 
-.sidebar-menu li:hover {
-  background: linear-gradient(90deg, #4b134f, #2c3e70, #3b3b3b, #1a5c2f); /* Blue to purple gradient for hover */
-  transform: translateX(4px);
-}
-
-.sidebar-menu li.active {
-  background: linear-gradient(90deg, #4b134f, #2c3e70, #3b3b3b, #1a5c2f); /* Same gradient for active/clicked item */
-}
-
+/* Link Styles */
 .sidebar-menu li a {
   display: flex;
   align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: white;
+  gap: 15px;
   padding: 12px 15px;
-  font-size: 15px;
-  border-radius: 12px;
+  text-decoration: none;
+  color: #e2e8f0;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: flex-start; /* Reset justify content */
 }
 
-.sidebar-menu li a span {
-  font-size: 18px;
+/* Hover State */
+.sidebar-menu li:hover {
+  background: linear-gradient(to right, #4a5568, #2d3748);
+  transform: translateX(5px);
 }
 
-.active{
+.sidebar-menu li:hover a {
+  color: #FFD700;
+}
+
+/* Active State */
+.sidebar-menu li.active {
+  background: linear-gradient(to right, #FFD700, #d4b106);
+}
+
+.sidebar-menu li.active a {
+  color: #2d3748;
   font-weight: bold;
-  background-color: black;
+}
+
+/* Icons */
+.sidebar-menu li a span {
+  font-size: 1.4rem;
+  width: 30px;
+  text-align: center;
+  display: inline-block;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%; /* Full width */
+    height: auto;
+    position: relative; /* Normal flow */
+    top: 0;
+    left: 0;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    overflow-y: auto;
+  }
+
+  .sidebar-menu li a {
+    justify-content: center; /* Center text/icons on mobile */
+  }
 }

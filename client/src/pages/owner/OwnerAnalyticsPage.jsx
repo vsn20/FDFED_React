@@ -121,8 +121,9 @@ const OwnerAnalyticsPage = () => {
 
   return (
     <div className={styles.container}>
+      <h2>Owner Dashboard</h2>
       <div className={styles.contentArea}>
-        <h1>Owner Dashboard</h1>
+        
         <p className={styles.subtitle}>
           Overview: <strong>{title}</strong>
         </p>

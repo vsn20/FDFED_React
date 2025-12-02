@@ -1,9 +1,13 @@
+/* Analytics.module.css */
+
+/* --- LAYOUT CONTAINERS (Updated for Sidebar Alignment) --- */
 .container {
-  margin-top: 90px;
+  margin-top: 20px; /* Changed from 90px to match Sidebar margin */
   display: flex;
   flex: 1;
-  justify-content: center;
+  flex-direction: column; /* Ensure vertical stacking */
   padding: 0 20px;
+  min-height: 80vh; /* Ensures it stretches nicely with sidebar */
   max-width: 100%;
 }
 
@@ -14,24 +18,41 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   width: 100%;
   max-width: 1200px;
+  margin: 0 auto; /* Center the card horizontally */
+  
+  /* Flex & Scroll Logic to match Sidebar */
+  flex: 1;
+  overflow-y: auto;
+  
+  /* Hide scrollbar logic */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.contentArea::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .contentArea h1 {
   color: #2d3436;
   margin-bottom: 10px;
   font-size: 1.8rem;
+  text-align: center; /* Optional: Center title */
 }
 
 .subtitle {
   color: #636e72;
   font-size: 1rem;
   margin-bottom: 30px;
+  text-align: center; /* Optional: Center subtitle */
 }
 
+/* --- GRAPH GRID & CARDS --- */
 .graphGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 25px;
+  padding-bottom: 20px; /* Add padding at bottom for scroll clearance */
 }
 
 .graphCard {
@@ -46,10 +67,10 @@
 }
 
 .chartWrapper {
-    flex: 1;
-    position: relative;
-    width: 100%;
-    min-height: 300px;
+  flex: 1;
+  position: relative;
+  width: 100%;
+  min-height: 300px;
 }
 
 .fullWidth {
@@ -57,11 +78,11 @@
 }
 
 .note {
-    font-size: 0.9rem;
-    font-style: italic;
-    color: #636e72;
-    margin-top: 20px;
-    text-align: center;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #636e72;
+  margin-top: 20px;
+  text-align: center;
 }
 
 .loading, .error {
@@ -75,10 +96,21 @@
   color: #e74c3c;
 }
 
+/* --- RESPONSIVE DESIGN --- */
 @media (max-width: 768px) {
+  .container {
+    margin-top: 20px;
+    padding: 0 10px;
+  }
+
+  .contentArea {
+    padding: 15px;
+  }
+
   .graphGrid {
     grid-template-columns: 1fr;
   }
+
   .fullWidth {
     grid-column: span 1;
   }

@@ -142,7 +142,7 @@ const OwnerSales = () => {
     return (
         <div className={styles.container}>
             <div className={styles.contentArea}>
-                <h1>Sales Overview</h1>
+                <h1 className='page-header'>Sales Overview</h1>
 
                 {/* Filters Section */}
                 <div className={styles.controlsContainer}>

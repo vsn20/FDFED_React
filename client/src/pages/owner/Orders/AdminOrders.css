@@ -8,26 +8,34 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* --- MAIN CONTAINER --- */
+/* --- MAIN CONTAINER (Matches Inventory & Sales layout) --- */
 .admin-orders-container {
-    margin-top: 90px;
+    margin-top: 20px; /* Aligned with sidebar margin */
     display: flex;
     flex: 1;
     gap: 25px;
     padding: 0 20px;
     max-width: 100%;
     flex-direction: column;
+    min-height: 80vh; /* Ensures it stretches nicely with sidebar */
 }
 
 /* --- CONTENT AREA (Card Style) --- */
 .content-area {
     background: #ffffff;
     border-radius: 15px;
-    padding: 20px;
+    padding: 25px; /* Consistent padding */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     flex: 1;
-    overflow-x: auto;
-    min-height: 80vh;
+    overflow-y: auto;
+    
+    /* Hide scrollbar logic */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+.content-area::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
 }
 
 /* --- PAGE HEADER --- */
@@ -47,30 +55,32 @@
     width: 100%;
 }
 
-/* --- FILTER CONTROLS BAR (Matches .controlsContainer) --- */
+/* --- FILTER CONTROLS BAR (Matches .controlsContainer logic) --- */
 .filters-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #ffffff;
+    background: #f8f9fa; /* Light grey background for filter bar */
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
     gap: 15px;
     flex-wrap: wrap;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #e6e9f0;
 }
 
-/* --- INPUTS & SELECTS (Matches .searchInput & .filterSelect) --- */
+/* --- INPUTS & SELECTS --- */
 .filter-input {
     padding: 10px 15px;
-    border: 1px solid #ced4da;
-    border-radius: 6px;
+    border: 1px solid #e6e9f0;
+    border-radius: 5px;
     font-size: 0.9rem;
     transition: border-color 0.2s;
     background-color: white;
     min-width: 140px;
     flex: 1;
+    color: #2d3436;
+    outline: none;
 }
 
 .filter-input[type="text"] {
@@ -79,16 +89,15 @@
 
 .filter-input:focus {
     border-color: #333;
-    outline: none;
 }
 
 /* --- BUTTONS --- */
 .btn-reset {
     padding: 10px 20px;
-    background-color: #ef4444; /* Red for Reset */
+    background-color: #333; /* Dark button for consistency */
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 5px;
     cursor: pointer;
     transition: background 0.2s;
     font-size: 0.9rem;
@@ -96,15 +105,16 @@
 }
 
 .btn-reset:hover {
-    background-color: #dc2626;
+    background-color: #555;
 }
 
-/* --- TABLE STYLES (Matches .table) --- */
+/* --- TABLE STYLES --- */
 .table-wrapper {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     margin-bottom: 20px;
-    border: none;
+    border: 1px solid #e6e9f0;
+    border-radius: 10px;
 }
 
 .orders-table {
@@ -112,8 +122,6 @@
     min-width: 800px;
     border-collapse: collapse;
     background: #ffffff;
-    border-radius: 10px;
-    border-spacing: 0;
 }
 
 .orders-table thead {
@@ -124,8 +132,8 @@
     color: white;
     padding: 15px;
     text-align: left;
-    font-size: 0.95rem;
-    font-weight: 500;
+    font-size: 0.9rem; /* Standardized font size */
+    font-weight: normal;
     border-bottom: 2px solid #ffffff;
     white-space: nowrap;
 }
@@ -133,7 +141,7 @@
 .orders-table td {
     padding: 15px;
     text-align: left;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     border-bottom: 1px solid #e6e9f0;
     color: #2d3436;
 }
@@ -151,14 +159,14 @@
     border-bottom: none;
 }
 
-/* --- PAGINATION (Matches .paginationContainer) --- */
+/* --- PAGINATION --- */
 .pagination-controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
     padding-top: 15px;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid #eee;
     flex-wrap: wrap;
     gap: 15px;
 }
@@ -166,34 +174,32 @@
 .rows-input {
     width: 60px;
     padding: 5px;
-    border: 1px solid #ced4da;
+    border: 1px solid #ccc;
     border-radius: 4px;
     text-align: center;
     font-size: 0.9rem;
 }
 
 .btn-page {
-    padding: 8px 16px;
-    border: 1px solid #cbd5e1;
-    background: white;
-    border-radius: 6px;
+    padding: 6px 14px;
+    border: none;
+    background: #333;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s;
-    color: #334155;
-    font-size: 0.9rem;
-    margin: 0;
+    color: white;
+    font-size: 0.85rem;
+    margin: 0 5px;
 }
 
 .btn-page:disabled {
-    background: #f1f5f9;
-    color: #cbd5e1;
+    background: #ccc;
+    color: #fff;
     cursor: not-allowed;
-    border-color: #e2e8f0;
 }
 
 .btn-page:hover:not(:disabled) {
-    background: #f1f5f9;
-    border-color: #94a3b8;
+    background: #555;
 }
 
 /* --- STATUS BADGES --- */
@@ -215,16 +221,16 @@
 /* --- DETAILS VIEW STYLES --- */
 .section-title {
     font-size: 1.2rem;
-    color: #000;
+    color: #2d3436;
     font-weight: 700;
-    margin: 20px 0 15px 0;
+    margin: 20px 0 10px 0;
     padding-bottom: 5px;
     border-bottom: 1px solid #eee;
 }
 
 .form-row {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     flex-wrap: wrap;
     margin-bottom: 15px;
 }
@@ -240,24 +246,24 @@
 .form-group label {
     display: block;
     margin-bottom: 5px;
-    color: #2c3e50;
-    font-size: 0.95rem;
-    font-weight: 600;
+    color: #2d3436;
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 .form-group input {
     width: 100%;
-    padding: 8px 12px;
-    background: #fff; /* Keep white for read-only to look clean */
-    border: 1px solid #bdc3c7;
-    border-radius: 4px;
-    color: #2c3e50;
-    font-size: 0.95rem;
+    padding: 10px;
+    background: #e9ecef; /* Read-only style */
+    border: 1px solid #e6e9f0;
+    border-radius: 5px;
+    color: #2d3436;
+    font-size: 0.9rem;
     outline: none;
 }
 
 .form-group input:read-only {
-    background-color: #f9fafb;
+    background-color: #e9ecef;
     cursor: default;
 }
 
@@ -305,16 +311,16 @@
         border-bottom: none;
     }
 
-   
-    .orders-table td:nth-of-type(1):before { content: "Order ID"; font-weight: bold; float: left; }
-    .orders-table td:nth-of-type(2):before { content: "Branch"; font-weight: bold; float: left; }
-    .orders-table td:nth-of-type(3):before { content: "Company"; font-weight: bold; float: left; }
-    .orders-table td:nth-of-type(4):before { content: "Product"; font-weight: bold; float: left; }
-    .orders-table td:nth-of-type(5):before { content: "Status"; font-weight: bold; float: left; }
-    .orders-table td:nth-of-type(6):before { content: "Delivery"; font-weight: bold; float: left; }
+    .orders-table td:nth-of-type(1):before { content: "Order ID"; font-weight: bold; float: left; color: #4b5563; }
+    .orders-table td:nth-of-type(2):before { content: "Branch"; font-weight: bold; float: left; color: #4b5563; }
+    .orders-table td:nth-of-type(3):before { content: "Company"; font-weight: bold; float: left; color: #4b5563; }
+    .orders-table td:nth-of-type(4):before { content: "Product"; font-weight: bold; float: left; color: #4b5563; }
+    .orders-table td:nth-of-type(5):before { content: "Status"; font-weight: bold; float: left; color: #4b5563; }
+    .orders-table td:nth-of-type(6):before { content: "Delivery"; font-weight: bold; float: left; color: #4b5563; }
 
     .pagination-controls {
         flex-direction: column;
         text-align: center;
+        gap: 10px;
     }
 }

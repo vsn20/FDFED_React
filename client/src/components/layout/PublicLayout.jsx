@@ -162,7 +162,7 @@ const PublicLayout = () => {
                 <li><Link to="/contact-us">Contact</Link></li>
               </ul>
             </div>
-            <div className="footer-column">
+            {/* <div className="footer-column">
               <h2 className="column-title">Our Services</h2>
               <ul className="column-list">
                 <li>Workday Extend Implementation</li>
@@ -174,7 +174,7 @@ const PublicLayout = () => {
                 <li>Staff Augmentation Services</li>
                 <li>Training & Support</li>
               </ul>
-            </div>
+            </div> */}
             <div className="footer-column">
               <h2 className="column-title">Get in Touch</h2>
               <div className="contact-info">
