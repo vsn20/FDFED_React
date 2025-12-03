@@ -179,7 +179,7 @@ const getRecipients = async (req, res) => {
     let branchSalesmen = [];
     if (manager && manager.bid) {
       branchSalesmen = await Employee.find({ 
-        role: "Salesman", 
+        role: "salesman", 
         bid: manager.bid, 
         status: "active" 
       }).select('e_id f_name last_name bid').lean();
