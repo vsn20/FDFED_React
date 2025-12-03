@@ -1,0 +1,185 @@
+vsn_20 <vuppalasainaman@gmail.com> (40):
+      2025-09-12 react app downloaded
+      2025-09-12 some changes
+      2025-09-12 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-09-29 all changes
+      2025-09-29 all changes
+      2025-09-29 many changes
+      2025-09-29 some changes
+      2025-10-30 aboutus
+      2025-11-04 login was updated userid and empid everything is correctly kept
+      2025-11-04 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-11-04 company authentication done
+      2025-11-07 sidebar fixed and the role issues is resolved(Sales Manager -> manager)
+      2025-11-07 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-11-07 added ourbranches
+      2025-11-14 implemented products feature in admin(just displaying the products not implemeneted edit status)
+      2025-11-14 implemeted products status in products (in owner).
+      2025-11-18 Corrected some mistakes in sales feature in salesman
+      2025-11-26 sales in admin first part is completed
+      2025-11-26 sales in admin successfully added still the sales details were not added
+      2025-11-26 sales details and sales routes in admin were added
+      2025-11-30 commits page
+      2025-11-30 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-11-30 in admin orders completed. till displaying all orders in list.
+      2025-11-30 in admin orders. orders details will be displayed when i click on the order date and pagination logic search and filters were added,
+      2025-11-30 commits updated pdf
+      2025-12-01 admin invenotry is added
+      2025-12-01 salary feature added in admin
+      2025-12-01 Profit dashboard is done in admin
+      2025-12-02 Ourproducts in home page has been completed
+      2025-12-02 redux is added in owner sales,branch and employee features then all the css is changed
+      2025-12-02 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-12-02 some changes
+      2025-12-02 import Topproducts added
+      2025-12-03 changed about us to add contributions and photos. changed admin role features css to align with sidebar and made sidebar css good,align with features
+      2025-12-03 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-12-03 all the css of homepage,login,company,customer page was done(height alignment) and form css was changed in admin dashboard
+      2025-12-03 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-12-03 small change in sidebar 2 sales in sidebar
+      2025-12-03 all the data is filtered
+      2025-12-03 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+
+saichand-avula <saichandavula2005@gmail.com> (36):
+      2025-11-21 css
+      2025-11-21 checking the issue in github
+      2025-11-21 added route for company orders in app.jsx
+      2025-11-22 updated sidebar of company for including orders
+      2025-11-22 added companyorders.jsx in pages i.e front end converted to react
+      2025-11-22 added orders controller for company  by serving json rather than view
+      2025-11-22 updated company routes to handle orders
+      2025-11-22 changed app.jsx for including routes to company complaints
+      2025-11-22 updated company side bar included complants
+      2025-11-22 added company complaints front end
+      2025-11-22 added compnay complaints controoler in server folder
+      2025-11-22 complaints model created
+      2025-11-22 customer model created
+      2025-11-22 company model created
+      2025-12-01 commit check
+      2025-12-01 company messages created by changing contolleres new jsx of message and server for socket io  products middle ware error fixed and updated company sidebar with message
+      2025-12-01 Merge branch 'main' into saichand
+      2025-12-01 Merge pull request #11 from vsn20/saichand
+      2025-12-01 owner messages done by adding controllers and routes
+      2025-12-01 company messages converted to socket io
+      2025-12-01 customer authentication front end related files
+      2025-12-01 customer login backend work
+      2025-12-01 Merge pull request #12 from vsn20/saichand
+      2025-12-02 git commit check
+      2025-12-02 commits file created
+      2025-12-02 top proudcts front end and controllers and routes are crated for top products
+      2025-12-02 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-12-02 Forget paswords controllers routes and frotn end and employess signup done
+      2025-12-02 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-12-03 manager messages done
+      2025-12-03 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-12-03 company analytics and  salesmanager messages
+      2025-12-03 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-12-03 products in redux and salesman messages updated
+      2025-12-03 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-12-03 company products redux issue fixed
+
+“Narayana <“narayanamurthychikkala6@gmail.com”> (28):
+      2025-09-29 branches feature in admin is created
+      2025-10-01 changes done in owner and salesman profile
+      2025-10-19 changes in owner dashboard
+      2025-10-30 photos uploaded
+      2025-10-30 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-10-30 updated about us page
+      2025-10-31 changes made in navbar
+      2025-11-06 public layout updated
+      2025-11-08 profile feature updated in salesmanager
+      2025-11-08 salesman and profile features are updated in salesmanager
+      2025-11-18 implemented orders feature in manager dashboard(frontend)
+      2025-11-18 added routes,controllers,models files in backend for orders feature
+      2025-11-25 changes made in App.jsx to add inventory feature(salesmanager)
+      2025-11-25 chnages made in sidebar.jsx to add inventory feature
+      2025-11-25 ManagerInventory.jsx file and its css created
+      2025-11-25 added inventory controller file in server folder
+      2025-11-25 added inventory routes in server folder
+      2025-11-25 updated server.js
+      2025-11-26 home page css updated
+      2025-11-26 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-12-01 sales feature added in salesmanager
+      2025-12-01 search option and pagination logic included in sales manager some features
+      2025-12-01 salaries feature in manager dashboard(frontend)
+      2025-12-01 salaries feature added(backend)
+      2025-12-01 Merge branch 'Narayana' of https://github.com/vsn20/FDFED_React into Narayana
+      2025-12-02 analytics feature added in manager dashboard
+      2025-12-02 changes made in css of employee, inevntory, salary features
+      2025-12-02 redux added in employees feature and added form validation
+
+“[VenkataHemaSai]” <“[venkatahemasaibhimineni@gmail.com]”> (26):
+      2025-10-23 changes made in react
+      2025-10-23 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-10-24 Aboutus page in react
+      2025-10-24 added team members section in aboutus
+      2025-10-24 small change in about us
+      2025-11-06 added the footer and modified the css.
+      2025-11-18 Sales feature is added in salesman(frontend)
+      2025-11-18 Sales feature of salesman, backend
+      2025-11-25 Backend for inventory of salesman is done.
+      2025-11-25 Frontend for inventory of salesman is done.
+      2025-12-01 app.jsx updated for salaries features
+      2025-12-01 sidebar updated for salaries in salesman
+      2025-12-01 saleries.jsx frontend
+      2025-12-01 salaries css for salesman
+      2025-12-01 server.js for salaries, salesman
+      2025-12-01 salary controller for salesman
+      2025-12-01 salesman salary route, new one created
+      2025-12-01 new products done in public, frontend
+      2025-12-01 new products, backend
+      2025-12-02 salesman anayltics done
+      2025-12-02 Naman's work: Done owner's analytics pages
+      2025-12-02 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-12-02 added rupees symbol
+      2025-12-03 Sai Chand: Done company sales
+      2025-12-03 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+      2025-12-03 Merge branch 'main' of https://github.com/vsn20/FDFED_React
+
+“saichand-avula” <“saichandavula2005@gmail.com”> (13):
+      2025-09-12 packages
+      2025-10-22 protected routes createed
+      2025-11-14 added company route in client
+      2025-11-14 added products in sidebar
+      2025-11-14 products images synced
+      2025-11-14 app.jsx changed to include route of company products
+      2025-11-14 company products component created
+      2025-11-14 edited server.js  for company handling
+      2025-11-14 company products display controllers added
+      2025-11-14 modified auth middle ware for proper multer handling
+      2025-11-14 added model for products
+      2025-11-14 added company.js for routes handling of company in server side
+      2025-11-14 installed and updated package.json and nodemodules by installing uuid and  multer
+
+vsn20 <vuppalasainaman@gmail.com> (7):
+      2025-11-26 Merge branch 'main' into naman
+      2025-11-26 Merge pull request #1 from vsn20/naman
+      2025-11-26 Merge pull request #2 from vsn20/naman
+      2025-11-30 Merge pull request #3 from vsn20/naman
+      2025-12-01 Merge pull request #7 from vsn20/naman
+      2025-12-01 Merge pull request #8 from vsn20/naman
+      2025-12-01 Merge pull request #9 from vsn20/naman
+
+Jahnavi Sadu <sadujahnavi3016@gmail.com> (6):
+      2025-12-02 previous purchases feature done in customer dashboard
+      2025-12-02 complaint feature in customer is done
+      2025-12-02 previous  purchases changed to react
+      2025-12-02 reviews feature in customer done
+      2025-12-02 contact us done
+      2025-12-02 fixed  app.jsx exra import
+
+VenkataHemaSai <venkatahemasaibhimineni@gmail.com> (6):
+      2025-12-01 Merge pull request #5 from vsn20/hemasai
+      2025-12-01 Merge branch 'main' into hemasai
+      2025-12-01 Merge pull request #10 from vsn20/hemasai
+      2025-12-02 Merge branch 'main' into hemasai
+      2025-12-02 Merge pull request #14 from vsn20/hemasai
+      2025-12-02 Merge pull request #15 from vsn20/hemasai
+
+Narayana Murthy <narayanamurthychikkala6@gmail.com> (5):
+      2025-12-01 Merge branch 'main' into Narayana
+      2025-12-01 Merge pull request #4 from vsn20/Narayana
+      2025-12-01 Merge pull request #6 from vsn20/Narayana
+      2025-12-02 Merge branch 'main' into Narayana
+      2025-12-02 Merge pull request #13 from vsn20/Narayana
+
