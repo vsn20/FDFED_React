@@ -223,10 +223,10 @@ const OwnerSales = () => {
                                         <td className={styles.td} data-label="Company">{sale.company_name}</td>
                                         <td className={styles.td} data-label="Product">{sale.product_name}</td>
                                         <td className={`${styles.td} ${styles.amountCell}`} data-label="Amount">
-                                            ${sale.amount.toFixed(2)}
+                                            ₹{sale.amount.toFixed(2)}
                                         </td>
                                         <td className={`${styles.td} ${sale.profit_or_loss >= 0 ? styles.profitCell : styles.lossCell}`} data-label="Profit">
-                                            ${sale.profit_or_loss.toFixed(2)}
+                                            ₹{sale.profit_or_loss.toFixed(2)}
                                         </td>
                                         <td className={styles.td} data-label="Date">
                                             {new Date(sale.sales_date).toLocaleDateString()}
