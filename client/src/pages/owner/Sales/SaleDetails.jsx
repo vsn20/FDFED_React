@@ -100,13 +100,13 @@ const SaleDetails = ({ saleId, onBack }) => {
                     <div className={styles.formRow}>
                         <div className={styles.formGroup}>
                             <label>Total Amount</label>
-                            <input type="text" value={`$${sale.amount?.toFixed(2)}`} readOnly />
+                            <input type="text" value={`₹${sale.amount?.toFixed(2)}`} readOnly />
                         </div>
                         <div className={styles.formGroup}>
                             <label>Profit/Loss</label>
                             <input 
                                 type="text" 
-                                value={`$${sale.profit_or_loss?.toFixed(2)}`} 
+                                value={`₹${sale.profit_or_loss?.toFixed(2)}`} 
                                 style={{ color: sale.profit_or_loss >= 0 ? '#27ae60' : '#c0392b', fontWeight: 'bold' }}
                                 readOnly 
                             />
