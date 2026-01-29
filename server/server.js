@@ -41,6 +41,7 @@ app.use(cors({
 }));
 
 // ============ HELMET SECURITY MIDDLEWARE ============
+// Helmet helps secure Express apps by setting various HTTP headers
 // Sets various HTTP headers for security
 app.use(helmet({
   // Content Security Policy - Controls allowed sources
@@ -103,7 +104,14 @@ const accessLogStream = rfs.createStream(
 );
 // ====================================================
 
+// DEVELOPMENT: Colored console output
+app.use(morgan(':method :url :status-colored :response-time ms - :user-id'));
 
+// ALWAYS: Also log to rotating file (detailed format with timestamp)
+app.use(morgan('[:date[clf]] :method :url :status :response-time ms - :user-id - :user-agent', { 
+  stream: accessLogStream 
+}));
+// ========================================================
 
 // Body parser
 app.use(express.json());
