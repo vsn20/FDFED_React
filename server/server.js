@@ -144,10 +144,7 @@ const {
 });
 
 // Route to get CSRF token (Frontend calls this first)
-app.get('/api/csrf-token', (req, res) => {
-  const csrfToken = generateCsrfToken(req, res);  // v4.x API
-  res.json({ csrfToken });
-});
+
 
 // Apply CSRF protection to all state-changing routes
 // Note: This protects POST, PUT, DELETE, PATCH requests
