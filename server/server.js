@@ -103,14 +103,7 @@ const accessLogStream = rfs.createStream(
 );
 // ====================================================
 
-// DEVELOPMENT: Colored console output
-app.use(morgan(':method :url :status-colored :response-time ms - :user-id'));
 
-// ALWAYS: Also log to rotating file (detailed format with timestamp)
-app.use(morgan('[:date[clf]] :method :url :status :response-time ms - :user-id - :user-agent', { 
-  stream: accessLogStream 
-}));
-// ========================================================
 
 // Body parser
 app.use(express.json());
@@ -144,7 +137,10 @@ const {
 });
 
 // Route to get CSRF token (Frontend calls this first)
-
+app.get('/api/csrf-token', (req, res) => {
+  const csrfToken = generateCsrfToken(req, res);  // v4.x API
+  res.json({ csrfToken });
+});
 
 // Apply CSRF protection to all state-changing routes
 // Note: This protects POST, PUT, DELETE, PATCH requests
