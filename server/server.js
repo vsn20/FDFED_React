@@ -84,6 +84,24 @@ if (!fs.existsSync(logsDir)) {
 
 // ============ ROTATING FILE STREAM SETUP ============
 // Creates files like: access-2026-02-05.log, access-2026-02-06.log
+const accessLogStream = rfs.createStream(
+  (time, index) => {
+    if (!time) return 'access.log'; // Initial file name
+    
+    // Format: access-YYYY-MM-DD.log
+    const year = time.getFullYear();
+    const month = String(time.getMonth() + 1).padStart(2, '0');
+    const day = String(time.getDate()).padStart(2, '0');
+    return `access-${year}-${month}-${day}.log`;
+  },
+  {
+    interval: '1d',        // Rotate daily
+    path: logsDir,         // Directory for log files
+    maxFiles: 14,          // Keep only last 14 days of logs
+    maxSize: '10M',        // Also rotate if file exceeds 10MB
+    compress: 'gzip'       // Compress old logs to .gz files
+  }
+);
 // ====================================================
 
 // DEVELOPMENT: Colored console output
