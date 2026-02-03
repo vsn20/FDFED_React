@@ -1,7 +1,13 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const helmet = require('helmet'); // Security middleware
+const cookieParser = require('cookie-parser'); // For CSRF cookies
+const { doubleCsrf } = require('csrf-csrf'); // Modern CSRF protection
 const path = require('path');
+const fs = require('fs');
+const morgan = require('morgan');
+const rfs = require('rotating-file-stream'); // Rotating File Stream
 const connectDB = require('./config/db');
 const http = require('http');
 const { Server } = require("socket.io");
@@ -34,9 +40,130 @@ app.use(cors({
   credentials: true
 }));
 
+// ============ HELMET SECURITY MIDDLEWARE ============
+// Sets various HTTP headers for security
+app.use(helmet({
+  // Content Security Policy - Controls allowed sources
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // For React dev
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:", "blob:"],
+      connectSrc: ["'self'", "http://localhost:5173", "ws://localhost:5173"], // API & WebSocket
+    }
+  },
+  // Allow cross-origin for React frontend
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
+// ====================================================
+
+// ============ MORGAN HTTP LOGGER MIDDLEWARE ============
+// Custom token: Add user ID from JWT if available
+morgan.token('user-id', (req) => {
+  return req.user ? req.user.id : 'anonymous';
+});
+
+// Custom token: Add colored status
+morgan.token('status-colored', (req, res) => {
+  const status = res.statusCode;
+  if (status >= 500) return `\x1b[31m${status}\x1b[0m`; // Red
+  if (status >= 400) return `\x1b[33m${status}\x1b[0m`; // Yellow
+  if (status >= 300) return `\x1b[36m${status}\x1b[0m`; // Cyan
+  return `\x1b[32m${status}\x1b[0m`; // Green
+});
+
+// Create logs directory if it doesn't exist
+const logsDir = path.join(__dirname, 'logs');
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true });
+}
+
+// ============ ROTATING FILE STREAM SETUP ============
+// Creates files like: access-2026-02-05.log, access-2026-02-06.log
+const accessLogStream = rfs.createStream(
+  (time, index) => {
+    if (!time) return 'access.log'; // Initial file name
+    
+    // Format: access-YYYY-MM-DD.log
+    const year = time.getFullYear();
+    const month = String(time.getMonth() + 1).padStart(2, '0');
+    const day = String(time.getDate()).padStart(2, '0');
+    return `access-${year}-${month}-${day}.log`;
+  },
+  {
+    interval: '1d',        // Rotate daily
+    path: logsDir,         // Directory for log files
+    maxFiles: 14,          // Keep only last 14 days of logs
+    maxSize: '10M',        // Also rotate if file exceeds 10MB
+    compress: 'gzip'       // Compress old logs to .gz files
+  }
+);
+// ====================================================
+
+// DEVELOPMENT: Colored console output
+app.use(morgan(':method :url :status-colored :response-time ms - :user-id'));
+
+// ALWAYS: Also log to rotating file (detailed format with timestamp)
+app.use(morgan('[:date[clf]] :method :url :status :response-time ms - :user-id - :user-agent', { 
+  stream: accessLogStream 
+}));
+// ========================================================
+
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Cookie Parser (Required for CSRF)
+app.use(cookieParser());
+
+// ============ CSRF PROTECTION MIDDLEWARE ============
+// Using Double Submit Cookie Pattern (Modern & Secure)
+const isProduction = process.env.NODE_ENV === 'production';
+
+const {
+  generateCsrfToken,    // v4.x API
+  doubleCsrfProtection,
+} = doubleCsrf({
+  getSecret: () => process.env.JWT_SECRET || 'csrf-secret-key-change-in-production',
+  // v4.x requires getSessionIdentifier - use IP + User-Agent as session identifier
+  getSessionIdentifier: (req) => req.ip + (req.headers['user-agent'] || ''),
+  // __Host- prefix requires secure:true (HTTPS), so only use it in production
+  cookieName: isProduction ? '__Host-psifi.x-csrf-token' : 'csrf-token',
+  cookieOptions: {
+    httpOnly: true,
+    sameSite: 'lax',  // For cross-origin compatibility
+    secure: isProduction, // HTTPS only in production
+    path: '/',
+  },
+  size: 64, // Token size
+  ignoredMethods: ['GET', 'HEAD', 'OPTIONS'], // Don't check CSRF for these
+  getTokenFromRequest: (req) => req.headers['x-csrf-token'], // Get token from header
+});
+
+// Route to get CSRF token (Frontend calls this first)
+app.get('/api/csrf-token', (req, res) => {
+  const csrfToken = generateCsrfToken(req, res);  // v4.x API
+  res.json({ csrfToken });
+});
+
+// Apply CSRF protection to all state-changing routes
+// Note: This protects POST, PUT, DELETE, PATCH requests
+app.use(doubleCsrfProtection);
+
+// CSRF Error Handler
+app.use((err, req, res, next) => {
+  if (err.code === 'EBADCSRFTOKEN' || err.message?.includes('csrf')) {
+    return res.status(403).json({
+      success: false,
+      message: 'Invalid or missing CSRF token. Please refresh and try again.'
+    });
+  }
+  next(err);
+});
+// ====================================================
 
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, '../client/public/uploads')));
