@@ -2,6 +2,19 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ForgotPassword.css';
 
+const API_BASE_URL = 'http://localhost:5001/api';
+
+// CSRF Token Helper
+let csrfToken = null;
+const getCsrfToken = async () => {
+  if (!csrfToken) {
+    const res = await fetch(`${API_BASE_URL}/csrf-token`, { credentials: 'include' });
+    const data = await res.json();
+    csrfToken = data.csrfToken;
+  }
+  return csrfToken;
+};
+
 const ForgotPassword = () => {
     const navigate = useNavigate();
 
@@ -37,9 +50,11 @@ const ForgotPassword = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:5001/api/forgot-password/send-otp', {
+            const csrf = await getCsrfToken();
+            const response = await fetch(`${API_BASE_URL}/forgot-password/send-otp`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json', 'x-csrf-token': csrf },
                 body: JSON.stringify({ identifier, type: identifierType }),
             });
             
@@ -79,9 +94,11 @@ const ForgotPassword = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:5001/api/forgot-password/reset', {
+            const csrf = await getCsrfToken();
+            const response = await fetch(`${API_BASE_URL}/forgot-password/reset`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json', 'x-csrf-token': csrf },
                 body: JSON.stringify({
                     otp,
                     newPassword,

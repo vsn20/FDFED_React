@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api/api';
 import './ContactUs.css'; // Import the CSS file created above
 
 const ContactUs = () => {
@@ -54,10 +54,8 @@ const ContactUs = () => {
     setLoading(true);
 
     try {
-      // Note: We use axios directly here because this is likely a public route 
-      // and doesn't necessarily need the Auth token attached by your 'api' instance.
-      // If your backend requires a token for this, use 'api.post' instead.
-      const res = await axios.post('http://localhost:5001/api/contact/submit', formData);
+      // Using api instance which has CSRF token handling built-in
+      const res = await api.post('/contact/submit', formData);
 
       if (res.data.success) {
         setStatus({ type: 'success', message: res.data.message });

@@ -129,18 +129,16 @@ const {
   doubleCsrfProtection,
 } = doubleCsrf({
   getSecret: () => process.env.JWT_SECRET || 'csrf-secret-key-change-in-production',
-  // v4.x requires getSessionIdentifier - use IP + User-Agent as session identifier
   getSessionIdentifier: (req) => req.ip + (req.headers['user-agent'] || ''),
-  // __Host- prefix requires secure:true (HTTPS), so only use it in production
   cookieName: isProduction ? '__Host-psifi.x-csrf-token' : 'csrf-token',
   cookieOptions: {
     httpOnly: true,
-    sameSite: 'lax',  // For cross-origin compatibility
-    secure: isProduction, // HTTPS only in production
+    sameSite: 'lax',  
+    secure: isProduction, 
     path: '/',
   },
-  size: 64, // Token size
-  ignoredMethods: ['GET', 'HEAD', 'OPTIONS'], // Don't check CSRF for these
+  size: 64, 
+  ignoredMethods: ['GET', 'HEAD', 'OPTIONS'], 
   getTokenFromRequest: (req) => req.headers['x-csrf-token'], // Get token from header
 });
 
