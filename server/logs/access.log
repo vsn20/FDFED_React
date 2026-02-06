@@ -2,3 +2,4 @@
 [05/Feb/2026:20:19:53 +0000] GET /api/branches 304 85.360 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
 [05/Feb/2026:20:19:54 +0000] GET /api/branches 304 58.997 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
 [06/Feb/2026:03:40:33 +0000] GET /api/csrf-token 200 6.591 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[06/Feb/2026:03:44:00 +0000] GET /api/csrf-token 304 6.767 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
