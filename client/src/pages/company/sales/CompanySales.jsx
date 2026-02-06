@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../../api/api';
 import './CompanySales.css';
 
 const CompanySales = () => {
@@ -15,20 +15,8 @@ const CompanySales = () => {
 
     const fetchSales = async () => {
         try {
-            // 1. GET THE TOKEN
-            const token = localStorage.getItem('token'); 
-
-            // 2. ATTACH IT TO THE REQUEST
-            const config = {
-                headers: {
-                    'Authorization': `Bearer ${token}`, // <--- THIS IS CRITICAL
-                    'Content-Type': 'application/json'
-                },
-                withCredentials: true
-            };
-
-            // 3. SEND REQUEST
-            const res = await axios.get('http://localhost:5001/api/company/sales', config);
+            // Using api instance which has auth token and CSRF handling built-in
+            const res = await api.get('/company/sales');
             
             setSales(res.data.sales);
             setLoading(false);

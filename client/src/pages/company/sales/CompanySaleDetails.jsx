@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../../api/api';
 import './CompanySales.css'; 
 
 const CompanySaleDetails = () => {
@@ -14,20 +14,8 @@ const CompanySaleDetails = () => {
     useEffect(() => {
         const fetchDetails = async () => {
             try {
-                // 1. Get Token
-                const token = localStorage.getItem('token');
-                
-                // 2. Set Config
-                const config = {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    withCredentials: true
-                };
-
-                // 3. Make Request
-                const res = await axios.get(`http://localhost:5001/api/company/sales/${id}`, config);
+                // Make Request (using api instance with CSRF handling)
+                const res = await api.get(`/company/sales/${id}`);
                 
                 setSale(res.data.sale);
                 setNewStatus(res.data.sale.installation_status || '');
@@ -43,22 +31,9 @@ const CompanySaleDetails = () => {
 
     const handleUpdateStatus = async () => {
         try {
-            // 1. Get Token
-            const token = localStorage.getItem('token');
-            
-            // 2. Set Config
-            const config = {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                withCredentials: true
-            };
-
-            // 3. Make PUT Request
-            await axios.put(`http://localhost:5001/api/company/sales/${id}/installation`, 
-                { installation_status: newStatus },
-                config
+            // Make PUT Request (using api instance with CSRF handling)
+            await api.put(`/company/sales/${id}/installation`, 
+                { installation_status: newStatus }
             );
             
             alert('Installation status updated successfully!');
