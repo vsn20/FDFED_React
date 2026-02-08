@@ -98,3 +98,8 @@
 [08/Feb/2026:11:23:56 +0000] GET / 404 3.060 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
 [08/Feb/2026:11:24:02 +0000] GET / 404 0.534 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
 [08/Feb/2026:11:24:23 +0000] GET / 404 7.304 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[08/Feb/2026:11:34:55 +0000] GET /favicon.ico 404 7.415 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[08/Feb/2026:11:35:05 +0000] GET /api/owner/orders 304 142.321 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[08/Feb/2026:11:35:05 +0000] GET /api/owner/orders/branches 304 189.602 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[08/Feb/2026:11:35:05 +0000] GET /api/owner/orders/branches 304 162.910 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[08/Feb/2026:11:35:05 +0000] GET /api/owner/orders 304 178.827 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
