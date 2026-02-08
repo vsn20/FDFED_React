@@ -8,6 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const morgan = require('morgan');
 const rfs = require('rotating-file-stream'); // Rotating File Stream
+const rateLimit = require('express-rate-limit'); // Rate limiting
 const connectDB = require('./config/db');
 const http = require('http');
 const { Server } = require("socket.io");
@@ -22,6 +23,11 @@ const app = express();
 
 // 1. Create HTTP server
 const server = http.createServer(app);
+
+// Test error route - REMOVE after testing
+app.get('/api/test-error', (req, res, next) => {
+  next(new Error('This is a test error!'));
+});
 
 // 2. Initialize Socket.io with Robust CORS
 // This fixes the connection issues for real-time messaging
@@ -83,25 +89,64 @@ if (!fs.existsSync(logsDir)) {
 }
 
 // ============ ROTATING FILE STREAM SETUP ============
-// Creates files like: access-2026-02-05.log, access-2026-02-06.log
+// Creates files like: access-2026-02-08.log (always with today's date)
+const isDev = process.env.NODE_ENV !== 'production';
+
+// Helper function to get formatted date string
+const getDateString = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 const accessLogStream = rfs.createStream(
   (time, index) => {
-    if (!time) return 'access.log'; // Initial file name
-    
-    // Format: access-YYYY-MM-DD.log
-    const year = time.getFullYear();
-    const month = String(time.getMonth() + 1).padStart(2, '0');
-    const day = String(time.getDate()).padStart(2, '0');
-    return `access-${year}-${month}-${day}.log`;
+    // Always use date in filename - use provided time or current date
+    const dateStr = getDateString(time || new Date());
+    return `access-${dateStr}.log`;
   },
   {
     interval: '1d',        // Rotate daily
+    intervalBoundary: true, // Rotate at midnight (00:00)
     path: logsDir,         // Directory for log files
     maxFiles: 14,          // Keep only last 14 days of logs
     maxSize: '10M',        // Also rotate if file exceeds 10MB
-    compress: 'gzip'       // Compress old logs to .gz files
+    compress: isDev ? false : 'gzip' // Only compress in production
   }
 );
+
+// Log rotation events in development
+if (isDev) {
+  accessLogStream.on('rotated', (filename) => {
+    console.log(`\x1b[36m[LOG ROTATION]\x1b[0m Rotated to: ${filename}`);
+  });
+  accessLogStream.on('error', (err) => {
+    console.error('\x1b[31m[LOG ROTATION ERROR]\x1b[0m', err);
+  });
+  console.log(`\x1b[36m[LOG]\x1b[0m Writing to: logs/access-${getDateString()}.log`);
+}
+
+// ============ ERROR LOG STREAM SETUP ============
+// Creates files like: error-2026-02-08.log
+const errorLogStream = rfs.createStream(
+  (time, index) => {
+    const dateStr = getDateString(time || new Date());
+    return `error-${dateStr}.log`;
+  },
+  {
+    interval: '1d',
+    intervalBoundary: true,
+    path: logsDir,
+    maxFiles: 30,          // Keep 30 days of error logs
+    maxSize: '20M',
+    compress: isDev ? false : 'gzip'
+  }
+);
+
+if (isDev) {
+  console.log(`\x1b[31m[ERROR LOG]\x1b[0m Writing errors to: logs/error-${getDateString()}.log`);
+}
 // ====================================================
 
 // DEVELOPMENT: Colored console output
@@ -112,6 +157,46 @@ app.use(morgan('[:date[clf]] :method :url :status :response-time ms - :user-id -
   stream: accessLogStream 
 }));
 // ========================================================
+
+// ============ RATE LIMITER MIDDLEWARE ============
+// Limit each IP to 100 requests per 15 minutes
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: {
+    success: false,
+    message: 'Too many requests from this IP, please try again after 15 minutes'
+  },
+  standardHeaders: true, // Return rate limit info in headers
+  legacyHeaders: false,  // Disable X-RateLimit-* headers
+  handler: (req, res, next, options) => {
+    // Log rate limit exceeded
+    const errorLog = `[${new Date().toISOString()}] RATE LIMIT EXCEEDED - IP: ${req.ip} - URL: ${req.originalUrl} - User-Agent: ${req.headers['user-agent'] || 'unknown'}\n`;
+    errorLogStream.write(errorLog);
+    res.status(options.statusCode).json(options.message);
+  }
+});
+
+// Stricter limiter for auth routes (5 attempts per 15 minutes)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: {
+    success: false,
+    message: 'Too many login attempts, please try again after 15 minutes'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res, next, options) => {
+    const errorLog = `[${new Date().toISOString()}] AUTH RATE LIMIT EXCEEDED - IP: ${req.ip} - URL: ${req.originalUrl}\n`;
+    errorLogStream.write(errorLog);
+    res.status(options.statusCode).json(options.message);
+  }
+});
+
+// Apply general rate limiter to all API routes
+app.use('/api/', apiLimiter);
+// ====================================================
 
 // Body parser
 app.use(express.json());
@@ -176,11 +261,11 @@ app.use((req, res, next) => {
 
 // --- MOUNT ROUTERS ---
 
-// Auth Routes
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/auth/company', require('./routes/companyAuthRoutes'));
-app.use('/api/auth/customer', require('./routes/customerAuthRoutes'));
-app.use('/api/forgot-password', require('./routes/forgotPasswordRoutes'));
+// Auth Routes (with stricter rate limiting)
+app.use('/api/auth', authLimiter, require('./routes/authRoutes'));
+app.use('/api/auth/company', authLimiter, require('./routes/companyAuthRoutes'));
+app.use('/api/auth/customer', authLimiter, require('./routes/customerAuthRoutes'));
+app.use('/api/forgot-password', authLimiter, require('./routes/forgotPasswordRoutes'));
 
 // Owner/Admin Routes
 app.use('/api/companies', require('./routes/owner/companyRoutes'));
@@ -246,10 +331,35 @@ io.on("connection", (socket) => {
   });
 });
 
+// ============ ERROR LOGGING HELPER ============
+const logError = (err, req) => {
+  const timestamp = new Date().toISOString();
+  const errorLog = `
+=====================================
+[${timestamp}] ERROR
+URL: ${req.method} ${req.originalUrl}
+IP: ${req.ip}
+User-Agent: ${req.headers['user-agent'] || 'unknown'}
+User ID: ${req.user ? req.user.id : 'anonymous'}
+Error Message: ${err.message}
+Stack Trace:
+${err.stack}
+=====================================\n`;
+  
+  // Write to error log file
+  errorLogStream.write(errorLog);
+};
+// ================================================
+
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ 
+  // Log error to console
+  console.error('\x1b[31m[ERROR]\x1b[0m', err.message);
+  
+  // Log error to file
+  logError(err, req);
+  
+  res.status(err.status || 500).json({ 
     success: false, 
     message: err.message || 'Internal Server Error' 
   });
