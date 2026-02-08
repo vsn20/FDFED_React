@@ -24,10 +24,10 @@ const app = express();
 // 1. Create HTTP server
 const server = http.createServer(app);
 
-// Test error route - REMOVE after testing
-app.get('/api/test-error', (req, res, next) => {
-  next(new Error('This is a test error!'));
-});
+// // Test error route - REMOVE after testing
+// app.get('/api/test-error', (req, res, next) => {
+//   next(new Error('This is a test error!'));
+// });
 
 // 2. Initialize Socket.io with Robust CORS
 // This fixes the connection issues for real-time messaging
