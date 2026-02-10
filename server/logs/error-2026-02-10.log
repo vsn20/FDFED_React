@@ -52,3 +52,5 @@ Error: Route not found: GET /api/company/orders?page=1&limit=10&search=
     at trimPrefix (C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\index.js:342:13)
     at C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\index.js:297:9
 =====================================
+[2026-02-10T09:17:38.960Z] AUTH RATE LIMIT EXCEEDED - IP: ::1 - URL: /api/auth/customer/login
+[2026-02-10T09:24:05.125Z] MULTER ERROR - Code: LIMIT_FILE_COUNT - IP: ::1 - User: C001 - Field: unknown
