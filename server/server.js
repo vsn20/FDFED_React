@@ -29,6 +29,8 @@ const server = http.createServer(app);
 //   next(new Error('This is a test error!'));
 // });
 
+// http://localhost:5001/api/test-error
+
 // 2. Initialize Socket.io with Robust CORS
 // This fixes the connection issues for real-time messaging
 const io = new Server(server, {
@@ -88,8 +90,7 @@ if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir, { recursive: true });
 }
 
-// ============ ROTATING FILE STREAM SETUP ============
-// Creates files like: access-2026-02-08.log (always with today's date)
+// ============ LOG FILE STREAMS SETUP ============
 const isDev = process.env.NODE_ENV !== 'production';
 
 // Helper function to get formatted date string
@@ -100,51 +101,27 @@ const getDateString = (date = new Date()) => {
   return `${year}-${month}-${day}`;
 };
 
-const accessLogStream = rfs.createStream(
-  (time, index) => {
-    // Always use date in filename - use provided time or current date
-    const dateStr = getDateString(time || new Date());
-    return `access-${dateStr}.log`;
-  },
-  {
-    interval: '1d',        // Rotate daily
-    intervalBoundary: true, // Rotate at midnight (00:00)
-    path: logsDir,         // Directory for log files
-    maxFiles: 14,          // Keep only last 14 days of logs
-    maxSize: '10M',        // Also rotate if file exceeds 10MB
-    compress: isDev ? false : 'gzip' // Only compress in production
-  }
-);
+// Static access log file
+const accessLogStream = fs.createWriteStream(path.join(logsDir, 'access.log'), { flags: 'a' });
 
-// Log rotation events in development
-if (isDev) {
-  accessLogStream.on('rotated', (filename) => {
-    console.log(`\x1b[36m[LOG ROTATION]\x1b[0m Rotated to: ${filename}`);
-  });
-  accessLogStream.on('error', (err) => {
-    console.error('\x1b[31m[LOG ROTATION ERROR]\x1b[0m', err);
-  });
-  console.log(`\x1b[36m[LOG]\x1b[0m Writing to: logs/access-${getDateString()}.log`);
-}
-
-// ============ ERROR LOG STREAM SETUP ============
-// Creates files like: error-2026-02-08.log
+// Rotating error log stream - creates files like: error-2026-02-08.log
 const errorLogStream = rfs.createStream(
   (time, index) => {
     const dateStr = getDateString(time || new Date());
     return `error-${dateStr}.log`;
   },
   {
-    interval: '1d',
-    intervalBoundary: true,
-    path: logsDir,
+    interval: '1d',        // Rotate daily
+    intervalBoundary: true, // Rotate at midnight (00:00)
+    path: logsDir,         // Directory for log files
     maxFiles: 30,          // Keep 30 days of error logs
-    maxSize: '20M',
-    compress: isDev ? false : 'gzip'
+    maxSize: '20M',        // Also rotate if file exceeds 20MB
+    compress: isDev ? false : 'gzip' // Only compress in production
   }
 );
 
 if (isDev) {
+  console.log(`\x1b[36m[LOG]\x1b[0m Writing to: logs/access.log`);
   console.log(`\x1b[31m[ERROR LOG]\x1b[0m Writing errors to: logs/error-${getDateString()}.log`);
 }
 // ====================================================
@@ -331,19 +308,31 @@ io.on("connection", (socket) => {
   });
 });
 
+// ============ 404 HANDLER - ROUTE NOT FOUND ============
+// This must be placed after all routes to catch unmatched requests
+app.use((req, res, next) => {
+  const error = new Error(`Route not found: ${req.method} ${req.originalUrl}`);
+  error.status = 404;
+  next(error);
+});
+// ========================================================
+
 // ============ ERROR LOGGING HELPER ============
 const logError = (err, req) => {
   const timestamp = new Date().toISOString();
+  const status = err.status || 500;
+  const errorType = status === 404 ? 'NOT_FOUND' : status >= 500 ? 'SERVER_ERROR' : 'CLIENT_ERROR';
+  
   const errorLog = `
 =====================================
-[${timestamp}] ERROR
+[${timestamp}] ${errorType} (${status})
 URL: ${req.method} ${req.originalUrl}
 IP: ${req.ip}
 User-Agent: ${req.headers['user-agent'] || 'unknown'}
 User ID: ${req.user ? req.user.id : 'anonymous'}
 Error Message: ${err.message}
 Stack Trace:
-${err.stack}
+${err.stack || 'No stack trace available'}
 =====================================\n`;
   
   // Write to error log file
