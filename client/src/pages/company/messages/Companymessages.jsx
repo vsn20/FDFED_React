@@ -6,17 +6,6 @@ import io from 'socket.io-client';
 const API_BASE_URL = 'http://localhost:5001/api';
 const SOCKET_URL = 'http://localhost:5001';
 
-// CSRF Token Helper
-let csrfToken = null;
-const getCsrfToken = async () => {
-  if (!csrfToken) {
-    const res = await fetch(`${API_BASE_URL}/csrf-token`, { credentials: 'include' });
-    const data = await res.json();
-    csrfToken = data.csrfToken;
-  }
-  return csrfToken;
-};
-
 const Companymessages = () => {
   // FIX: Get 'user' from context so we know our own ID (c_id)
   const { token, user } = useContext(AuthContext);
@@ -158,11 +147,9 @@ const Companymessages = () => {
     e.preventDefault();
     setSending(true);
     try {
-      const csrf = await getCsrfToken();
       const response = await fetch(`${API_BASE_URL}/company/messages/send`, {
         method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json', 'x-auth-token': token, 'Authorization': `Bearer ${token}`, 'x-csrf-token': csrf },
+        headers: { 'Content-Type': 'application/json', 'x-auth-token': token, 'Authorization': `Bearer ${token}` },
         body: JSON.stringify(composeData)
       });
       const result = await response.json();

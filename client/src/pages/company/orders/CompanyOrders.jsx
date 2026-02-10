@@ -3,17 +3,6 @@ import AuthContext from '../../../context/AuthContext';
 
 const API_BASE_URL = 'http://localhost:5001/api';
 
-// CSRF Token Helper
-let csrfToken = null;
-const getCsrfToken = async () => {
-  if (!csrfToken) {
-    const res = await fetch(`${API_BASE_URL}/csrf-token`, { credentials: 'include' });
-    const data = await res.json();
-    csrfToken = data.csrfToken;
-  }
-  return csrfToken;
-};
-
 // --- STYLES (Adapted to include Table styles) ---
 const styles = {
   container: {
@@ -194,15 +183,12 @@ const EditOrderForm = ({ order, onBack, onUpdateSuccess }) => {
     setError('');
 
     try {
-      const csrf = await getCsrfToken();
       const response = await fetch(`${API_BASE_URL}/company/orders/${order.order_id}`, {
         method: 'PUT',
-        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           'x-auth-token': token,
-          'Authorization': `Bearer ${token}`,
-          'x-csrf-token': csrf
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           status,

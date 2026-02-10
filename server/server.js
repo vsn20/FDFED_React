@@ -2,8 +2,6 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const helmet = require('helmet'); // Security middleware
-const cookieParser = require('cookie-parser'); // For CSRF cookies
-const { doubleCsrf } = require('csrf-csrf'); // Modern CSRF protection
 const path = require('path');
 const fs = require('fs');
 const morgan = require('morgan');
@@ -178,53 +176,6 @@ app.use('/api/', apiLimiter);
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Cookie Parser (Required for CSRF)
-app.use(cookieParser());
-
-// ============ CSRF PROTECTION MIDDLEWARE ============
-// Using Double Submit Cookie Pattern (Modern & Secure)
-const isProduction = process.env.NODE_ENV === 'production';
-
-const {
-  generateCsrfToken,    // v4.x API
-  doubleCsrfProtection,
-} = doubleCsrf({
-  getSecret: () => process.env.JWT_SECRET || 'csrf-secret-key-change-in-production',
-  getSessionIdentifier: (req) => req.ip + (req.headers['user-agent'] || ''),
-  cookieName: isProduction ? '__Host-psifi.x-csrf-token' : 'csrf-token',
-  cookieOptions: {
-    httpOnly: true,
-    sameSite: 'lax',  
-    secure: isProduction, 
-    path: '/',
-  },
-  size: 64, 
-  ignoredMethods: ['GET', 'HEAD', 'OPTIONS'], 
-  getTokenFromRequest: (req) => req.headers['x-csrf-token'], // Get token from header
-});
-
-// Route to get CSRF token (Frontend calls this first)
-app.get('/api/csrf-token', (req, res) => {
-  const csrfToken = generateCsrfToken(req, res);  // v4.x API
-  res.json({ csrfToken });
-});
-
-// Apply CSRF protection to all state-changing routes
-// Note: This protects POST, PUT, DELETE, PATCH requests
-app.use(doubleCsrfProtection);
-
-// CSRF Error Handler
-app.use((err, req, res, next) => {
-  if (err.code === 'EBADCSRFTOKEN' || err.message?.includes('csrf')) {
-    return res.status(403).json({
-      success: false,
-      message: 'Invalid or missing CSRF token. Please refresh and try again.'
-    });
-  }
-  next(err);
-});
-// ====================================================
 
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, '../client/public/uploads')));

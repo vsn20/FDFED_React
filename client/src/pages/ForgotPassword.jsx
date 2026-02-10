@@ -4,17 +4,6 @@ import './ForgotPassword.css';
 
 const API_BASE_URL = 'http://localhost:5001/api';
 
-// CSRF Token Helper
-let csrfToken = null;
-const getCsrfToken = async () => {
-  if (!csrfToken) {
-    const res = await fetch(`${API_BASE_URL}/csrf-token`, { credentials: 'include' });
-    const data = await res.json();
-    csrfToken = data.csrfToken;
-  }
-  return csrfToken;
-};
-
 const ForgotPassword = () => {
     const navigate = useNavigate();
 
@@ -50,11 +39,9 @@ const ForgotPassword = () => {
         }
 
         try {
-            const csrf = await getCsrfToken();
             const response = await fetch(`${API_BASE_URL}/forgot-password/send-otp`, {
                 method: 'POST',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json', 'x-csrf-token': csrf },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ identifier, type: identifierType }),
             });
             
@@ -94,11 +81,9 @@ const ForgotPassword = () => {
         }
 
         try {
-            const csrf = await getCsrfToken();
             const response = await fetch(`${API_BASE_URL}/forgot-password/reset`, {
                 method: 'POST',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json', 'x-csrf-token': csrf },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     otp,
                     newPassword,
