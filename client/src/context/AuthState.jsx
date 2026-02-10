@@ -4,11 +4,31 @@ import AuthContext from './AuthContext';
 import api from '../api/api';
 import jwt_decode from 'jwt-decode';
 
+// Cookie Helper Functions
+const setCookie = (name, value, days = 1) => {
+    const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+    document.cookie = `${name}=${value}; expires=${expires}; path=/; SameSite=Lax`;
+};
+
+const getCookie = (name) => {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [cookieName, cookieValue] = cookie.trim().split('=');
+        if (cookieName === name) return cookieValue;
+    }
+    return null;
+};
+
+const deleteCookie = (name) => {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+};
+
 // Reducer function to manage auth state changes
 const authReducer = (state, action) => {
     switch (action.type) {
         case 'LOGIN_SUCCESS':
             localStorage.setItem('token', action.payload.token);
+            setCookie('token', action.payload.token, 1); // Set cookie for 24 hours
             return {
                 ...state,
                 isAuthenticated: true,
@@ -27,6 +47,7 @@ const authReducer = (state, action) => {
         case 'LOGIN_FAIL':
         case 'LOGOUT':
             localStorage.removeItem('token');
+            deleteCookie('token'); // Remove cookie on logout
             return {
                 ...state,
                 token: null,
@@ -41,8 +62,13 @@ const authReducer = (state, action) => {
 
 
 const AuthState = (props) => {
+    // Try to get token from localStorage first, then cookie as fallback
+    const getInitialToken = () => {
+        return localStorage.getItem('token') || getCookie('token') || null;
+    };
+
     const initialState = {
-        token: localStorage.getItem('token'),
+        token: getInitialToken(),
         isAuthenticated: null,
         loading: true,
         user: null,
@@ -53,8 +79,12 @@ const AuthState = (props) => {
 
     // Load User: Check if a token exists and is valid
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = getInitialToken();
         if (token) {
+            // Sync localStorage and cookie
+            localStorage.setItem('token', token);
+            setCookie('token', token, 1);
+            
             try {
                 const decoded = jwt_decode(token);
                 // Check if token is expired
