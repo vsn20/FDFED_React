@@ -117,7 +117,6 @@ const Details = () => {
                                         value={formData.firstName}
                                         onChange={handleChange}
                                         required
-                                        placeholder="First Name is required"
                                     />
                                 </div>
                                 <div>
@@ -129,7 +128,6 @@ const Details = () => {
                                         value={formData.lastName}
                                         onChange={handleChange}
                                         required
-                                        placeholder="Last Name is required"
                                     />
                                 </div>
                                 <div>
@@ -166,13 +164,11 @@ const Details = () => {
                                 <div>
                                     <label className={styles.fieldLabel}>Email</label>
                                     <input
-                                        className={styles.fieldInput}
+                                        className={`${styles.fieldInput} ${styles.disabledField}`}
                                         type="email"
                                         name="email"
                                         value={formData.email}
-                                        onChange={handleChange}
-                                        required
-                                        placeholder="Email is required"
+                                        disabled
                                     />
                                 </div>
                                 <div>
@@ -183,7 +179,6 @@ const Details = () => {
                                         name="phoneNumber"
                                         value={formData.phoneNumber}
                                         onChange={handleChange}
-                                        placeholder="Enter phone number"
                                         pattern="[0-9]{10}"
                                     />
                                 </div>
@@ -205,37 +200,31 @@ const Details = () => {
                                 <div>
                                     <label className={styles.fieldLabel}>Account Number</label>
                                     <input
-                                        className={styles.fieldInput}
+                                        className={`${styles.fieldInput} ${styles.disabledField}`}
                                         type="text"
                                         name="accountNumber"
                                         value={formData.accountNumber}
-                                        onChange={handleChange}
-                                        required
-                                        placeholder="Account Number is required"
+                                        disabled
                                     />
                                 </div>
                                 <div>
                                     <label className={styles.fieldLabel}>IFSC Code</label>
                                     <input
-                                        className={styles.fieldInput}
+                                        className={`${styles.fieldInput} ${styles.disabledField}`}
                                         type="text"
                                         name="ifsc"
                                         value={formData.ifsc}
-                                        onChange={handleChange}
-                                        required
-                                        placeholder="IFSC Code is required"
+                                        disabled
                                     />
                                 </div>
                                 <div>
                                     <label className={styles.fieldLabel}>Bank</label>
                                     <input
-                                        className={styles.fieldInput}
+                                        className={`${styles.fieldInput} ${styles.disabledField}`}
                                         type="text"
                                         name="bank"
                                         value={formData.bank}
-                                        onChange={handleChange}
-                                        required
-                                        placeholder="Bank is required"
+                                        disabled
                                     />
                                 </div>
                                 <div>
@@ -250,14 +239,11 @@ const Details = () => {
                                 <div>
                                     <label className={styles.fieldLabel}>Monthly Salary</label>
                                     <input
-                                        className={styles.fieldInput}
+                                        className={`${styles.fieldInput} ${styles.disabledField}`}
                                         type="number"
                                         name="baseSalary"
                                         value={formData.baseSalary}
-                                        onChange={handleChange}
-                                        required
-                                        min="0"
-                                        placeholder="Enter monthly salary"
+                                        disabled
                                     />
                                 </div>
                                 <div>
@@ -268,7 +254,6 @@ const Details = () => {
                                         name="address"
                                         value={formData.address}
                                         onChange={handleChange}
-                                        placeholder="Enter address"
                                     />
                                 </div>
                             </div>

@@ -1,0 +1,54 @@
+[2026-02-10T08:48:01.839Z] RATE LIMIT EXCEEDED - IP: ::1 - URL: /api/owner/sales - User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[2026-02-10T08:48:08.225Z] RATE LIMIT EXCEEDED - IP: ::1 - URL: /api/owner/inventory - User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[2026-02-10T08:48:08.230Z] RATE LIMIT EXCEEDED - IP: ::1 - URL: /api/owner/inventory/branches - User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[2026-02-10T08:48:08.235Z] RATE LIMIT EXCEEDED - IP: ::1 - URL: /api/owner/inventory - User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[2026-02-10T08:48:08.239Z] RATE LIMIT EXCEEDED - IP: ::1 - URL: /api/owner/inventory/branches - User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[2026-02-10T08:48:17.512Z] RATE LIMIT EXCEEDED - IP: ::1 - URL: /api/owner/profits?monthYear=Jan-2026 - User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[2026-02-10T08:48:22.092Z] RATE LIMIT EXCEEDED - IP: ::1 - URL: /api/companies - User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[2026-02-10T08:48:22.096Z] RATE LIMIT EXCEEDED - IP: ::1 - URL: /api/companies - User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[2026-02-10T08:48:24.269Z] RATE LIMIT EXCEEDED - IP: ::1 - URL: /api/owner/messages/inbox?page=1&limit=10&search= - User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[2026-02-10T08:48:24.295Z] RATE LIMIT EXCEEDED - IP: ::1 - URL: /api/owner/messages/inbox?page=1&limit=10&search= - User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[2026-02-10T08:48:27.378Z] RATE LIMIT EXCEEDED - IP: ::1 - URL: /api/owner/analytics/data - User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[2026-02-10T08:48:27.381Z] RATE LIMIT EXCEEDED - IP: ::1 - URL: /api/owner/analytics/data - User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+
+=====================================
+[2026-02-10T08:55:23.646Z] NOT_FOUND (404)
+URL: GET /api/company/orders?page=1&limit=10&search=
+IP: ::1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+User ID: anonymous
+Error Message: Route not found: GET /api/company/orders?page=1&limit=10&search=
+Stack Trace:
+Error: Route not found: GET /api/company/orders?page=1&limit=10&search=
+    at C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\server.js:314:17
+    at Layer.handleRequest (C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\index.js:342:13)
+    at C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\index.js:297:9
+    at processParams (C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\index.js:582:12)
+    at next (C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\index.js:291:5)
+    at C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\server.js:236:3
+    at Layer.handleRequest (C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\index.js:342:13)
+    at C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\index.js:297:9
+=====================================
+
+=====================================
+[2026-02-10T08:55:23.651Z] NOT_FOUND (404)
+URL: GET /api/company/orders?page=1&limit=10&search=
+IP: ::1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+User ID: anonymous
+Error Message: Route not found: GET /api/company/orders?page=1&limit=10&search=
+Stack Trace:
+Error: Route not found: GET /api/company/orders?page=1&limit=10&search=
+    at C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\server.js:314:17
+    at Layer.handleRequest (C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\index.js:342:13)
+    at C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\index.js:297:9
+    at processParams (C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\index.js:582:12)
+    at next (C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\index.js:291:5)
+    at C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\server.js:236:3
+    at Layer.handleRequest (C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\lib\layer.js:152:17)
+    at trimPrefix (C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\index.js:342:13)
+    at C:\PROJECTS\FDFED_USING_REACT\FDFED_React\server\node_modules\router\index.js:297:9
+=====================================
