@@ -305,3 +305,16 @@
 [10/Feb/2026:08:52:33 +0000] GET /api/company/products 404 1.141 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
 [10/Feb/2026:08:55:23 +0000] GET /api/company/orders?page=1&limit=10&search= 404 6.368 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
 [10/Feb/2026:08:55:23 +0000] GET /api/company/orders?page=1&limit=10&search= 404 1.498 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[10/Feb/2026:08:55:45 +0000] GET /api/company/products 200 727.570 ms - company - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[10/Feb/2026:08:55:46 +0000] GET /api/company/products 304 736.969 ms - company - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[10/Feb/2026:08:56:48 +0000] POST /api/auth/login 200 226.697 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[10/Feb/2026:08:56:49 +0000] GET /api/salesman/analytics/data 200 466.695 ms - hema - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[10/Feb/2026:08:56:49 +0000] GET /api/salesman/analytics/data 304 304.168 ms - hema - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[10/Feb/2026:08:56:51 +0000] GET /api/salesman/profile 200 478.142 ms - hema - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[10/Feb/2026:08:56:52 +0000] GET /api/salesman/profile 304 645.648 ms - hema - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[10/Feb/2026:08:57:34 +0000] POST /api/salesman/profile/update 200 862.019 ms - hema - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[10/Feb/2026:08:57:34 +0000] GET /api/salesman/profile 200 194.985 ms - hema - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[10/Feb/2026:08:57:37 +0000] GET /api/salesman/analytics/data 304 150.787 ms - hema - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[10/Feb/2026:08:57:37 +0000] GET /api/salesman/analytics/data 304 156.255 ms - hema - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[10/Feb/2026:08:57:39 +0000] GET /api/salesman/profile 304 245.354 ms - hema - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
+[10/Feb/2026:08:57:39 +0000] GET /api/salesman/profile 304 265.257 ms - hema - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36
