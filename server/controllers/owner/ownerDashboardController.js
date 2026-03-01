@@ -3,43 +3,37 @@ const Sale = require("../../models/sale");
 const Branch = require("../../models/branches");
 const Employee = require("../../models/employees");
 const Product = require("../../models/products");
+const Company = require("../../models/company");
 
 // @desc    Get Owner Dashboard Data (Last 30 Days)
 // @route   GET /api/owner/analytics/data
 // @access  Private (Owner)
 exports.getOwnerDashboardData = async (req, res) => {
   try {
-    // 1. Calculate Date Range (Last 30 Days)
     const endDate = new Date();
-    endDate.setHours(23, 59, 59, 999); // End of today
+    endDate.setHours(23, 59, 59, 999);
 
     const startDate = new Date();
-    startDate.setDate(endDate.getDate() - 29); // Go back 29 days (total 30 days)
-    startDate.setHours(0, 0, 0, 0); // Start of that day
+    startDate.setDate(endDate.getDate() - 29);
+    startDate.setHours(0, 0, 0, 0);
 
-    // 2. Fetch Orders and Sales in this range
     const [orders, sales] = await Promise.all([
       Order.find({ ordered_date: { $gte: startDate, $lte: endDate } }).lean(),
       Sale.find({ sales_date: { $gte: startDate, $lte: endDate } }).lean()
     ]);
 
-    // 3. Process data for charts
     const days = [];
     const orderCounts = [];
     const saleCounts = [];
     const profitLossTotals = [];
 
-    // Loop through each of the last 30 days
     for (let i = 0; i < 30; i++) {
-      // Create a date object for the current iteration
       const currentDate = new Date(startDate);
       currentDate.setDate(startDate.getDate() + i);
 
-      // Format label (e.g., "Oct 14")
       const dayLabel = currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       days.push(dayLabel);
 
-      // Filter Orders for this specific date
       const dailyOrders = orders.filter(order => {
         const orderDate = new Date(order.ordered_date);
         return (
@@ -50,7 +44,6 @@ exports.getOwnerDashboardData = async (req, res) => {
       });
       orderCounts.push(dailyOrders.length);
 
-      // Filter Sales for this specific date
       const dailySales = sales.filter(sale => {
         const saleDate = new Date(sale.sales_date);
         return (
@@ -61,7 +54,6 @@ exports.getOwnerDashboardData = async (req, res) => {
       });
       saleCounts.push(dailySales.length);
 
-      // Calculate Daily Profit/Loss
       const dailyProfit = dailySales.reduce((sum, sale) => sum + (sale.profit_or_loss || 0), 0);
       profitLossTotals.push(dailyProfit);
     }
@@ -86,26 +78,21 @@ exports.getOwnerDashboardData = async (req, res) => {
 // @desc    Get Salesman Performance Data (optionally filtered by month)
 // @route   GET /api/owner/analytics/salesman-performance?month=YYYY-MM
 // @access  Private (Owner)
-// Note: Only employees with role 'salesman' are included.
-//       Employees with role 'manager' are intentionally excluded.
 exports.getSalesmanPerformance = async (req, res) => {
   try {
-    const { month } = req.query; // e.g. "2026-02"
+    const { month } = req.query;
 
-    // Build date range for the requested month (defaults to current month)
     let startDate, endDate;
     if (month && /^\d{4}-\d{2}$/.test(month)) {
       const [year, mon] = month.split('-').map(Number);
       startDate = new Date(year, mon - 1, 1, 0, 0, 0, 0);
-      endDate   = new Date(year, mon,     0, 23, 59, 59, 999); // last day of month
+      endDate   = new Date(year, mon,     0, 23, 59, 59, 999);
     } else {
       const now = new Date();
       startDate = new Date(now.getFullYear(), now.getMonth(),     1, 0, 0, 0, 0);
       endDate   = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
     }
 
-    // Fetch in parallel: branches, active salesmen, month-filtered sales, accepted products,
-    // and all sale dates (for building the available-months dropdown)
     const [branches, salesmen, monthSales, products, allSaleDates] = await Promise.all([
       Branch.find().lean(),
       Employee.find({ role: 'salesman', status: 'active' }).lean(),
@@ -114,18 +101,15 @@ exports.getSalesmanPerformance = async (req, res) => {
       Sale.find({}, { sales_date: 1, _id: 0 }).lean(),
     ]);
 
-    // Derive the list of months that have at least one sale record
     const monthSet = new Set();
     allSaleDates.forEach((s) => {
       const d = new Date(s.sales_date);
       monthSet.add(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
     });
-    // Most-recent month first
     const availableMonths = [...monthSet].sort().reverse();
 
     const branchNames = branches.map((b) => b.b_name);
 
-    // Build unique sorted list of product names that appear in this month's sales
     const productNames = [
       'All',
       ...[
@@ -140,20 +124,17 @@ exports.getSalesmanPerformance = async (req, res) => {
       ].sort(),
     ];
 
-    // 2. Build performance[branchName][productFilter] = [...]
     const performance = {};
 
     for (const branch of branches) {
       const bName = branch.b_name;
       performance[bName] = {};
 
-      // Only active salesmen assigned to this branch
       const branchSalesmen = salesmen.filter((e) => e.bid === branch.bid);
       if (branchSalesmen.length === 0) continue;
 
       const branchSales = monthSales.filter((s) => s.branch_id === branch.bid);
 
-      // 'All' products: both sales count (transactions) and units sold (quantity sum)
       performance[bName]['All'] = branchSalesmen
         .map((emp) => {
           const empSales = branchSales.filter((s) => s.salesman_id === emp.e_id);
@@ -164,7 +145,6 @@ exports.getSalesmanPerformance = async (req, res) => {
         .filter((entry) => entry.units > 0 || entry.sales > 0)
         .sort((a, b) => b.units - a.units);
 
-      // Per-product: both sales count and units sold per salesman
       for (const prodName of productNames.slice(1)) {
         const prodEntry = products.find((p) => p.Prod_name === prodName);
         if (!prodEntry) continue;
@@ -194,11 +174,11 @@ exports.getSalesmanPerformance = async (req, res) => {
 };
 
 // @desc    Get Branch Sales Data (product-level breakdown per branch)
-// @route   GET /api/owner/analytics/branch-sales
+// @route   GET /api/owner/analytics/branch-sales?month=YYYY-MM
 // @access  Private (Owner)
 exports.getBranchSales = async (req, res) => {
   try {
-    const { month } = req.query; // e.g. "2026-02"
+    const { month } = req.query;
 
     const [branches, allSales, products] = await Promise.all([
       Branch.find().lean(),
@@ -206,7 +186,6 @@ exports.getBranchSales = async (req, res) => {
       Product.find({ Status: 'Accepted' }).lean(),
     ]);
 
-    // ── Compute availableMonths from ALL sales (regardless of filter) ──
     const monthSet = new Set();
     allSales.forEach((s) => {
       if (s.sales_date) {
@@ -217,14 +196,13 @@ exports.getBranchSales = async (req, res) => {
           );
       }
     });
-    const availableMonths = [...monthSet].sort().reverse(); // newest first
+    const availableMonths = [...monthSet].sort().reverse();
 
-    // ── Filter sales by the requested month (if provided) ──
     let filteredSales = allSales;
     if (month) {
       const [y, m] = month.split('-').map(Number);
       const start = new Date(y, m - 1, 1);
-      const end = new Date(y, m, 1); // first of next month
+      const end = new Date(y, m, 1);
       filteredSales = allSales.filter((s) => {
         if (!s.sales_date) return false;
         const d = new Date(s.sales_date);
@@ -234,7 +212,6 @@ exports.getBranchSales = async (req, res) => {
 
     const branchNames = branches.map((b) => b.b_name);
 
-    // Product names that actually appear in the (filtered) sales
     const productNames = [
       'All',
       ...[
@@ -249,10 +226,6 @@ exports.getBranchSales = async (req, res) => {
       ].sort(),
     ];
 
-    // branchSales[branchName] = {
-    //   totalUnits, totalSales,
-    //   byProduct: { productName: { units, sales } }
-    // }
     const branchSales = {};
     for (const branch of branches) {
       const bSales = filteredSales.filter((s) => s.branch_id === branch.bid);
@@ -280,6 +253,138 @@ exports.getBranchSales = async (req, res) => {
     });
   } catch (error) {
     console.error('[OwnerDashboard] getBranchSales error:', error.message);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+// @desc    Get Company Sales Data
+// @route   GET /api/owner/analytics/company-sales?month=YYYY-MM
+// @access  Private (Owner)
+exports.getCompanySales = async (req, res) => {
+  try {
+    const { month } = req.query;
+
+    const [companies, allSales] = await Promise.all([
+      Company.find({ active: 'active' }).lean(),
+      Sale.find({}, { sales_date: 1, company_id: 1, quantity: 1, _id: 0 }).lean(),
+    ]);
+
+    // Build availableMonths from all sales
+    const monthSet = new Set();
+    allSales.forEach((s) => {
+      if (s.sales_date) {
+        const d = new Date(s.sales_date);
+        if (!isNaN(d))
+          monthSet.add(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
+      }
+    });
+    const availableMonths = [...monthSet].sort().reverse();
+
+    // Filter by month
+    let filteredSales = allSales;
+    if (month) {
+      const [y, m] = month.split('-').map(Number);
+      const start = new Date(y, m - 1, 1);
+      const end = new Date(y, m, 1);
+      filteredSales = allSales.filter((s) => {
+        if (!s.sales_date) return false;
+        const d = new Date(s.sales_date);
+        return d >= start && d < end;
+      });
+    }
+
+    // Build companySales map: { companyName: { totalUnits, totalSales } }
+    const companyNames = [];
+    const companySales = {};
+
+    for (const company of companies) {
+      const cSales = filteredSales.filter((s) => s.company_id === company.c_id);
+      // Only include companies that have at least 1 sale (in filtered or all time)
+      companyNames.push(company.cname);
+      companySales[company.cname] = {
+        totalUnits: cSales.reduce((sum, s) => sum + (s.quantity || 1), 0),
+        totalSales: cSales.length,
+      };
+    }
+
+    res.json({
+      success: true,
+      data: { companies: companyNames, companySales, availableMonths },
+    });
+  } catch (error) {
+    console.error('[OwnerDashboard] getCompanySales error:', error.message);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+// @desc    Get Product Sales Data (optionally filtered by company)
+// @route   GET /api/owner/analytics/product-sales?month=YYYY-MM&company=CompanyName
+// @access  Private (Owner)
+// Note: When a company filter is applied, only products sold under that company
+//       appear on the x-axis, giving a per-company product breakdown.
+exports.getProductSales = async (req, res) => {
+  try {
+    const { month, company } = req.query;
+
+    const [companies, products, allSales] = await Promise.all([
+      Company.find({ active: 'active' }).lean(),
+      Product.find({ Status: 'Accepted' }).lean(),
+      Sale.find({}, { sales_date: 1, company_id: 1, product_id: 1, quantity: 1, _id: 0 }).lean(),
+    ]);
+
+    // Build availableMonths
+    const monthSet = new Set();
+    allSales.forEach((s) => {
+      if (s.sales_date) {
+        const d = new Date(s.sales_date);
+        if (!isNaN(d))
+          monthSet.add(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
+      }
+    });
+    const availableMonths = [...monthSet].sort().reverse();
+
+    // Filter by month
+    let filteredSales = allSales;
+    if (month) {
+      const [y, m] = month.split('-').map(Number);
+      const start = new Date(y, m - 1, 1);
+      const end = new Date(y, m, 1);
+      filteredSales = allSales.filter((s) => {
+        if (!s.sales_date) return false;
+        const d = new Date(s.sales_date);
+        return d >= start && d < end;
+      });
+    }
+
+    // Filter by company — narrows products to those sold under that company
+    if (company && company !== 'All') {
+      const companyDoc = companies.find((c) => c.cname === company);
+      if (companyDoc) {
+        filteredSales = filteredSales.filter((s) => s.company_id === companyDoc.c_id);
+      }
+    }
+
+    // Build productSales: { productName: { totalUnits, totalSales } }
+    // Only include products that appear in the filtered sales
+    const productSales = {};
+    for (const product of products) {
+      const pSales = filteredSales.filter((s) => s.product_id === product.prod_id);
+      if (pSales.length > 0) {
+        productSales[product.Prod_name] = {
+          totalUnits: pSales.reduce((sum, s) => sum + (s.quantity || 1), 0),
+          totalSales: pSales.length,
+        };
+      }
+    }
+
+    const companyNames = ['All', ...companies.map((c) => c.cname)];
+
+    res.json({
+      success: true,
+      data: { companies: companyNames, productSales, availableMonths },
+    });
+  } catch (error) {
+    console.error('[OwnerDashboard] getProductSales error:', error.message);
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 };

@@ -15,7 +15,6 @@ import {
 import { Line, Bar } from 'react-chartjs-2';
 import styles from './OwnerAnalyticsPage.module.css';
 
-// Register ChartJS components (added PointElement, LineElement, Filler for Line charts)
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -34,13 +33,7 @@ ChartJS.register(
 
 /**
  * Creates an inline Chart.js plugin that fills each dataset's backgroundColor
- * with a linear gradient (top → bottom). Because it runs in beforeDatasetsDraw,
- * the gradient automatically adapts when the chart is resized.
- *
- * @param {string}  id           - Unique plugin id (used by Chart.js internally)
- * @param {string}  colorTop     - CSS color string for the top / left of the gradient
- * @param {string}  colorBottom  - CSS color string for the bottom / right of the gradient
- * @param {boolean} horizontal   - If true, draws the gradient left-to-right instead
+ * with a linear gradient (top → bottom).
  */
 const makeGradientPlugin = (id, colorTop, colorBottom, horizontal = false) => ({
   id,
@@ -60,10 +53,6 @@ const makeGradientPlugin = (id, colorTop, colorBottom, horizontal = false) => ({
 
 /**
  * DRY factory for modern, dashboard-style Chart.js options.
- *
- * @param {string}  chartTitle  - Title displayed above the chart
- * @param {string}  yLabel      - Y-axis scale title (pass '' to hide)
- * @param {boolean} horizontal  - Set indexAxis:'y' for horizontal bar charts
  */
 const createModernOptions = (chartTitle, yLabel, horizontal = false) => ({
   responsive: true,
@@ -130,6 +119,7 @@ const createModernOptions = (chartTitle, yLabel, horizontal = false) => ({
 
 // Formats "YYYY-MM" → "Month YYYY" for display in the month dropdown
 const formatMonthLabel = (m) => {
+  if (!m) return '';
   const [year, mon] = m.split('-');
   return new Date(Number(year), Number(mon) - 1, 1).toLocaleDateString('en-US', {
     month: 'long',
@@ -137,71 +127,94 @@ const formatMonthLabel = (m) => {
   });
 };
 
-// Gradient plugin instances — created once outside the component so they have
-// stable references and Chart.js does not re-register them on every render.
+// Gradient plugin instances — created once outside the component
 const gradientPlugins = {
-  orders: makeGradientPlugin(
-    'gradient_orders',
-    'rgba(108, 99, 255, 0.55)',
-    'rgba(108, 99, 255, 0.03)'
-  ),
-  sales: makeGradientPlugin(
-    'gradient_sales',
-    'rgba(246, 201, 14, 0.55)',
-    'rgba(246, 201, 14, 0.03)'
-  ),
-  // Vertical gradient for salesman bars (top=vivid, bottom=transparent)
-  salesman: makeGradientPlugin(
-    'gradient_salesman',
-    'rgba(72, 187, 120, 0.88)',
-    'rgba(72, 187, 120, 0.08)'
-  ),
-  // Vertical gradient for branch sales bars (blue tones)
-  branch: makeGradientPlugin(
-    'gradient_branch',
-    'rgba(66, 153, 225, 0.65)',
-    'rgba(66, 153, 225, 0.05)'
-  ),
+  orders: makeGradientPlugin('gradient_orders', 'rgba(108, 99, 255, 0.55)', 'rgba(108, 99, 255, 0.03)'),
+  sales: makeGradientPlugin('gradient_sales', 'rgba(246, 201, 14, 0.55)', 'rgba(246, 201, 14, 0.03)'),
+  salesman: makeGradientPlugin('gradient_salesman', 'rgba(72, 187, 120, 0.88)', 'rgba(72, 187, 120, 0.08)'),
+  branch: makeGradientPlugin('gradient_branch', 'rgba(66, 153, 225, 0.65)', 'rgba(66, 153, 225, 0.05)'),
+  company: makeGradientPlugin('gradient_company', 'rgba(237, 137, 54, 0.75)', 'rgba(237, 137, 54, 0.05)'),
+  product: makeGradientPlugin('gradient_product', 'rgba(159, 122, 234, 0.75)', 'rgba(159, 122, 234, 0.05)'),
 };
+
+// Tab definitions
+const TABS = [
+  { id: 1, label: 'Overview',            icon: '📊' },
+  { id: 2, label: 'Salesman Performance',icon: '👤' },
+  { id: 3, label: 'Branch Sales',        icon: '🏢' },
+  { id: 4, label: 'Company Sales',       icon: '🏭' },
+  { id: 5, label: 'Product Sales',       icon: '📦' },
+];
 
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
 const OwnerAnalyticsPage = () => {
-  // --- Overview state ---
-  const [chartData, setChartData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [title, setTitle] = useState('');
 
-  // --- Salesman Performance state ---
-  const [salesmanData, setSalesmanData] = useState(null);
+  // ── Active tab ──────────────────────────────────────────────────────────────
+  const [activeSection, setActiveSection] = useState(1);
+
+  // ── Section 1: Overview ─────────────────────────────────────────────────────
+  const [chartData, setChartData]   = useState(null);
+  const [loading, setLoading]       = useState(true);
+  const [error, setError]           = useState(null);
+  const [title, setTitle]           = useState('');
+
+  // ── Section 2: Salesman Performance ────────────────────────────────────────
+  const [salesmanData, setSalesmanData]       = useState(null);
   const [salesmanLoading, setSalesmanLoading] = useState(true);
-  const [salesmanError, setSalesmanError] = useState(null);
-  const [selectedBranch, setSelectedBranch] = useState('');
+  const [salesmanError, setSalesmanError]     = useState(null);
+  const [selectedBranch, setSelectedBranch]   = useState('');
   const [selectedProduct, setSelectedProduct] = useState('All');
-  // Month filter: initialised to '' so we can auto-select the latest month with data
-  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedMonth, setSelectedMonth]     = useState('');
   const [availableMonths, setAvailableMonths] = useState([]);
-  // Tracks whether the very first salesman fetch has resolved
   const [salesmanInitDone, setSalesmanInitDone] = useState(false);
-  // Toggle: 'units' = quantity sum, 'sales' = transaction count
   const [s2Metric, setS2Metric] = useState('units');
 
-  // --- Branch Sales state (Section 3) ---
-  const [branchSalesData, setBranchSalesData] = useState(null);
+  // ── Section 3: Branch Sales ─────────────────────────────────────────────────
+  const [branchSalesData, setBranchSalesData]       = useState(null);
   const [branchSalesLoading, setBranchSalesLoading] = useState(true);
-  const [branchSalesError, setBranchSalesError] = useState(null);
-  const [s3Branch, setS3Branch] = useState('All');
+  const [branchSalesError, setBranchSalesError]     = useState(null);
+  const [s3Branch, setS3Branch]   = useState('All');
   const [s3Product, setS3Product] = useState('All');
-  // Section 3 month filter — also starts empty and auto-selects
-  const [s3Month, setS3Month] = useState('');
+  const [s3Month, setS3Month]     = useState('');
   const [s3AvailableMonths, setS3AvailableMonths] = useState([]);
-  // Toggle: 'units' = quantity sum, 'sales' = transaction count
   const [s3Metric, setS3Metric] = useState('units');
 
-  // Fetch overview analytics data
+  // ── Section 4: Company Sales ────────────────────────────────────────────────
+  const [companySalesData, setCompanySalesData]       = useState(null);
+  const [companySalesLoading, setCompanySalesLoading] = useState(false);
+  const [companySalesError, setCompanySalesError]     = useState(null);
+  const [s4Month, setS4Month]             = useState('');
+  const [s4AvailableMonths, setS4AvailableMonths] = useState([]);
+  const [s4Metric, setS4Metric]           = useState('units');
+  // Flag: true once user has visited section 4 for the first time
+  const [s4Triggered, setS4Triggered] = useState(false);
+
+  // ── Section 5: Product Sales ────────────────────────────────────────────────
+  const [productSalesData, setProductSalesData]       = useState(null);
+  const [productSalesLoading, setProductSalesLoading] = useState(false);
+  const [productSalesError, setProductSalesError]     = useState(null);
+  const [s5Month, setS5Month]             = useState('');
+  const [s5AvailableMonths, setS5AvailableMonths] = useState([]);
+  const [s5Company, setS5Company]         = useState('All');
+  const [s5Metric, setS5Metric]           = useState('units');
+  // Flag: true once user has visited section 5 for the first time
+  const [s5Triggered, setS5Triggered] = useState(false);
+
+  // ---------------------------------------------------------------------------
+  // Tab click handler — triggers lazy-load for sections 4 & 5
+  // ---------------------------------------------------------------------------
+  const handleTabClick = (sectionId) => {
+    setActiveSection(sectionId);
+    if (sectionId === 4 && !s4Triggered) setS4Triggered(true);
+    if (sectionId === 5 && !s5Triggered) setS5Triggered(true);
+  };
+
+  // ---------------------------------------------------------------------------
+  // Section 1: Overview — fetch on mount
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -220,22 +233,19 @@ const OwnerAnalyticsPage = () => {
     fetchData();
   }, []);
 
-  // ── Section 2: Initial fetch (without month param) to discover available months,
-  //    then auto-select the latest month that actually has data.
+  // ---------------------------------------------------------------------------
+  // Section 2: Salesman — init fetch to discover available months
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     const initSalesman = async () => {
       setSalesmanLoading(true);
       setSalesmanError(null);
       try {
-        // First call without month → API defaults to current month.
-        // We only need availableMonths from it.
         const response = await api.get('/owner/analytics/salesman-performance');
         if (response.data.success) {
           const data = response.data.data;
           const months = data.availableMonths || [];
           setAvailableMonths(months);
-
-          // Pick the latest month that has data (most-recent first from API)
           const bestMonth = months.length > 0 ? months[0] : (() => {
             const n = new Date();
             return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}`;
@@ -252,30 +262,23 @@ const OwnerAnalyticsPage = () => {
     initSalesman();
   }, []);
 
-  // ── Section 2: Re-fetch whenever selectedMonth changes (skipped until init is done).
-  //    Note: The API already filters out employees with the Sales Manager role —
-  //    only field salespeople are included in the response.
+  // Section 2: re-fetch when selectedMonth changes
   useEffect(() => {
     if (!salesmanInitDone || !selectedMonth) return;
     const fetchSalesmanData = async () => {
       setSalesmanLoading(true);
       setSalesmanError(null);
       try {
-        const response = await api.get(
-          `/owner/analytics/salesman-performance?month=${selectedMonth}`
-        );
+        const response = await api.get(`/owner/analytics/salesman-performance?month=${selectedMonth}`);
         if (response.data.success) {
           const data = response.data.data;
           setSalesmanData(data);
-          // Keep the months list up-to-date
           if (data.availableMonths?.length) setAvailableMonths(data.availableMonths);
-          // Default to the first branch, or keep current if it still exists
           if (data.branches?.length > 0) {
             setSelectedBranch((prev) =>
               prev && data.branches.includes(prev) ? prev : data.branches[0]
             );
           }
-          // Reset product if it no longer exists in the returned product list
           if (!data.products.includes(selectedProduct)) setSelectedProduct('All');
         }
       } catch (err) {
@@ -289,14 +292,11 @@ const OwnerAnalyticsPage = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [salesmanInitDone, selectedMonth]);
 
-  // ── Section 3: Single effect driven by s3Month.
-  //    Phase 1 (s3Month === ''): fetch without month to discover availableMonths, then
-  //    set s3Month to the latest month with data — this triggers Phase 2 automatically.
-  //    Phase 2 (s3Month !== ''): fetch month-filtered data and render the chart.
-  //    Functional updaters for setS3Branch / setS3Product avoid stale-closure bugs.
+  // ---------------------------------------------------------------------------
+  // Section 3: Branch Sales — phase-1 / phase-2 pattern
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     if (s3Month === '') {
-      // Phase 1 — branchSalesLoading stays true throughout so no flicker occurs
       const init = async () => {
         try {
           const res = await api.get('/owner/analytics/branch-sales');
@@ -307,40 +307,30 @@ const OwnerAnalyticsPage = () => {
               const n = new Date();
               return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}`;
             })();
-            setS3Month(best); // triggers Phase 2 re-run
+            setS3Month(best);
           }
         } catch (err) {
           console.error('Error during branch-sales init:', err);
           setBranchSalesError('Failed to load branch sales data');
           setBranchSalesLoading(false);
         }
-        // branchSalesLoading intentionally NOT set to false here;
-        // Phase 2 will resolve it after the month-filtered fetch completes.
       };
       init();
       return;
     }
 
-    // Phase 2 — fetch data for the selected month
     let cancelled = false;
     const fetchBranchSales = async () => {
       setBranchSalesLoading(true);
       setBranchSalesError(null);
       try {
-        const response = await api.get(
-          `/owner/analytics/branch-sales?month=${s3Month}`
-        );
+        const response = await api.get(`/owner/analytics/branch-sales?month=${s3Month}`);
         if (!cancelled && response.data.success) {
           const data = response.data.data;
           setBranchSalesData(data);
           if (data.availableMonths?.length) setS3AvailableMonths(data.availableMonths);
-          // Use functional updaters to read current state — avoids stale closure values
-          setS3Branch((prev) =>
-            prev !== 'All' && !data.branches.includes(prev) ? 'All' : prev
-          );
-          setS3Product((prev) =>
-            prev !== 'All' && !data.products.includes(prev) ? 'All' : prev
-          );
+          setS3Branch((prev) => prev !== 'All' && !data.branches.includes(prev) ? 'All' : prev);
+          setS3Product((prev) => prev !== 'All' && !data.products.includes(prev) ? 'All' : prev);
         }
       } catch (err) {
         if (!cancelled) {
@@ -352,44 +342,157 @@ const OwnerAnalyticsPage = () => {
       }
     };
     fetchBranchSales();
-    return () => { cancelled = true; }; // cancel stale fetch if month changes quickly
+    return () => { cancelled = true; };
   }, [s3Month]);
 
   // ---------------------------------------------------------------------------
-  // Overview chart configs (derived from chartData)
+  // Section 4: Company Sales — lazy-loaded on first tab visit
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    if (!s4Triggered) return;
+
+    // Phase 1: discover available months
+    if (s4Month === '') {
+      const init = async () => {
+        setCompanySalesLoading(true);
+        try {
+          const res = await api.get('/owner/analytics/company-sales');
+          if (res.data.success) {
+            const months = res.data.data.availableMonths || [];
+            if (months.length) setS4AvailableMonths(months);
+            const best = months.length > 0 ? months[0] : (() => {
+              const n = new Date();
+              return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}`;
+            })();
+            setS4Month(best); // triggers Phase 2
+          }
+        } catch (err) {
+          console.error('Error during company-sales init:', err);
+          setCompanySalesError('Failed to load company sales data');
+          setCompanySalesLoading(false);
+        }
+      };
+      init();
+      return;
+    }
+
+    // Phase 2: fetch month-filtered data
+    let cancelled = false;
+    const fetchCompanySales = async () => {
+      setCompanySalesLoading(true);
+      setCompanySalesError(null);
+      try {
+        const res = await api.get(`/owner/analytics/company-sales?month=${s4Month}`);
+        if (!cancelled && res.data.success) {
+          setCompanySalesData(res.data.data);
+          if (res.data.data.availableMonths?.length)
+            setS4AvailableMonths(res.data.data.availableMonths);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error('Error fetching company sales data:', err);
+          setCompanySalesError('Failed to load company sales data');
+        }
+      } finally {
+        if (!cancelled) setCompanySalesLoading(false);
+      }
+    };
+    fetchCompanySales();
+    return () => { cancelled = true; };
+  }, [s4Triggered, s4Month]);
+
+  // ---------------------------------------------------------------------------
+  // Section 5: Product Sales — lazy-loaded on first tab visit, re-fetched on
+  //            month OR company filter change
+  // ---------------------------------------------------------------------------
+  useEffect(() => {
+    if (!s5Triggered) return;
+
+    // Phase 1: discover available months
+    if (s5Month === '') {
+      const init = async () => {
+        setProductSalesLoading(true);
+        try {
+          const res = await api.get('/owner/analytics/product-sales');
+          if (res.data.success) {
+            const months = res.data.data.availableMonths || [];
+            if (months.length) setS5AvailableMonths(months);
+            const best = months.length > 0 ? months[0] : (() => {
+              const n = new Date();
+              return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}`;
+            })();
+            setS5Month(best); // triggers Phase 2
+          }
+        } catch (err) {
+          console.error('Error during product-sales init:', err);
+          setProductSalesError('Failed to load product sales data');
+          setProductSalesLoading(false);
+        }
+      };
+      init();
+      return;
+    }
+
+    // Phase 2: fetch filtered data
+    let cancelled = false;
+    const fetchProductSales = async () => {
+      setProductSalesLoading(true);
+      setProductSalesError(null);
+      try {
+        const params = new URLSearchParams({ month: s5Month });
+        if (s5Company && s5Company !== 'All') params.set('company', s5Company);
+        const res = await api.get(`/owner/analytics/product-sales?${params.toString()}`);
+        if (!cancelled && res.data.success) {
+          setProductSalesData(res.data.data);
+          if (res.data.data.availableMonths?.length)
+            setS5AvailableMonths(res.data.data.availableMonths);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error('Error fetching product sales data:', err);
+          setProductSalesError('Failed to load product sales data');
+        }
+      } finally {
+        if (!cancelled) setProductSalesLoading(false);
+      }
+    };
+    fetchProductSales();
+    return () => { cancelled = true; };
+  // s5Company change should always re-fetch (server-side filter)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [s5Triggered, s5Month, s5Company]);
+
+  // ---------------------------------------------------------------------------
+  // Chart config builders
   // ---------------------------------------------------------------------------
 
   const buildOverviewCharts = () => {
     if (!chartData) return null;
 
-    // 1. Orders — smooth Line chart with purple gradient fill
     const ordersData = {
       labels: chartData.days,
       datasets: [{
         label: 'Daily Orders',
         data: chartData.orderCounts,
         borderColor: '#6c63ff',
-        backgroundColor: 'rgba(108, 99, 255, 0.25)', // overridden by gradient plugin
+        backgroundColor: 'rgba(108, 99, 255, 0.25)',
         fill: true,
         tension: 0.4,
       }],
     };
 
-    // 2. Sales — smooth Line chart with gold gradient fill
     const salesData = {
       labels: chartData.days,
       datasets: [{
         label: 'Daily Sales',
         data: chartData.saleCounts,
         borderColor: '#d4a017',
-        backgroundColor: 'rgba(246, 201, 14, 0.22)', // overridden by gradient plugin
+        backgroundColor: 'rgba(246, 201, 14, 0.22)',
         fill: true,
         tension: 0.4,
       }],
     };
 
-    // 3. Financial Performance — per-bar color (profit=green / loss=red), rounded corners.
-    //    Multi-color bars are set directly; no single gradient plugin needed here.
     const profitData = {
       labels: chartData.days,
       datasets: [{
@@ -406,7 +509,6 @@ const OwnerAnalyticsPage = () => {
       }],
     };
 
-    // Extend base options to format y-axis as currency for the profit chart
     const profitBase = createModernOptions('Financial Performance', 'Amount ($)');
     const profitOptions = {
       ...profitBase,
@@ -432,16 +534,10 @@ const OwnerAnalyticsPage = () => {
     };
   };
 
-  // ---------------------------------------------------------------------------
-  // Salesman Performance chart config (derived from current filter selections)
-  // ---------------------------------------------------------------------------
-
   const buildSalesmanChart = () => {
     if (!salesmanData || !selectedBranch) return null;
-
     const branchPerf = salesmanData.performance?.[selectedBranch];
     if (!branchPerf) return null;
-
     const productPerf = branchPerf[selectedProduct];
     if (!productPerf || productPerf.length === 0) return null;
 
@@ -450,7 +546,7 @@ const OwnerAnalyticsPage = () => {
       ? (selectedProduct === 'All' ? 'Units Sold (All Products)' : 'Units Sold')
       : (selectedProduct === 'All' ? 'No. of Sales (All Products)' : 'No. of Sales');
 
-    const names = productPerf.map((p) => p.name);
+    const names  = productPerf.map((p) => p.name);
     const values = productPerf.map((p) => isUnits ? p.units : p.sales);
 
     const chartConfig = {
@@ -458,55 +554,26 @@ const OwnerAnalyticsPage = () => {
       datasets: [{
         label: yLabel,
         data: values,
-        backgroundColor: 'rgba(72, 187, 120, 0.6)', // overridden by gradient plugin
+        backgroundColor: 'rgba(72, 187, 120, 0.6)',
         borderColor: 'rgba(56, 161, 105, 1)',
         borderWidth: 1.5,
         borderRadius: 8,
       }],
     };
 
-    const chartTitle = `${selectedBranch} — ${
-      selectedProduct === 'All' ? 'All Products' : selectedProduct
-    }`;
-
-    // Vertical bar chart: salesman names on X-axis, units on Y-axis.
-    // maxRotation:45 so names don't overlap when there are many salesmen.
+    const chartTitle = `${selectedBranch} — ${selectedProduct === 'All' ? 'All Products' : selectedProduct}`;
     const baseOptions = createModernOptions(chartTitle, yLabel);
     const options = {
       ...baseOptions,
       scales: {
         ...baseOptions.scales,
-        x: {
-          ...baseOptions.scales.x,
-          ticks: {
-            ...baseOptions.scales.x.ticks,
-            maxRotation: 45,
-            minRotation: 0,
-          },
-        },
-        y: {
-          ...baseOptions.scales.y,
-          ticks: {
-            ...baseOptions.scales.y.ticks,
-            stepSize: 1, // units are whole numbers
-          },
-        },
+        x: { ...baseOptions.scales.x, ticks: { ...baseOptions.scales.x.ticks, maxRotation: 45, minRotation: 0 } },
+        y: { ...baseOptions.scales.y, ticks: { ...baseOptions.scales.y.ticks, stepSize: 1 } },
       },
     };
-
     return { chartConfig, options };
   };
 
-  // ---------------------------------------------------------------------------
-  // Branch Sales chart config (Section 3)
-  // ---------------------------------------------------------------------------
-  //
-  // Filter logic:
-  //   (All, All)      → total sales transactions per branch (bar per branch)
-  //   (Branch, All)   → units sold per product inside that branch (bar per product)
-  //   (All, Product)  → that product's units sold per branch (bar per branch)
-  //   (Branch, Prod)  → single bar: units of that product in that branch
-  //
   const buildBranchSalesChart = () => {
     if (!branchSalesData) return null;
     const { branchSales, branches } = branchSalesData;
@@ -515,7 +582,6 @@ const OwnerAnalyticsPage = () => {
     const bothAll      = s3Branch === 'All' && s3Product === 'All';
     const branchOnly   = s3Branch !== 'All' && s3Product === 'All';
     const productOnly  = s3Branch === 'All' && s3Product !== 'All';
-    const bothSelected = s3Branch !== 'All' && s3Product !== 'All';
 
     let labels, values, chartTitle, yLabel;
 
@@ -554,7 +620,7 @@ const OwnerAnalyticsPage = () => {
       datasets: [{
         label: yLabel,
         data: values,
-        backgroundColor: 'rgba(66, 153, 225, 0.6)', // overridden by branch gradient plugin
+        backgroundColor: 'rgba(66, 153, 225, 0.6)',
         borderColor: 'rgba(43, 108, 176, 1)',
         borderWidth: 1.5,
         borderRadius: 8,
@@ -564,289 +630,452 @@ const OwnerAnalyticsPage = () => {
     return { chartConfig, options: createModernOptions(chartTitle, yLabel) };
   };
 
+  // Section 4: Company Sales chart
+  const buildCompanySalesChart = () => {
+    if (!companySalesData) return null;
+    const { companies, companySales } = companySalesData;
+    const isUnits = s4Metric === 'units';
+
+    const labels = companies.filter((c) => companySales[c]);
+    const values = labels.map((c) => isUnits ? companySales[c].totalUnits : companySales[c].totalSales);
+
+    if (values.length === 0 || values.every((v) => v === 0)) return null;
+
+    const yLabel    = isUnits ? 'Units Sold' : 'No. of Sales';
+    const chartTitle = isUnits ? 'Total Units Sold per Company' : 'Total Sales per Company';
+
+    const chartConfig = {
+      labels,
+      datasets: [{
+        label: yLabel,
+        data: values,
+        backgroundColor: 'rgba(237, 137, 54, 0.7)',
+        borderColor: 'rgba(197, 97, 14, 1)',
+        borderWidth: 1.5,
+        borderRadius: 8,
+      }],
+    };
+
+    const baseOptions = createModernOptions(chartTitle, yLabel);
+    const options = {
+      ...baseOptions,
+      scales: {
+        ...baseOptions.scales,
+        x: { ...baseOptions.scales.x, ticks: { ...baseOptions.scales.x.ticks, maxRotation: 45, minRotation: 0 } },
+        y: { ...baseOptions.scales.y, ticks: { ...baseOptions.scales.y.ticks, stepSize: 1 } },
+      },
+    };
+
+    return { chartConfig, options };
+  };
+
+  // Section 5: Product Sales chart
+  const buildProductSalesChart = () => {
+    if (!productSalesData) return null;
+    const { productSales } = productSalesData;
+    const isUnits = s5Metric === 'units';
+
+    const labels = Object.keys(productSales);
+    const values = labels.map((p) => isUnits ? productSales[p].totalUnits : productSales[p].totalSales);
+
+    if (labels.length === 0 || values.every((v) => v === 0)) return null;
+
+    const yLabel     = isUnits ? 'Units Sold' : 'No. of Sales';
+    const chartTitle = s5Company === 'All'
+      ? (isUnits ? 'Units Sold per Product' : 'Sales per Product')
+      : (isUnits ? `Units Sold per Product — ${s5Company}` : `Sales per Product — ${s5Company}`);
+
+    const chartConfig = {
+      labels,
+      datasets: [{
+        label: yLabel,
+        data: values,
+        backgroundColor: 'rgba(159, 122, 234, 0.7)',
+        borderColor: 'rgba(107, 70, 193, 1)',
+        borderWidth: 1.5,
+        borderRadius: 8,
+      }],
+    };
+
+    const baseOptions = createModernOptions(chartTitle, yLabel);
+    const options = {
+      ...baseOptions,
+      scales: {
+        ...baseOptions.scales,
+        x: { ...baseOptions.scales.x, ticks: { ...baseOptions.scales.x.ticks, maxRotation: 45, minRotation: 0 } },
+        y: { ...baseOptions.scales.y, ticks: { ...baseOptions.scales.y.ticks, stepSize: 1 } },
+      },
+    };
+
+    return { chartConfig, options };
+  };
+
+  // ---------------------------------------------------------------------------
+  // Derived chart configs
+  // ---------------------------------------------------------------------------
+  const overviewCharts    = buildOverviewCharts();
+  const salesmanChart     = buildSalesmanChart();
+  const branchSalesChart  = buildBranchSalesChart();
+  const companySalesChart = buildCompanySalesChart();
+  const productSalesChart = buildProductSalesChart();
+
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
-
-  const overviewCharts = buildOverviewCharts();
-  const salesmanChart = buildSalesmanChart();
-  const branchSalesChart = buildBranchSalesChart();
-
   return (
     <div className={styles.container}>
       <h2>Owner Dashboard</h2>
+
       <div className={styles.contentArea}>
 
-        {/* ── Section 1: Overview ──────────────────────────────────────── */}
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <h3 className={styles.sectionTitle}>Overview</h3>
-            {title && (
-              <p className={styles.subtitle}>
-                Period: <strong>{title}</strong>
-              </p>
+        {/* ── Tab Navigation Bar ──────────────────────────────────────── */}
+        <nav className={styles.tabBar} role="tablist" aria-label="Analytics sections">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              role="tab"
+              aria-selected={activeSection === tab.id}
+              className={`${styles.tabBtn} ${activeSection === tab.id ? styles.tabActive : ''}`}
+              onClick={() => handleTabClick(tab.id)}
+            >
+              <span className={styles.tabIcon} aria-hidden="true">{tab.icon}</span>
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+
+        {/* ── Section 1: Overview ─────────────────────────────────────── */}
+        {activeSection === 1 && (
+          <section className={styles.section} role="tabpanel">
+            <div className={styles.sectionHeader}>
+              <h3 className={styles.sectionTitle}>Overview</h3>
+              {title && (
+                <p className={styles.subtitle}>
+                  Period: <strong>{title}</strong>
+                </p>
+              )}
+            </div>
+
+            {loading && <div className={styles.loading}>Loading overview…</div>}
+            {error   && <div className={styles.error}>{error}</div>}
+
+            {!loading && !error && overviewCharts && (
+              <>
+                <div className={styles.graphGrid}>
+                  <div className={styles.graphCard}>
+                    <div className={styles.chartWrapper}>
+                      <Line options={overviewCharts.ordersOptions} data={overviewCharts.ordersData} plugins={[gradientPlugins.orders]} />
+                    </div>
+                  </div>
+                  <div className={styles.graphCard}>
+                    <div className={styles.chartWrapper}>
+                      <Line options={overviewCharts.salesOptions} data={overviewCharts.salesData} plugins={[gradientPlugins.sales]} />
+                    </div>
+                  </div>
+                  <div className={`${styles.graphCard} ${styles.fullWidth}`}>
+                    <div className={styles.chartWrapper}>
+                      <Bar options={overviewCharts.profitOptions} data={overviewCharts.profitData} />
+                    </div>
+                  </div>
+                </div>
+                <p className={styles.note}>
+                  Note: Profits shown are for sales only. Realized profit (after salaries) can be verified from the Profits page.
+                </p>
+              </>
             )}
-          </div>
-
-          {loading && <div className={styles.loading}>Loading overview…</div>}
-          {error && <div className={styles.error}>{error}</div>}
-
-          {!loading && !error && overviewCharts && (
-            <>
-              <div className={styles.graphGrid}>
-                {/* Orders Line Chart */}
-                <div className={styles.graphCard}>
-                  <div className={styles.chartWrapper}>
-                    <Line
-                      options={overviewCharts.ordersOptions}
-                      data={overviewCharts.ordersData}
-                      plugins={[gradientPlugins.orders]}
-                    />
-                  </div>
-                </div>
-
-                {/* Sales Line Chart */}
-                <div className={styles.graphCard}>
-                  <div className={styles.chartWrapper}>
-                    <Line
-                      options={overviewCharts.salesOptions}
-                      data={overviewCharts.salesData}
-                      plugins={[gradientPlugins.sales]}
-                    />
-                  </div>
-                </div>
-
-                {/* Financial Performance Bar Chart — full width */}
-                <div className={`${styles.graphCard} ${styles.fullWidth}`}>
-                  <div className={styles.chartWrapper}>
-                    <Bar
-                      options={overviewCharts.profitOptions}
-                      data={overviewCharts.profitData}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <p className={styles.note}>
-                Note: Profits shown are for sales only. Realized profit (after salaries) can be
-                verified from the Profits page.
-              </p>
-            </>
-          )}
-        </section>
+          </section>
+        )}
 
         {/* ── Section 2: Salesman Performance ─────────────────────────── */}
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <h3 className={styles.sectionTitle}>Salesman Performance</h3>
-          </div>
+        {activeSection === 2 && (
+          <section className={styles.section} role="tabpanel">
+            <div className={styles.sectionHeader}>
+              <h3 className={styles.sectionTitle}>Salesman Performance</h3>
+            </div>
 
-          {salesmanLoading && <div className={styles.loading}>Loading salesman data…</div>}
-          {salesmanError && <div className={styles.error}>{salesmanError}</div>}
+            {salesmanLoading && <div className={styles.loading}>Loading salesman data…</div>}
+            {salesmanError   && <div className={styles.error}>{salesmanError}</div>}
 
-          {!salesmanLoading && !salesmanError && salesmanData && (
-            <>
-              {/* Filter dropdowns: Month | Branch | Product | Toggle */}
-              <div className={styles.filterRow}>
-                {/* Month selector — drives a re-fetch of the performance data */}
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel} htmlFor="monthSelect">Month</label>
-                  <select
-                    id="monthSelect"
-                    className={styles.filterSelect}
-                    value={selectedMonth}
-                    onChange={(e) => setSelectedMonth(e.target.value)}
-                  >
-                    {availableMonths.map((m) => (
-                      <option key={m} value={m}>{formatMonthLabel(m)}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Branch selector — required; defaults to the first branch */}
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel} htmlFor="branchSelect">Branch</label>
-                  <select
-                    id="branchSelect"
-                    className={styles.filterSelect}
-                    value={selectedBranch}
-                    onChange={(e) => setSelectedBranch(e.target.value)}
-                  >
-                    {salesmanData.branches.map((b) => (
-                      <option key={b} value={b}>{b}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Product selector — defaults to "All" */}
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel} htmlFor="productSelect">Product</label>
-                  <select
-                    id="productSelect"
-                    className={styles.filterSelect}
-                    value={selectedProduct}
-                    onChange={(e) => setSelectedProduct(e.target.value)}
-                  >
-                    {salesmanData.products.map((p) => (
-                      <option key={p} value={p}>{p}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Units / Sales toggle */}
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel}>Metric</label>
-                  <div className={styles.toggleWrapper}>
-                    <button
-                      type="button"
-                      className={`${styles.toggleBtn} ${s2Metric === 'sales' ? styles.toggleActive : ''}`}
-                      onClick={() => setS2Metric('sales')}
-                    >
-                      Sales
-                    </button>
-                    <button
-                      type="button"
-                      className={`${styles.toggleBtn} ${s2Metric === 'units' ? styles.toggleActive : ''}`}
-                      onClick={() => setS2Metric('units')}
-                    >
-                      Units
-                    </button>
+            {!salesmanLoading && !salesmanError && salesmanData && (
+              <>
+                <div className={styles.filterRow}>
+                  <div className={styles.filterGroup}>
+                    <label className={styles.filterLabel} htmlFor="monthSelect">Month</label>
+                    <select id="monthSelect" className={styles.filterSelect} value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
+                      {availableMonths.map((m) => (
+                        <option key={m} value={m}>{formatMonthLabel(m)}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className={styles.filterGroup}>
+                    <label className={styles.filterLabel} htmlFor="branchSelect">Branch</label>
+                    <select id="branchSelect" className={styles.filterSelect} value={selectedBranch} onChange={(e) => setSelectedBranch(e.target.value)}>
+                      {salesmanData.branches.map((b) => (
+                        <option key={b} value={b}>{b}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className={styles.filterGroup}>
+                    <label className={styles.filterLabel} htmlFor="productSelect">Product</label>
+                    <select id="productSelect" className={styles.filterSelect} value={selectedProduct} onChange={(e) => setSelectedProduct(e.target.value)}>
+                      {salesmanData.products.map((p) => (
+                        <option key={p} value={p}>{p}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className={styles.filterGroup}>
+                    <label className={styles.filterLabel}>Metric</label>
+                    <div className={styles.toggleWrapper}>
+                      <button type="button" className={`${styles.toggleBtn} ${s2Metric === 'sales' ? styles.toggleActive : ''}`} onClick={() => setS2Metric('sales')}>Sales</button>
+                      <button type="button" className={`${styles.toggleBtn} ${s2Metric === 'units' ? styles.toggleActive : ''}`} onClick={() => setS2Metric('units')}>Units</button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Vertical bar chart or empty state */}
-              {salesmanChart ? (
-                <div className={`${styles.graphCard} ${styles.fullWidth}`}>
-                  <div className={styles.chartWrapper}>
-                    <Bar
-                      options={salesmanChart.options}
-                      data={salesmanChart.chartConfig}
-                      plugins={[gradientPlugins.salesman]}
-                    />
+                {salesmanChart ? (
+                  <div className={`${styles.graphCard} ${styles.fullWidth}`}>
+                    <div className={styles.chartWrapper}>
+                      <Bar options={salesmanChart.options} data={salesmanChart.chartConfig} plugins={[gradientPlugins.salesman]} />
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className={styles.emptyState}>
-                  No performance data available for the selected filters.
-                </div>
-              )}
-            </>
-          )}
-        </section>
+                ) : (
+                  <div className={styles.emptyState}>No performance data available for the selected filters.</div>
+                )}
+              </>
+            )}
+          </section>
+        )}
 
         {/* ── Section 3: Branch Sales ───────────────────────────────────── */}
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <h3 className={styles.sectionTitle}>Branch Sales</h3>
-          </div>
+        {activeSection === 3 && (
+          <section className={styles.section} role="tabpanel">
+            <div className={styles.sectionHeader}>
+              <h3 className={styles.sectionTitle}>Branch Sales</h3>
+            </div>
 
-          {branchSalesLoading && <div className={styles.loading}>Loading branch data…</div>}
-          {branchSalesError && <div className={styles.error}>{branchSalesError}</div>}
+            {branchSalesLoading && <div className={styles.loading}>Loading branch data…</div>}
+            {branchSalesError   && <div className={styles.error}>{branchSalesError}</div>}
 
-          {!branchSalesLoading && !branchSalesError && branchSalesData && (
-            <>
-              {/* Filter dropdowns: Month | Branch | Product | Toggle */}
-              <div className={styles.filterRow}>
-                {/* Month selector — drives a re-fetch of branch sales data */}
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel} htmlFor="s3MonthSelect">Month</label>
-                  <select
-                    id="s3MonthSelect"
-                    className={styles.filterSelect}
-                    value={s3Month}
-                    onChange={(e) => setS3Month(e.target.value)}
-                  >
-                    {s3AvailableMonths.map((m) => (
-                      <option key={m} value={m}>{formatMonthLabel(m)}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Branch filter — 'All' shows all branches */}
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel} htmlFor="s3BranchSelect">Branch</label>
-                  <select
-                    id="s3BranchSelect"
-                    className={styles.filterSelect}
-                    value={s3Branch}
-                    onChange={(e) => setS3Branch(e.target.value)}
-                  >
-                    <option value="All">All Branches</option>
-                    {branchSalesData.branches.map((b) => (
-                      <option key={b} value={b}>{b}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Product filter — 'All' shows all products */}
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel} htmlFor="s3ProductSelect">Product</label>
-                  <select
-                    id="s3ProductSelect"
-                    className={styles.filterSelect}
-                    value={s3Product}
-                    onChange={(e) => setS3Product(e.target.value)}
-                  >
-                    {branchSalesData.products.map((p) => (
-                      <option key={p} value={p}>{p === 'All' ? 'All Products' : p}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Units / Sales toggle */}
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel}>Metric</label>
-                  <div className={styles.toggleWrapper}>
-                    <button
-                      type="button"
-                      className={`${styles.toggleBtn} ${s3Metric === 'sales' ? styles.toggleActive : ''}`}
-                      onClick={() => setS3Metric('sales')}
-                    >
-                      Sales
-                    </button>
-                    <button
-                      type="button"
-                      className={`${styles.toggleBtn} ${s3Metric === 'units' ? styles.toggleActive : ''}`}
-                      onClick={() => setS3Metric('units')}
-                    >
-                      Units
-                    </button>
+            {!branchSalesLoading && !branchSalesError && branchSalesData && (
+              <>
+                <div className={styles.filterRow}>
+                  <div className={styles.filterGroup}>
+                    <label className={styles.filterLabel} htmlFor="s3MonthSelect">Month</label>
+                    <select id="s3MonthSelect" className={styles.filterSelect} value={s3Month} onChange={(e) => setS3Month(e.target.value)}>
+                      {s3AvailableMonths.map((m) => (
+                        <option key={m} value={m}>{formatMonthLabel(m)}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className={styles.filterGroup}>
+                    <label className={styles.filterLabel} htmlFor="s3BranchSelect">Branch</label>
+                    <select id="s3BranchSelect" className={styles.filterSelect} value={s3Branch} onChange={(e) => setS3Branch(e.target.value)}>
+                      <option value="All">All Branches</option>
+                      {branchSalesData.branches.map((b) => (
+                        <option key={b} value={b}>{b}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className={styles.filterGroup}>
+                    <label className={styles.filterLabel} htmlFor="s3ProductSelect">Product</label>
+                    <select id="s3ProductSelect" className={styles.filterSelect} value={s3Product} onChange={(e) => setS3Product(e.target.value)}>
+                      {branchSalesData.products.map((p) => (
+                        <option key={p} value={p}>{p === 'All' ? 'All Products' : p}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className={styles.filterGroup}>
+                    <label className={styles.filterLabel}>Metric</label>
+                    <div className={styles.toggleWrapper}>
+                      <button type="button" className={`${styles.toggleBtn} ${s3Metric === 'sales' ? styles.toggleActive : ''}`} onClick={() => setS3Metric('sales')}>Sales</button>
+                      <button type="button" className={`${styles.toggleBtn} ${s3Metric === 'units' ? styles.toggleActive : ''}`} onClick={() => setS3Metric('units')}>Units</button>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Chart or empty state */}
-              {branchSalesChart ? (
-                <div className={`${styles.graphCard} ${styles.fullWidth}`}>
-                  <div className={styles.chartWrapper}>
-                    <Bar
-                      options={branchSalesChart.options}
-                      data={branchSalesChart.chartConfig}
-                      plugins={[gradientPlugins.branch]}
-                    />
+                {branchSalesChart ? (
+                  <div className={`${styles.graphCard} ${styles.fullWidth}`}>
+                    <div className={styles.chartWrapper}>
+                      <Bar options={branchSalesChart.options} data={branchSalesChart.chartConfig} plugins={[gradientPlugins.branch]} />
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.emptyState}>No sales data available for the selected filters.</div>
+                )}
+
+                <p className={styles.note}>
+                  {s3Branch === 'All' && s3Product === 'All' && `Showing total ${s3Metric === 'units' ? 'units sold' : 'sales'} per branch (${formatMonthLabel(s3Month)}).`}
+                  {s3Branch !== 'All' && s3Product === 'All' && `Showing ${s3Metric === 'units' ? 'units sold' : 'no. of sales'} per product in ${s3Branch} (${formatMonthLabel(s3Month)}).`}
+                  {s3Branch === 'All' && s3Product !== 'All' && `Showing ${s3Metric === 'units' ? 'units sold' : 'no. of sales'} of "${s3Product}" across all branches (${formatMonthLabel(s3Month)}).`}
+                  {s3Branch !== 'All' && s3Product !== 'All' && `Showing ${s3Metric === 'units' ? 'units sold' : 'no. of sales'} of "${s3Product}" in ${s3Branch} (${formatMonthLabel(s3Month)}).`}
+                </p>
+              </>
+            )}
+          </section>
+        )}
+
+        {/* ── Section 4: Company Sales ──────────────────────────────────── */}
+        {activeSection === 4 && (
+          <section className={styles.section} role="tabpanel">
+            <div className={styles.sectionHeader}>
+              <h3 className={styles.sectionTitle}>Company Sales</h3>
+            </div>
+
+            {companySalesLoading && <div className={styles.loading}>Loading company data…</div>}
+            {companySalesError   && <div className={styles.error}>{companySalesError}</div>}
+
+            {!companySalesLoading && !companySalesError && companySalesData && (
+              <>
+                <div className={styles.filterRow}>
+                  {/* Month filter */}
+                  <div className={styles.filterGroup}>
+                    <label className={styles.filterLabel} htmlFor="s4MonthSelect">Month</label>
+                    <select
+                      id="s4MonthSelect"
+                      className={styles.filterSelect}
+                      value={s4Month}
+                      onChange={(e) => setS4Month(e.target.value)}
+                    >
+                      {s4AvailableMonths.map((m) => (
+                        <option key={m} value={m}>{formatMonthLabel(m)}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Sales / Units toggle */}
+                  <div className={styles.filterGroup}>
+                    <label className={styles.filterLabel}>Metric</label>
+                    <div className={styles.toggleWrapper}>
+                      <button
+                        type="button"
+                        className={`${styles.toggleBtn} ${s4Metric === 'sales' ? styles.toggleActive : ''}`}
+                        onClick={() => setS4Metric('sales')}
+                      >
+                        Sales
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.toggleBtn} ${s4Metric === 'units' ? styles.toggleActive : ''}`}
+                        onClick={() => setS4Metric('units')}
+                      >
+                        Units
+                      </button>
+                    </div>
                   </div>
                 </div>
-              ) : (
-                <div className={styles.emptyState}>
-                  No sales data available for the selected filters.
-                </div>
-              )}
 
-              {/* Context note describing what the chart is showing */}
-              <p className={styles.note}>
-                {s3Branch === 'All' && s3Product === 'All' &&
-                  `Showing total ${s3Metric === 'units' ? 'units sold' : 'sales'} per branch (${formatMonthLabel(s3Month)}).`}
-                {s3Branch !== 'All' && s3Product === 'All' &&
-                  `Showing ${s3Metric === 'units' ? 'units sold' : 'no. of sales'} per product in ${s3Branch} (${formatMonthLabel(s3Month)}).`}
-                {s3Branch === 'All' && s3Product !== 'All' &&
-                  `Showing ${s3Metric === 'units' ? 'units sold' : 'no. of sales'} of "${s3Product}" across all branches (${formatMonthLabel(s3Month)}).`}
-                {s3Branch !== 'All' && s3Product !== 'All' &&
-                  `Showing ${s3Metric === 'units' ? 'units sold' : 'no. of sales'} of "${s3Product}" in ${s3Branch} (${formatMonthLabel(s3Month)}).`}
-              </p>
-            </>
-          )}
-        </section>
+                {companySalesChart ? (
+                  <div className={`${styles.graphCard} ${styles.fullWidth}`}>
+                    <div className={styles.chartWrapper}>
+                      <Bar
+                        options={companySalesChart.options}
+                        data={companySalesChart.chartConfig}
+                        plugins={[gradientPlugins.company]}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.emptyState}>No company sales data available for the selected month.</div>
+                )}
+
+                <p className={styles.note}>
+                  Showing {s4Metric === 'units' ? 'total units sold' : 'total no. of sales'} per company ({formatMonthLabel(s4Month)}).
+                  {s4Metric === 'units' && ' Units reflect the sum of quantities across all transactions.'}
+                </p>
+              </>
+            )}
+          </section>
+        )}
+
+        {/* ── Section 5: Product Sales ──────────────────────────────────── */}
+        {activeSection === 5 && (
+          <section className={styles.section} role="tabpanel">
+            <div className={styles.sectionHeader}>
+              <h3 className={styles.sectionTitle}>Product Sales</h3>
+            </div>
+
+            {productSalesLoading && <div className={styles.loading}>Loading product data…</div>}
+            {productSalesError   && <div className={styles.error}>{productSalesError}</div>}
+
+            {!productSalesLoading && !productSalesError && productSalesData && (
+              <>
+                <div className={styles.filterRow}>
+                  {/* Month filter */}
+                  <div className={styles.filterGroup}>
+                    <label className={styles.filterLabel} htmlFor="s5MonthSelect">Month</label>
+                    <select
+                      id="s5MonthSelect"
+                      className={styles.filterSelect}
+                      value={s5Month}
+                      onChange={(e) => setS5Month(e.target.value)}
+                    >
+                      {s5AvailableMonths.map((m) => (
+                        <option key={m} value={m}>{formatMonthLabel(m)}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Company filter — filters x-axis to products from that company */}
+                  <div className={styles.filterGroup}>
+                    <label className={styles.filterLabel} htmlFor="s5CompanySelect">Company</label>
+                    <select
+                      id="s5CompanySelect"
+                      className={styles.filterSelect}
+                      value={s5Company}
+                      onChange={(e) => setS5Company(e.target.value)}
+                    >
+                      {productSalesData.companies.map((c) => (
+                        <option key={c} value={c}>{c === 'All' ? 'All Companies' : c}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Sales / Units toggle */}
+                  <div className={styles.filterGroup}>
+                    <label className={styles.filterLabel}>Metric</label>
+                    <div className={styles.toggleWrapper}>
+                      <button
+                        type="button"
+                        className={`${styles.toggleBtn} ${s5Metric === 'sales' ? styles.toggleActive : ''}`}
+                        onClick={() => setS5Metric('sales')}
+                      >
+                        Sales
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.toggleBtn} ${s5Metric === 'units' ? styles.toggleActive : ''}`}
+                        onClick={() => setS5Metric('units')}
+                      >
+                        Units
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {productSalesChart ? (
+                  <div className={`${styles.graphCard} ${styles.fullWidth}`}>
+                    <div className={styles.chartWrapper}>
+                      <Bar
+                        options={productSalesChart.options}
+                        data={productSalesChart.chartConfig}
+                        plugins={[gradientPlugins.product]}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.emptyState}>No product sales data available for the selected filters.</div>
+                )}
+
+                <p className={styles.note}>
+                  {s5Company === 'All'
+                    ? `Showing ${s5Metric === 'units' ? 'units sold' : 'no. of sales'} for all products across all companies (${formatMonthLabel(s5Month)}).`
+                    : `Showing ${s5Metric === 'units' ? 'units sold' : 'no. of sales'} for products under "${s5Company}" only (${formatMonthLabel(s5Month)}).`
+                  }
+                </p>
+              </>
+            )}
+          </section>
+        )}
 
       </div>
     </div>

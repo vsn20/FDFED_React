@@ -1,13 +1,13 @@
-/* Analytics.module.css */
+/* OwnerAnalyticsPage.module.css */
 
-/* --- LAYOUT CONTAINERS (Updated for Sidebar Alignment) --- */
+/* --- LAYOUT CONTAINERS --- */
 .container {
-  margin-top: 20px; /* Changed from 90px to match Sidebar margin */
+  margin-top: 20px;
   display: flex;
   flex: 1;
-  flex-direction: column; /* Ensure vertical stacking */
+  flex-direction: column;
   padding: 0 20px;
-  min-height: 80vh; /* Ensures it stretches nicely with sidebar */
+  min-height: 80vh;
   max-width: 100%;
 }
 
@@ -15,32 +15,81 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-
-  /* Flex & Scroll logic to match Sidebar */
   flex: 1;
   overflow-y: auto;
-
-  /* Hide scrollbar */
-  scrollbar-width: none;        /* Firefox */
-  -ms-overflow-style: none;     /* IE/Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .contentArea::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  display: none;
 }
 
 .contentArea h1 {
   color: #2d3436;
   margin-bottom: 10px;
   font-size: 1.8rem;
-  text-align: center; /* Optional: Center title */
+  text-align: center;
 }
 
 .subtitle {
   color: #636e72;
   font-size: 1rem;
   margin-bottom: 30px;
-  text-align: center; /* Optional: Center subtitle */
+  text-align: center;
+}
+
+/* --- TAB NAVIGATION BAR ---
+   Five clickable section blocks displayed at the top.
+   Clicking a block reveals that section's chart.
+*/
+.tabBar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.tabBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #718096;
+  font-size: 0.86rem;
+  font-weight: 600;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.tabBtn:hover {
+  border-color: #6c63ff;
+  color: #6c63ff;
+  background: rgba(108, 99, 255, 0.05);
+}
+
+.tabActive {
+  background: #6c63ff;
+  border-color: #6c63ff;
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(108, 99, 255, 0.32);
+}
+
+.tabActive:hover {
+  background: #5a52e0;
+  border-color: #5a52e0;
+  color: #ffffff;
+}
+
+.tabIcon {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 /* --- GRAPH GRID & CARDS --- */
@@ -48,7 +97,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 25px;
-  padding-bottom: 20px; /* Add padding at bottom for scroll clearance */
+  padding-bottom: 20px;
 }
 
 .graphCard {
@@ -92,11 +141,7 @@
   color: #e74c3c;
 }
 
-/* --- SECTION STRUCTURE ---
-   .section        : top-level section block with a white card style
-   .sectionHeader  : flex row containing the title + optional subtitle
-   .sectionTitle   : the <h3> section heading
-*/
+/* --- SECTION STRUCTURE --- */
 .section {
   background: #ffffff;
   border-radius: 14px;
@@ -123,12 +168,7 @@
   letter-spacing: -0.01em;
 }
 
-/* --- FILTER ROW (Salesman Performance section)
-   .filterRow    : flex row that holds both filter groups side by side
-   .filterGroup  : wrapper for label + select combo
-   .filterLabel  : small label text above the select
-   .filterSelect : styled <select> element
-*/
+/* --- FILTER ROW --- */
 .filterRow {
   display: flex;
   flex-wrap: wrap;
@@ -173,11 +213,7 @@
   border-color: #6c63ff;
 }
 
-/* --- METRIC TOGGLE
-   .toggleWrapper : flex container for the two toggle buttons
-   .toggleBtn     : individual toggle button (Sales / Units)
-   .toggleActive  : highlighted state for the currently selected metric
-*/
+/* --- METRIC TOGGLE --- */
 .toggleWrapper {
   display: inline-flex;
   border: 1.5px solid #e2e8f0;
@@ -215,17 +251,12 @@
   color: #fff;
 }
 
-/* --- SALESMAN CARD
-   .salesmanCard : taller card variant for the horizontal bar chart
-                   so salesman names have enough row height
-*/
+/* --- SALESMAN CARD --- */
 .salesmanCard {
   min-height: 480px;
 }
 
-/* --- EMPTY STATE
-   .emptyState : shown when no data matches current filters
-*/
+/* --- EMPTY STATE --- */
 .emptyState {
   text-align: center;
   padding: 40px 20px;
@@ -268,5 +299,18 @@
   .filterGroup {
     min-width: unset;
     width: 100%;
+  }
+
+  .tabBar {
+    gap: 8px;
+  }
+
+  .tabBtn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .tabIcon {
+    display: none;
   }
 }
