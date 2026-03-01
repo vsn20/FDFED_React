@@ -397,3 +397,122 @@
     .tabBtn { padding: 8px 12px; font-size: 0.8rem; }
     .tabIcon { display: none; }
 }
+/* ═══════════════════════════════════════════════════════════
+   LOW STOCK MINI-CARD GRID  —  replaces the legacy list
+   ═══════════════════════════════════════════════════════════ */
+
+.lowStockCardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+
+/* Card */
+.lowStockCard {
+  background: rgba(255,255,255,0.92);
+  border: 1px solid #f0d78c;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: lscPop 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lowStockCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+}
+
+.lowStockCardOut {
+  border-color: #fca5a5;
+  background: rgba(255,238,238,0.92);
+}
+
+@keyframes lscPop {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* Top accent stripe */
+.lscAccent { height: 3px; width: 100%; flex-shrink: 0; }
+
+/* Body */
+.lscBody {
+  padding: 12px 14px 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.lscName {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #2d3436;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lscCompany {
+  font-size: 0.73rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.lscModel {
+  font-size: 0.68rem;
+  color: #adb5bd;
+  font-weight: 500;
+}
+
+/* Meter */
+.lscMeterRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.lscMeterTrack {
+  flex: 1;
+  height: 4px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.lscMeterFill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  min-width: 3px;
+}
+
+.lscQty {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #e67e22;
+  white-space: nowrap;
+}
+
+.lscQtyOut {
+  color: #e74c3c;
+  animation: lscPulse 2s ease-in-out infinite;
+}
+
+@keyframes lscPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+@media (max-width: 768px) {
+  .lowStockCardGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .lowStockCardGrid { grid-template-columns: 1fr; }
+}

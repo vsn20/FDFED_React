@@ -1,183 +1,668 @@
-/* --- Standardized Variables (Based on Previous Light Theme) --- */
+/* ============================================================
+   Salary.module.css  — "Midnight Ledger"
+   Salary view — aligned with Details.module.css theme.
+   Font: Playfair Display (headings) + Outfit (body/UI)
+   Palette: Deep navy bg · Warm cream cards · Amber accents
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+/* ─── DESIGN TOKENS ─────────────────────────────────────── */
 :root {
-    --bg-light: #f8f9fa; /* Very Light Grey Background */
-    --card-light: #ffffff; /* White Card Background */
-    --primary-text: #212529; /* Dark Black/Grey Text for contrast */
-    --secondary-text: #6c757d; /* Medium Grey Text */
-    --accent-blue: #007bff; /* Standard Blue Accent */
-    --accent-yellow: #ffc107; /* Adopted Yellow Accent for roles/highlights */
-    --success-green: #28a745; /* High-Contrast Success Green */
-    --danger-red: #dc3545; /* High-Contrast Danger Red */
-    --border-color: #e9ecef; /* Very Light Border */
+  --ink:          #0d1b2a;
+  --ink-mid:      #14263a;
+  --ink-light:    #1e3a52;
+  --paper:        #faf8f5;
+  --paper-mid:    #f0ede8;
+  --paper-border: #e4dfd8;
+
+  --amber:        #d97706;
+  --amber-light:  #fbbf24;
+  --amber-glow:   rgba(217,119,6,0.18);
+
+  --text-primary:   #1a2e42;
+  --text-secondary: #4a6278;
+  --text-muted:     #7a95aa;
+
+  --success-bg:  #dcfce7;
+  --success-fg:  #14532d;
+  --success-bdr: #86efac;
+
+  --danger-bg:   #fee2e2;
+  --danger-fg:   #7f1d1d;
+  --danger-bdr:  #fca5a5;
+
+  --warn-bg:     #fef3c7;
+  --warn-fg:     #78350f;
+  --warn-bdr:    #fcd34d;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  --shadow-card:  0 4px 24px rgba(13,27,42,0.10), 0 1px 4px rgba(13,27,42,0.06);
+  --shadow-lift:  0 12px 40px rgba(13,27,42,0.16), 0 2px 8px rgba(13,27,42,0.08);
+  --shadow-amber: 0 4px 20px rgba(217,119,6,0.25);
 }
 
+/* ─── RESET ──────────────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ─── PAGE WRAPPER ────────────────────────────────────────── */
 .pageContainer {
-    /* Using the standardized background color */
-    background-color: var(--bg-light); 
-    padding: 20px; 
-    margin: 0;
-    width: 100%;
+  font-family: 'Outfit', 'Segoe UI', sans-serif;
+  background-image: radial-gradient(circle, rgba(13,27,42,0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-color: #eef1f5;
+  padding: 32px 24px 48px;
+  min-height: 100vh;
+  width: 100%;
 }
 
 .contentArea {
-    max-width: 1200px; 
-    width: 100%; 
-    margin: 0 auto; 
-    
-    background: var(--card-light);
-    border-radius: 12px;
-    padding: 30px; 
-    /* Standardized shadow for the main card */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
-    border: 1px solid var(--border-color); /* Added back a subtle border */
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+  background: var(--paper);
+  border-radius: var(--radius-lg);
+  padding: 40px 44px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--paper-border);
+  border-top: 4px solid var(--amber);
+  animation: contentFadeUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+@keyframes contentFadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── PAGE TITLE ──────────────────────────────────────────── */
 .title {
-    color: var(--primary-text);
-    /* Standardized border color */
-    border-bottom: 1px solid var(--border-color); 
-    padding-bottom: 15px;
-    margin-bottom: 25px;
-    font-size: 2.2rem; /* Slightly larger heading */
-    font-weight: 700;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink);
+  padding-bottom: 18px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--paper-border);
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
+.title::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 28px;
+  background: linear-gradient(180deg, var(--amber-light), var(--amber));
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ─── CONTROLS ROW ────────────────────────────────────────── */
 .controls {
-    display: flex;
-    align-items: center;
-    gap: 20px; /* Slightly increased gap */
-    margin-bottom: 30px; /* Increased bottom margin */
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
 }
 
 .label {
-    font-weight: 500;
-    color: var(--secondary-text);
-    font-size: 1rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
 }
 
 .selectInput {
-    padding: 10px 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px; /* Consistent rounded corners */
-    font-size: 1rem;
-    color: var(--primary-text);
-    background-color: var(--card-light);
-    cursor: pointer;
-    transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 9px 32px 9px 13px;
+  border: 1.5px solid var(--paper-border);
+  border-radius: var(--radius-sm);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  background: var(--paper);
+  cursor: pointer;
+  min-width: 180px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a95aa' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .selectInput:focus {
-    /* Use the accent color for focus state */
-    border-color: var(--accent-yellow);
-    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.4); 
-    outline: none;
+  border-color: var(--amber);
+  box-shadow: 0 0 0 3px var(--amber-glow);
+  outline: none;
 }
 
+/* ─── DATE RANGE HEADING ──────────────────────────────────── */
 .dateRange {
-    color: var(--primary-text); 
-    margin-bottom: 15px;
-    margin-top: 25px;
-    font-size: 1.6rem;
-    font-weight: 600;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  margin-top: 8px;
+  letter-spacing: -0.01em;
 }
 
+/* ─── LOADING / ERROR ─────────────────────────────────────── */
 .loadingMessage,
 .errorMessage {
-    padding: 18px; /* Increased padding */
-    border-radius: 8px;
-    text-align: center;
-    font-weight: 600;
-    margin-top: 25px;
-    font-size: 1.1rem;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  margin-top: 20px;
+  font-size: 0.95rem;
 }
 
 .loadingMessage {
-    background-color: #e6f7ff; /* Light blue */
-    color: var(--accent-blue);
+  background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+  color: #075985;
+  border: 1px solid #7dd3fc;
 }
 
 .errorMessage {
-    background-color: #fcebeb; /* Light red */
-    color: var(--danger-red);
-    border: 1px solid #f9dcdc;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--danger-bg), #fecaca);
+  color: var(--danger-fg);
+  border: 1px solid var(--danger-bdr);
+  border-left: 4px solid #dc2626;
+  animation: slideInRight 0.3s ease;
 }
 
+.errorMessage::before { content: '⚠'; font-size: 1rem; flex-shrink: 0; }
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ─── SALARY LIST ─────────────────────────────────────────── */
 .salaryList {
-    display: flex;
-    flex-direction: column;
-    gap: 25px; /* Increased gap between entries */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
+/* ─── SALARY ENTRY CARD ───────────────────────────────────── */
 .salaryEntry {
-    padding: 25px; /* Increased padding inside entry */
-    border: 1px solid var(--border-color); 
-    border-radius: 10px; 
-    background-color: var(--card-light);
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05); /* Very light initial shadow */
-    transition: box-shadow 0.3s, border-color 0.3s, transform 0.2s;
+  padding: 28px;
+  border: 1px solid var(--paper-border);
+  border-left: 3px solid var(--amber);
+  border-radius: var(--radius-md);
+  background: var(--paper-mid);
+  box-shadow: 0 1px 4px rgba(13,27,42,0.04);
+  transition: box-shadow 0.2s ease, transform 0.18s ease, border-color 0.2s ease;
 }
 
 .salaryEntry:hover {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12); /* Lift and shadow on hover */
-    border-color: var(--accent-yellow); 
-    transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+  border-color: var(--paper-border);
+  border-left-color: var(--amber-light);
+  transform: translateY(-2px);
 }
 
+/* ─── ENTRY HEADER ────────────────────────────────────────── */
 .entryHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--border-color); 
-    padding-bottom: 15px;
-    margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--paper-border);
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .employeeName {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--primary-text);
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
 }
 
+/* Role badge — wax stamp amber style */
 .role {
-    /* Use the adopted yellow accent for the role tag */
-    background-color: var(--accent-yellow); 
-    color: var(--primary-text); /* Keep text dark for contrast */
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+  display: inline-block;
+  background: linear-gradient(135deg, var(--amber-light), var(--amber));
+  color: #fff;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  box-shadow: var(--shadow-amber);
 }
 
+/* ─── ENTRY DETAILS ───────────────────────────────────────── */
 .entryDetails > div {
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
 }
 
-.label {
-    /* Overwrite local label use to be slightly darker than generic secondary text for details */
-    font-weight: 500;
-    color: #495057; 
+.entryDetails > div span:last-child {
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
+/* ─── TOTAL ROW ───────────────────────────────────────────── */
 .total {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--success-green); /* High-contrast green for total */
-    padding-top: 15px;
-    border-top: 1px solid var(--border-color); 
-    margin-top: 15px;
-    display: flex;
-    justify-content: space-between;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--success-fg);
+  padding-top: 14px;
+  border-top: 1px solid var(--paper-border);
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  background: linear-gradient(135deg, var(--success-bg), #bbf7d0);
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--success-bdr);
 }
 
+/* ─── NOTE ────────────────────────────────────────────────── */
 .note {
-    color: var(--danger-red);
-    font-style: italic;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border-color);
-    font-size: 0.95rem;
+  font-family: 'Outfit', sans-serif;
+  color: var(--danger-fg);
+  font-style: italic;
+  font-size: 0.88rem;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, var(--danger-bg), #fecaca);
+  border: 1px solid var(--danger-bdr);
+  border-left: 3px solid #dc2626;
+  border-radius: var(--radius-sm);
+}
+
+/* ─── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .pageContainer { padding: 20px 12px 40px; }
+  .contentArea { padding: 24px 20px; }
+  .title { font-size: 1.5rem; }
+  .controls { flex-direction: column; align-items: flex-start; }
+  .selectInput { width: 100%; }
+  .entryHeader { flex-direction: column; align-items: flex-start; }
+}
+/* ═══════════════════════════════════════════════════════════
+   SUMMARY STRIP
+   ═══════════════════════════════════════════════════════════ */
+
+.summaryStrip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 32px;
+  padding: 20px;
+  background: var(--paper-mid);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--paper-border);
+}
+
+.summaryCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--paper);
+  border: 1px solid var(--paper-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  animation: contentFadeUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.summaryCard:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-2px);
+}
+
+.summaryIcon {
+  font-size: 1.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.summaryValue {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.summaryLabel {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 3px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PAYSLIP CARDS — replace old salaryEntry
+   ═══════════════════════════════════════════════════════════ */
+
+.payslipCard {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border: 1px solid var(--paper-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: 0 2px 8px rgba(13,27,42,0.05);
+  transition: box-shadow 0.22s cubic-bezier(0.22,1,0.36,1),
+              transform 0.22s cubic-bezier(0.22,1,0.36,1);
+  animation: payslipSlide 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  border-left: 4px solid var(--amber);
+}
+
+@keyframes payslipSlide {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.payslipCard:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-2px);
+}
+
+/* Highest-paid highlight */
+.payslipTop {
+  border-left-color: #059669;
+  background: linear-gradient(135deg, #f0fdf4 0%, var(--paper) 40%);
+}
+
+/* ── Left panel: avatar + identity ── */
+.payslipLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 24px;
+  min-width: 220px;
+  background: var(--paper-mid);
+  border-right: 1px solid var(--paper-border);
+  flex-shrink: 0;
+}
+
+.payslipAvatarWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.payslipAvatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.18);
+}
+
+.topBadge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: linear-gradient(135deg, #059669, #34d399);
+  color: #fff;
+  font-size: 0.6rem;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--paper);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+.payslipIdentity { flex: 1; min-width: 0; }
+
+.payslipName {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.payslipMeta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 5px;
+  flex-wrap: wrap;
+}
+
+.payslipId {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.rolePill {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--amber-light), var(--amber));
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.63rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  box-shadow: 0 1px 6px rgba(217,119,6,0.28);
+}
+
+/* ── Center panel: breakdown + bar ── */
+.payslipCenter {
+  flex: 1;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+
+.breakdownRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.breakdownItem {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.breakdownDivider {
+  width: 1px;
+  height: 36px;
+  background: var(--paper-border);
+  flex-shrink: 0;
+}
+
+.breakdownLabel {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+}
+
+.breakdownValue {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.commissionValue {
+  color: #059669;
+}
+
+/* Proportion bar */
+.propBarWrap { display: flex; flex-direction: column; gap: 5px; }
+
+.propBarTrack {
+  height: 6px;
+  border-radius: 10px;
+  background: var(--paper-border);
+  overflow: hidden;
+  display: flex;
+}
+
+.propBarBase {
+  height: 100%;
+  background: linear-gradient(90deg, var(--ink-light), var(--ink));
+  border-radius: 10px 0 0 10px;
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  min-width: 4px;
+}
+
+.propBarComm {
+  height: 100%;
+  background: linear-gradient(90deg, #059669, #34d399);
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  min-width: 4px;
+}
+
+.propBarLabels {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.64rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Note */
+.payslipNote {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--danger-fg);
+  background: linear-gradient(135deg, var(--danger-bg), #fecaca);
+  border: 1px solid var(--danger-bdr);
+  border-left: 3px solid #dc2626;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+}
+
+/* ── Right panel: net pay "stamp" ── */
+.payslipRight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 28px;
+  background: var(--ink);
+  color: #fff;
+  min-width: 160px;
+  flex-shrink: 0;
+  gap: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.payslipRight::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.payslipTop .payslipRight {
+  background: linear-gradient(135deg, #059669, #065f46);
+}
+
+.totalLabel {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.55);
+}
+
+.totalAmount {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.totalMonth {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.45);
+  margin-top: 2px;
+}
+
+/* ── Empty state ── */
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+}
+
+.emptyIcon { font-size: 3rem; margin-bottom: 12px; }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .payslipCard { flex-direction: column; border-left: none; border-top: 4px solid var(--amber); }
+  .payslipTop  { border-top-color: #059669; }
+  .payslipLeft { border-right: none; border-bottom: 1px solid var(--paper-border); min-width: unset; }
+  .payslipRight { min-width: unset; padding: 18px 24px; flex-direction: row; justify-content: space-between; }
+  .summaryStrip { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .summaryStrip { grid-template-columns: 1fr; }
+  .breakdownRow { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .breakdownDivider { width: 100%; height: 1px; }
 }

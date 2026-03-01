@@ -151,45 +151,109 @@ const ManagerOrdersPage = () => {
                         </div>
 
                         {/* SEARCH */}
-                        <input
-                            type="text"
-                            placeholder="Search Order ID, Product, Company..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            style={{ marginBottom: "10px", padding: "8px", width: "50%" }}
-                        />
+                        <div className={styles.searchRow}>
+                            <input
+                                type="text"
+                                placeholder="Search Order ID, Product, Company..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className={styles.searchInput}
+                                style={{ width: '320px' }}
+                            />
+                        </div>
 
-                        {loading && <p>Loading orders...</p>}
-                        {error && <p className={styles.errorMessage}>{error}</p>}
-                        
-                        {!loading && !error && (
-                            <div className={styles.tableWrapper}>
-                                <table className={styles.table}>
-                                    <thead className={styles.thead}>
-                                        <tr>
-                                            <th className={styles.th}>Order ID</th>
-                                            <th className={styles.th}>Product</th>
-                                            <th className={styles.th}>Company</th>
-                                            <th className={styles.th}>Quantity</th>
-                                            <th className={styles.th}>Status</th>
-                                            <th className={styles.th}>Ordered Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {currentOrders.map((order) => (
-                                            <tr key={order._id} className={styles.tr} onClick={() => handleRowClick(order.order_id)}>
-                                                <td className={styles.td}>{order.order_id}</td>
-                                                <td className={styles.td}>{order.product_name}</td>
-                                                <td className={styles.td}>{order.company_name}</td>
-                                                <td className={styles.td}>{order.quantity}</td>
-                                                <td className={styles.td}>{order.status}</td>
-                                                <td className={styles.td}>{new Date(order.ordered_date).toLocaleDateString()}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                                {orders.length === 0 && <p>No orders found for your branch.</p>}
+                        {loading && (
+                            <div className={styles.loadingGrid}>
+                                {[...Array(6)].map((_, i) => (
+                                    <div key={i} className={styles.skeletonCard} style={{ animationDelay: `${i * 0.07}s` }} />
+                                ))}
                             </div>
+                        )}
+                        {error && <p className={styles.errorMessage}>{error}</p>}
+
+                        {!loading && !error && (
+                            <>
+                                {currentOrders.length === 0 ? (
+                                    <div className={styles.emptyState}>
+                                        <div className={styles.emptyIcon}>📋</div>
+                                        <p>{orders.length === 0 ? 'No orders found for your branch.' : 'No orders match your search.'}</p>
+                                    </div>
+                                ) : (
+                                    <div className={styles.cardGrid}>
+                                        {currentOrders.map((order, idx) => {
+                                            const st = (order.status || '').toLowerCase();
+                                            const statusAccent =
+                                                st === 'pending'   ? 'linear-gradient(90deg,#3b82f6,#93c5fd)' :
+                                                st === 'delivered' ? 'linear-gradient(90deg,#059669,#34d399)' :
+                                                st === 'cancelled' ? 'linear-gradient(90deg,#dc2626,#f87171)' :
+                                                st === 'approved'  ? 'linear-gradient(90deg,#0891b2,#22d3ee)' :
+                                                                     'linear-gradient(90deg,#6b7280,#9ca3af)';
+
+                                            const statusClass =
+                                                st === 'pending'   ? styles.orderStatusPending   :
+                                                st === 'delivered' ? styles.orderStatusDelivered :
+                                                st === 'cancelled' ? styles.orderStatusCancelled :
+                                                st === 'approved'  ? styles.orderStatusApproved  :
+                                                                     styles.orderStatusDefault;
+
+                                            const avatarColors = [
+                                                ['#3b82f6','#93c5fd'], ['#7c3aed','#a78bfa'],
+                                                ['#059669','#34d399'], ['#d97706','#fbbf24'],
+                                                ['#0891b2','#22d3ee'], ['#dc2626','#f87171'],
+                                            ];
+                                            const [c1, c2] = avatarColors[(order.product_name?.charCodeAt(0) || 0) % avatarColors.length];
+                                            const initial = (order.product_name?.[0] || 'O').toUpperCase();
+
+                                            return (
+                                                <div
+                                                    key={order._id}
+                                                    className={styles.empCard}
+                                                    style={{ animationDelay: `${idx * 0.05}s`, cursor: 'pointer' }}
+                                                    onClick={() => handleRowClick(order.order_id)}
+                                                >
+                                                    <div className={styles.cardAccent} style={{ background: statusAccent }} />
+
+                                                    <div className={styles.cardHeader}>
+                                                        <div className={styles.avatar} style={{ background: `linear-gradient(135deg,${c1},${c2})` }}>
+                                                            {initial}
+                                                        </div>
+                                                        <div className={styles.cardMeta}>
+                                                            <div className={styles.cardName}>{order.product_name}</div>
+                                                            <div className={styles.cardRole}>{order.company_name}</div>
+                                                        </div>
+                                                        <span className={statusClass}>
+                                                            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                                                        </span>
+                                                    </div>
+
+                                                    <div className={styles.cardId}>
+                                                        <span className={styles.cardIdLabel}>ORDER</span>
+                                                        <span className={styles.cardIdValue}>{order.order_id}</span>
+                                                    </div>
+
+                                                    <div className={styles.cardStats}>
+                                                        <div className={styles.cardStat}>
+                                                            <div className={styles.cardStatVal}>{order.quantity}</div>
+                                                            <div className={styles.cardStatLabel}>Units</div>
+                                                        </div>
+                                                        <div className={styles.cardStatDivider} />
+                                                        <div className={styles.cardStat}>
+                                                            <div className={styles.cardStatVal}>
+                                                                {new Date(order.ordered_date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                                                            </div>
+                                                            <div className={styles.cardStatLabel}>Ordered</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className={styles.cardFooter}>
+                                                        <span className={styles.viewDetails}>View Details →</span>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </>
                         )}
 
                         {/* PAGINATION */}
@@ -202,7 +266,7 @@ const ManagerOrdersPage = () => {
                                         min="1"
                                         value={rowsInput}
                                         onChange={handleRowsChange}
-                                        style={{ width: "60px", marginLeft: "10px" }}
+                                        className={styles.rowsInput}
                                     />
                                 </div>
 

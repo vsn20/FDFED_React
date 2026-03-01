@@ -488,23 +488,45 @@ const ManagerAnalyticsPage = () => {
           <div className={styles.lowStockAlert}>
             <div className={styles.lowStockHeader}>
               <span className={styles.lowStockIcon}>⚠️</span>
-              <h2>Low Stock Alert — {lowStockItems.length} Product{lowStockItems.length > 1 ? 's' : ''}</h2>
+              <h2>Low Stock Alert — {lowStockItems.length} Product{lowStockItems.length > 1 ? 's' : ''} Need Restocking</h2>
             </div>
             <p className={styles.lowStockSubtext}>
-              The following products have stock below {LOW_STOCK_THRESHOLD} units and need restocking:
+              The following products are below {LOW_STOCK_THRESHOLD} units. Consider placing orders soon.
             </p>
-            <div className={styles.lowStockList}>
-              {lowStockItems.map(item => (
-                <div key={item._id} className={styles.lowStockItem}>
-                  <div className={styles.lowStockProductInfo}>
-                    <span className={styles.lowStockProductName}>{item.product_name}</span>
-                    <span className={styles.lowStockCompany}>{item.company_name} • {item.model_no}</span>
+            <div className={styles.lowStockCardGrid}>
+              {lowStockItems.map((item, idx) => {
+                const isOut = item.quantity === 0;
+                const pct = isOut ? 0 : Math.min(100, Math.max(5, (item.quantity / LOW_STOCK_THRESHOLD) * 100));
+                return (
+                  <div
+                    key={item._id}
+                    className={`${styles.lowStockCard} ${isOut ? styles.lowStockCardOut : ''}`}
+                    style={{ animationDelay: `${idx * 0.06}s` }}
+                  >
+                    <div className={styles.lscAccent} style={{
+                      background: isOut
+                        ? 'linear-gradient(90deg,#dc2626,#f87171)'
+                        : 'linear-gradient(90deg,#d97706,#fbbf24)'
+                    }} />
+                    <div className={styles.lscBody}>
+                      <div className={styles.lscName}>{item.product_name}</div>
+                      <div className={styles.lscCompany}>{item.company_name}</div>
+                      {item.model_no && <div className={styles.lscModel}>{item.model_no}</div>}
+                      <div className={styles.lscMeterRow}>
+                        <div className={styles.lscMeterTrack}>
+                          <div className={styles.lscMeterFill} style={{
+                            width: `${pct}%`,
+                            background: isOut ? '#dc2626' : '#d97706'
+                          }} />
+                        </div>
+                        <span className={`${styles.lscQty} ${isOut ? styles.lscQtyOut : ''}`}>
+                          {isOut ? 'OUT OF STOCK' : `${item.quantity} left`}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className={`${styles.lowStockQuantity} ${item.quantity === 0 ? styles.outOfStock : ''}`}>
-                    {item.quantity === 0 ? 'OUT OF STOCK' : `${item.quantity} left`}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}

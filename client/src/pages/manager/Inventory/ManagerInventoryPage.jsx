@@ -127,49 +127,90 @@ const ManagerInventoryPage = () => {
                         />
                     </div>
 
-                    {/* TABLE */}
-                    <div className={styles.tableWrapper}>
-                        <table className={styles.table}>
-                            <thead className={styles.thead}>
-                                <tr>
-                                    <th>Product ID</th>
-                                    <th>Product Name</th>
-                                    <th>Model No.</th>
-                                    <th>Company</th>
-                                    <th>Quantity</th>
-                                    <th>Last Updated</th>
-                                </tr>
-                            </thead>
+                    {/* INVENTORY CARD GRID */}
+                    {currentItems.length === 0 ? (
+                        <div className={styles.emptyState}>No inventory found.</div>
+                    ) : (
+                        <div className={styles.invCardGrid}>
+                            {currentItems.map((item, idx) => {
+                                const isOut = item.quantity === 0;
+                                const isLow = !isOut && item.quantity < LOW_STOCK_THRESHOLD;
+                                const isHealthy = !isOut && !isLow;
 
-                            <tbody>
-                                {currentItems.length === 0 ? (
-                                    <tr>
-                                        <td colSpan="6" className={styles.emptyState}>
-                                            No inventory found.
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    currentItems.map((item) => (
-                                        <tr key={item._id} className={`${styles.tr} ${item.quantity < LOW_STOCK_THRESHOLD ? styles.lowStockRow : ''}`}>
-                                            <td>{item.product_id}</td>
-                                            <td>{item.product_name}</td>
-                                            <td>{item.model_no}</td>
-                                            <td>{item.company_name}</td>
-                                            <td>
-                                                <span className={item.quantity < LOW_STOCK_THRESHOLD ? styles.lowStockQty : ''}>
-                                                    {item.quantity}
-                                                    {item.quantity < LOW_STOCK_THRESHOLD && (
-                                                        <span className={styles.lowStockBadge}> LOW</span>
-                                                    )}
-                                                </span>
-                                            </td>
-                                            <td>{new Date(item.updatedAt).toLocaleDateString()}</td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                const accentGradient = isOut
+                                    ? 'linear-gradient(90deg,#dc2626,#f87171)'
+                                    : isLow
+                                    ? 'linear-gradient(90deg,#d97706,#fbbf24)'
+                                    : 'linear-gradient(90deg,#059669,#34d399)';
+
+                                const avatarGradient = isOut
+                                    ? 'linear-gradient(135deg,#dc2626,#f87171)'
+                                    : isLow
+                                    ? 'linear-gradient(135deg,#d97706,#fbbf24)'
+                                    : 'linear-gradient(135deg,#059669,#34d399)';
+
+                                const stockPct = isOut ? 0 : Math.min(100, Math.max(6, (item.quantity / 50) * 100));
+                                const initial = (item.product_name?.[0] || '?').toUpperCase();
+
+                                return (
+                                    <div
+                                        key={item._id}
+                                        className={styles.invCard}
+                                        style={{ animationDelay: `${idx * 0.045}s` }}
+                                    >
+                                        {/* Status accent stripe */}
+                                        <div className={styles.invCardAccent} style={{ background: accentGradient }} />
+
+                                        <div className={styles.invCardBody}>
+                                            {/* Header: avatar + name + company */}
+                                            <div className={styles.invCardHeader}>
+                                                <div className={styles.invAvatar} style={{ background: avatarGradient }}>
+                                                    {initial}
+                                                </div>
+                                                <div className={styles.invMeta}>
+                                                    <div className={styles.invProductName}>{item.product_name}</div>
+                                                    <div className={styles.invCompany}>{item.company_name}</div>
+                                                </div>
+                                            </div>
+
+                                            {/* Model + ID row */}
+                                            <div className={styles.invModelRow}>
+                                                <span className={styles.invModelLabel}>MODEL</span>
+                                                <span className={styles.invModelValue}>{item.model_no || '—'}</span>
+                                                <span className={styles.invIdBadge}>#{item.product_id}</span>
+                                            </div>
+
+                                            {/* Stock meter */}
+                                            <div className={styles.invStockSection}>
+                                                <div className={styles.invStockRow}>
+                                                    <span className={styles.invStockLabel}>STOCK LEVEL</span>
+                                                    <span className={`${styles.invStockValue} ${isLow ? styles.invStockLow : ''} ${isOut ? styles.invStockOut : ''}`}>
+                                                        {item.quantity}
+                                                        {isLow && <span className={styles.invLowBadge}>LOW</span>}
+                                                        {isOut && <span className={styles.invOutBadge}>OUT</span>}
+                                                    </span>
+                                                </div>
+                                                <div className={styles.invMeterTrack}>
+                                                    <div
+                                                        className={styles.invMeterFill}
+                                                        style={{ width: `${stockPct}%`, background: accentGradient }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Footer */}
+                                        <div className={styles.invCardFooter}>
+                                            <span className={styles.invUpdatedLabel}>Last updated</span>
+                                            <span className={styles.invUpdatedDate}>
+                                                {new Date(item.updatedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                            </span>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
 
                     {/* PAGINATION CONTROLS */}
                     {filteredInventory.length > 0 && (
