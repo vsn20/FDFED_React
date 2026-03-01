@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../../../api/api'; // Path remains 3 levels up
+import api from '../../../api/api'; 
 import styles from './Salaries.module.css';
 
 const Salaries = () => {
@@ -12,7 +12,6 @@ const Salaries = () => {
   const fetchSalary = async (monthYear = '') => {
     try {
       setLoading(true);
-      // Construct URL query
       const url = monthYear 
         ? `/salesman/salaries?monthYear=${monthYear}` 
         : '/salesman/salaries';
@@ -23,7 +22,6 @@ const Salaries = () => {
         setSalaryData(res.data.data);
         setOptions(res.data.monthYearOptions);
         
-        // Update selected month if provided or returned by API
         if (monthYear) {
              setSelectedMonth(monthYear);
         } else if (res.data.selectedMonthYear) {
@@ -51,7 +49,7 @@ const Salaries = () => {
   };
 
   if (loading && !salaryData) {
-    return <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>;
+    return <div className={styles.loading}>Loading...</div>;
   }
 
   return (
@@ -111,7 +109,7 @@ const Salaries = () => {
                 )}
              </div>
         ) : (
-            <p style={{ textAlign: 'center', marginTop: '20px' }}>No salary data available.</p>
+            <p className={styles.noData}>No salary data available.</p>
         )}
       </div>
     </div>

@@ -1,69 +1,113 @@
+/* Inventory.module.css – teal/slate theme */
+
+/* ── Page wrapper ── */
 .container {
-    padding: 20px;
-    width: 100%;
+    min-height: calc(100vh - 130px);
+    background: linear-gradient(160deg, #f0f9ff 0%, #f8fafc 55%, #f0fdf4 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 24px 20px 40px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 16px;
 }
 
+/* ── Card ── */
 .contentArea {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1200px;
+    background: #ffffff;
+    border-radius: 28px;
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.04),
+        0 16px 48px rgba(15, 118, 110, 0.10);
+    padding: 36px 40px 44px;
+    animation: slideUp 0.4s ease;
 }
 
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Header ── */
 .headerContainer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 14px;
 }
 
 .headerContainer h1 {
-    font-size: 24px;
-    color: #333;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: #0f172a;
     margin: 0;
 }
 
+/* ── Search input ── */
 .searchContainer input {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    padding: 9px 14px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 50px;
     width: 300px;
-    font-size: 14px;
+    font-size: 0.88rem;
+    color: #0f172a;
+    background: #fff;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+.searchContainer input:focus {
+    border-color: #0f766e;
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+}
+
+.searchContainer input::placeholder {
+    color: #94a3b8;
+}
+
+/* ── Branch Info ── */
 .branchInfo {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 16px 22px;
+    margin-bottom: 22px;
     display: flex;
-    gap: 30px;
-    border: 1px solid #e9ecef;
+    gap: 36px;
+    flex-wrap: wrap;
 }
 
 .infoGroup {
     display: flex;
     flex-direction: column;
+    gap: 3px;
 }
 
 .infoLabel {
-    font-size: 12px;
-    color: #6c757d;
+    font-size: 0.72rem;
+    color: #64748b;
     font-weight: 600;
     text-transform: uppercase;
-    margin-bottom: 4px;
+    letter-spacing: 0.5px;
 }
 
 .infoValue {
-    font-size: 16px;
-    color: #212529;
-    font-weight: 500;
+    font-size: 0.95rem;
+    color: #0f172a;
+    font-weight: 600;
 }
 
+/* ── Table ── */
 .tableWrapper {
     overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 12px rgba(15, 118, 110, 0.06);
 }
 
 .table {
@@ -72,35 +116,105 @@
     min-width: 600px;
 }
 
-.table th {
-    background-color: #333;
-    color: white;
-    padding: 12px 15px;
+.table th,
+.table td {
+    padding: 13px 16px;
     text-align: left;
-    font-weight: 500;
-    font-size: 14px;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.table thead tr {
+    background: linear-gradient(135deg, #0f766e, #0d9488);
+}
+
+.table th {
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+    background: #fff;
+    transition: background 0.15s;
+}
+
+.table tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.table tbody tr:hover {
+    background: #f0fdfa;
+    cursor: default;
 }
 
 .table td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #eee;
-    color: #333;
-    font-size: 14px;
+    color: #334155;
+    font-weight: 500;
 }
 
-.table tr:hover {
-    background-color: #f8f9fa;
-}
-
-.loading, .errorMessage, .noData {
+/* ── States ── */
+.loading {
     text-align: center;
-    padding: 20px;
-    font-size: 16px;
+    padding: 40px;
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.noData {
+    text-align: center;
+    padding: 32px;
+    color: #94a3b8;
+    font-style: italic;
 }
 
 .errorMessage {
-    color: #dc3545;
-    background-color: #f8d7da;
-    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+    border-radius: 14px;
+    padding: 12px 18px;
+    font-size: 0.88rem;
+    font-weight: 500;
     margin-bottom: 20px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .headerContainer { flex-direction: column; align-items: stretch; }
+    .searchContainer input { width: 100%; }
+    .branchInfo { gap: 20px; }
+
+    .table thead { display: none; }
+    .table tbody tr {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 14px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 12px;
+        background: #fff;
+    }
+    .table td {
+        display: flex;
+        justify-content: space-between;
+        padding: 7px 0;
+        border-bottom: 1px dashed #e2e8f0;
+        font-size: 0.85rem;
+    }
+    .table td:last-child { border-bottom: none; }
+    .table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #64748b;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        margin-right: 8px;
+        min-width: 100px;
+    }
 }

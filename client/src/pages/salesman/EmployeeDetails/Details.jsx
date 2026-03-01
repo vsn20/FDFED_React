@@ -16,27 +16,33 @@ const Details = () => {
         address: '',
         baseSalary: 0,
     });
+    const [originalData, setOriginalData] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
     const [notFound, setNotFound] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+
+    const buildFormData = (data) => ({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        status: data.status.toLowerCase(),
+        email: data.email,
+        phoneNumber: data.phoneNumber || '',
+        accountNumber: data.accountNumber,
+        ifsc: data.ifsc,
+        bank: data.bank,
+        address: data.address || '',
+        baseSalary: data.monthlySalary || 0,
+    });
 
     useEffect(() => {
         const fetchSalesman = async () => {
             try {
                 const res = await api.get('/salesman/profile');
                 setSalesman(res.data);
-                setFormData({
-                    firstName: res.data.firstName,
-                    lastName: res.data.lastName,
-                    status: res.data.status.toLowerCase(),
-                    email: res.data.email,
-                    phoneNumber: res.data.phoneNumber || '',
-                    accountNumber: res.data.accountNumber,
-                    ifsc: res.data.ifsc,
-                    bank: res.data.bank,
-                    address: res.data.address || '',
-                    baseSalary: res.data.monthlySalary || 0,
-                });
+                const built = buildFormData(res.data);
+                setFormData(built);
+                setOriginalData(built);
             } catch (err) {
                 console.error("Error fetching salesman details:", err);
                 setNotFound(true);
@@ -50,6 +56,20 @@ const Details = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleEdit = () => {
+        setOriginalData({ ...formData });
+        setSuccessMessage('');
+        setErrorMessage('');
+        setIsEditing(true);
+    };
+
+    const handleCancel = () => {
+        setFormData({ ...originalData });
+        setSuccessMessage('');
+        setErrorMessage('');
+        setIsEditing(false);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -61,18 +81,10 @@ const Details = () => {
             setErrorMessage('');
             const updatedRes = await api.get('/salesman/profile');
             setSalesman(updatedRes.data);
-            setFormData({
-                firstName: updatedRes.data.firstName,
-                lastName: updatedRes.data.lastName,
-                status: updatedRes.data.status.toLowerCase(),
-                email: updatedRes.data.email,
-                phoneNumber: updatedRes.data.phoneNumber || '',
-                accountNumber: updatedRes.data.accountNumber,
-                ifsc: updatedRes.data.ifsc,
-                bank: updatedRes.data.bank,
-                address: updatedRes.data.address || '',
-                baseSalary: updatedRes.data.monthlySalary || 0,
-            });
+            const built = buildFormData(updatedRes.data);
+            setFormData(built);
+            setOriginalData(built);
+            setIsEditing(false);
         } catch (err) {
             console.error("Error updating salesman details:", err);
             setErrorMessage(err.response?.data?.message || "Failed to update salesman details");
@@ -80,36 +92,92 @@ const Details = () => {
         }
     };
 
+    const statusColors = {
+        active: styles.statusActive,
+        resigned: styles.statusResigned,
+        fired: styles.statusFired,
+    };
+
     if (notFound) {
-        return <div className={styles.errorMessage}>Salesman not found.</div>;
+        return (
+            <div className={styles.centeredError}>
+                <div className={styles.errorBubble}>Employee record not found.</div>
+            </div>
+        );
     }
 
     if (!salesman) {
-        return <div>Loading...</div>;
+        return (
+            <div className={styles.loadingWrapper}>
+                <div className={styles.spinner}></div>
+                <p>Loading profile…</p>
+            </div>
+        );
     }
 
     return (
         <div className={styles.container}>
             <div className={styles.contentArea}>
-                <h1>Employee Details</h1>
-                {successMessage && <p className={styles.successMessage}>{successMessage}</p>}
-                {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
-                <div className={styles.formContainer}>
-                    <div className={styles.formWrapper}>
-                        <div className={styles.formSection}>
-                            <h2 className={styles.sectionTitle}>Personal Details</h2>
-                            <div className={styles.fieldGroup}>
-                                <div>
-                                    <label className={styles.fieldLabel}>Salesman ID</label>
-                                    <input
-                                        className={`${styles.fieldInput} ${styles.disabledField}`}
-                                        type="text"
-                                        value={salesman.salesmanId}
-                                        disabled
-                                    />
-                                </div>
-                                <div>
-                                    <label className={styles.fieldLabel}>First Name</label>
+
+                {/* ── Header Row ── */}
+                <div className={styles.pageHeader}>
+                    <div className={styles.avatarBlock}>
+                        <div className={styles.avatar}>
+                            {formData.firstName.charAt(0)}{formData.lastName.charAt(0)}
+                        </div>
+                        <div>
+                            <h1 className={styles.profileName}>
+                                {formData.firstName} {formData.lastName}
+                            </h1>
+                            <span className={`${styles.statusBadge} ${statusColors[formData.status] || ''}`}>
+                                {formData.status.charAt(0).toUpperCase() + formData.status.slice(1)}
+                            </span>
+                        </div>
+                    </div>
+
+                    {!isEditing ? (
+                        <button className={styles.editButton} onClick={handleEdit}>
+                            ✏️ Edit Profile
+                        </button>
+                    ) : (
+                        <div className={styles.actionButtons}>
+                            <button className={styles.cancelButton} onClick={handleCancel}>
+                                ✕ Cancel
+                            </button>
+                            <button className={styles.saveButton} onClick={handleSubmit}>
+                                ✔ Save Changes
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                {/* ── Alerts ── */}
+                {successMessage && (
+                    <div className={styles.alertSuccess}>✅ {successMessage}</div>
+                )}
+                {errorMessage && (
+                    <div className={styles.alertError}>⚠️ {errorMessage}</div>
+                )}
+
+                {/* ── Sections ── */}
+                <div className={styles.sectionsGrid}>
+
+                    {/* Personal Details */}
+                    <div className={styles.card}>
+                        <div className={styles.cardHeader}>
+                            <span className={styles.cardIcon}>👤</span>
+                            <h2 className={styles.cardTitle}>Personal Details</h2>
+                        </div>
+                        <div className={styles.fieldGroup}>
+
+                            <div className={`${styles.fieldItem} ${isEditing ? styles.lockedItem : ''}`}>
+                                <label className={styles.fieldLabel}>Salesman ID</label>
+                                <div className={styles.readValue}>{salesman.salesmanId}</div>
+                            </div>
+
+                            <div className={styles.fieldItem}>
+                                <label className={styles.fieldLabel}>First Name</label>
+                                {isEditing ? (
                                     <input
                                         className={styles.fieldInput}
                                         type="text"
@@ -118,9 +186,14 @@ const Details = () => {
                                         onChange={handleChange}
                                         required
                                     />
-                                </div>
-                                <div>
-                                    <label className={styles.fieldLabel}>Last Name</label>
+                                ) : (
+                                    <div className={styles.readValue}>{formData.firstName}</div>
+                                )}
+                            </div>
+
+                            <div className={styles.fieldItem}>
+                                <label className={styles.fieldLabel}>Last Name</label>
+                                {isEditing ? (
                                     <input
                                         className={styles.fieldInput}
                                         type="text"
@@ -129,18 +202,19 @@ const Details = () => {
                                         onChange={handleChange}
                                         required
                                     />
-                                </div>
-                                <div>
-                                    <label className={styles.fieldLabel}>Role</label>
-                                    <input
-                                        className={`${styles.fieldInput} ${styles.disabledField}`}
-                                        type="text"
-                                        value={salesman.role}
-                                        disabled
-                                    />
-                                </div>
-                                <div>
-                                    <label className={styles.fieldLabel}>Status</label>
+                                ) : (
+                                    <div className={styles.readValue}>{formData.lastName}</div>
+                                )}
+                            </div>
+
+                            <div className={`${styles.fieldItem} ${isEditing ? styles.lockedItem : ''}`}>
+                                <label className={styles.fieldLabel}>Role</label>
+                                <div className={styles.readValue}>{salesman.role}</div>
+                            </div>
+
+                            <div className={styles.fieldItem}>
+                                <label className={styles.fieldLabel}>Status</label>
+                                {isEditing ? (
                                     <select
                                         className={styles.fieldInput}
                                         name="status"
@@ -151,28 +225,28 @@ const Details = () => {
                                         <option value="resigned">Resigned</option>
                                         <option value="fired">Fired</option>
                                     </select>
-                                </div>
-                                <div>
-                                    <label className={styles.fieldLabel}>Branch Name</label>
-                                    <input
-                                        className={`${styles.fieldInput} ${styles.disabledField}`}
-                                        type="text"
-                                        value={salesman.branch}
-                                        disabled
-                                    />
-                                </div>
-                                <div>
-                                    <label className={styles.fieldLabel}>Email</label>
-                                    <input
-                                        className={`${styles.fieldInput} ${styles.disabledField}`}
-                                        type="email"
-                                        name="email"
-                                        value={formData.email}
-                                        disabled
-                                    />
-                                </div>
-                                <div>
-                                    <label className={styles.fieldLabel}>Phone Number</label>
+                                ) : (
+                                    <div className={styles.readValue}>
+                                        <span className={`${styles.statusBadgeSmall} ${statusColors[formData.status] || ''}`}>
+                                            {formData.status.charAt(0).toUpperCase() + formData.status.slice(1)}
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className={`${styles.fieldItem} ${isEditing ? styles.lockedItem : ''}`}>
+                                <label className={styles.fieldLabel}>Branch Name</label>
+                                <div className={styles.readValue}>{salesman.branch}</div>
+                            </div>
+
+                            <div className={`${styles.fieldItem} ${isEditing ? styles.lockedItem : ''}`}>
+                                <label className={styles.fieldLabel}>Email</label>
+                                <div className={styles.readValue}>{formData.email}</div>
+                            </div>
+
+                            <div className={styles.fieldItem}>
+                                <label className={styles.fieldLabel}>Phone Number</label>
+                                {isEditing ? (
                                     <input
                                         className={styles.fieldInput}
                                         type="text"
@@ -180,89 +254,73 @@ const Details = () => {
                                         value={formData.phoneNumber}
                                         onChange={handleChange}
                                         pattern="[0-9]{10}"
+                                        placeholder="10-digit number"
                                     />
-                                </div>
+                                ) : (
+                                    <div className={styles.readValue}>{formData.phoneNumber || '—'}</div>
+                                )}
                             </div>
-                        </div>
 
-                        <div className={styles.formSection}>
-                            <h2 className={styles.sectionTitle}>Account and Salaries</h2>
-                            <div className={styles.fieldGroup}>
-                                <div>
-                                    <label className={styles.fieldLabel}>Registration Date</label>
-                                    <input
-                                        className={`${styles.fieldInput} ${styles.disabledField}`}
-                                        type="text"
-                                        value={salesman.formattedRegistrationDate}
-                                        disabled
-                                    />
-                                </div>
-                                <div>
-                                    <label className={styles.fieldLabel}>Account Number</label>
-                                    <input
-                                        className={`${styles.fieldInput} ${styles.disabledField}`}
-                                        type="text"
-                                        name="accountNumber"
-                                        value={formData.accountNumber}
-                                        disabled
-                                    />
-                                </div>
-                                <div>
-                                    <label className={styles.fieldLabel}>IFSC Code</label>
-                                    <input
-                                        className={`${styles.fieldInput} ${styles.disabledField}`}
-                                        type="text"
-                                        name="ifsc"
-                                        value={formData.ifsc}
-                                        disabled
-                                    />
-                                </div>
-                                <div>
-                                    <label className={styles.fieldLabel}>Bank</label>
-                                    <input
-                                        className={`${styles.fieldInput} ${styles.disabledField}`}
-                                        type="text"
-                                        name="bank"
-                                        value={formData.bank}
-                                        disabled
-                                    />
-                                </div>
-                                <div>
-                                    <label className={styles.fieldLabel}>Hire Date</label>
-                                    <input
-                                        className={`${styles.fieldInput} ${styles.disabledField}`}
-                                        type="text"
-                                        value={salesman.formattedHireDate}
-                                        disabled
-                                    />
-                                </div>
-                                <div>
-                                    <label className={styles.fieldLabel}>Monthly Salary</label>
-                                    <input
-                                        className={`${styles.fieldInput} ${styles.disabledField}`}
-                                        type="number"
-                                        name="baseSalary"
-                                        value={formData.baseSalary}
-                                        disabled
-                                    />
-                                </div>
-                                <div>
-                                    <label className={styles.fieldLabel}>Address</label>
+                        </div>
+                    </div>
+
+                    {/* Account & Salary */}
+                    <div className={styles.card}>
+                        <div className={styles.cardHeader}>
+                            <span className={styles.cardIcon}>💳</span>
+                            <h2 className={styles.cardTitle}>Account & Salary</h2>
+                        </div>
+                        <div className={styles.fieldGroup}>
+
+                            <div className={`${styles.fieldItem} ${isEditing ? styles.lockedItem : ''}`}>
+                                <label className={styles.fieldLabel}>Registration Date</label>
+                                <div className={styles.readValue}>{salesman.formattedRegistrationDate}</div>
+                            </div>
+
+                            <div className={`${styles.fieldItem} ${isEditing ? styles.lockedItem : ''}`}>
+                                <label className={styles.fieldLabel}>Hire Date</label>
+                                <div className={styles.readValue}>{salesman.formattedHireDate}</div>
+                            </div>
+
+                            <div className={`${styles.fieldItem} ${isEditing ? styles.lockedItem : ''}`}>
+                                <label className={styles.fieldLabel}>Account Number</label>
+                                <div className={styles.readValue}>{formData.accountNumber}</div>
+                            </div>
+
+                            <div className={`${styles.fieldItem} ${isEditing ? styles.lockedItem : ''}`}>
+                                <label className={styles.fieldLabel}>IFSC Code</label>
+                                <div className={styles.readValue}>{formData.ifsc}</div>
+                            </div>
+
+                            <div className={`${styles.fieldItem} ${isEditing ? styles.lockedItem : ''}`}>
+                                <label className={styles.fieldLabel}>Bank</label>
+                                <div className={styles.readValue}>{formData.bank}</div>
+                            </div>
+
+                            <div className={`${styles.fieldItem} ${isEditing ? styles.lockedItem : ''}`}>
+                                <label className={styles.fieldLabel}>Monthly Salary</label>
+                                <div className={styles.readValue}>₹ {Number(formData.baseSalary).toLocaleString('en-IN')}</div>
+                            </div>
+
+                            <div className={`${styles.fieldItem} ${styles.fullWidth}`}>
+                                <label className={styles.fieldLabel}>Address</label>
+                                {isEditing ? (
                                     <input
                                         className={styles.fieldInput}
                                         type="text"
                                         name="address"
                                         value={formData.address}
                                         onChange={handleChange}
+                                        placeholder="Enter your address"
                                     />
-                                </div>
+                                ) : (
+                                    <div className={styles.readValue}>{formData.address || '—'}</div>
+                                )}
                             </div>
-                        </div>
 
-                        <button className={styles.submitButton} onClick={handleSubmit}>
-                            Update Details
-                        </button>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
