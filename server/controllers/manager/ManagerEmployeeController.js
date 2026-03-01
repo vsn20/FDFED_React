@@ -1,6 +1,7 @@
 const Employee = require("../../models/employees");
 const User = require("../../models/User");
 const Branch = require("../../models/branches");
+const Sale = require("../../models/sale");
 
 exports.getEmployees = async (req, res) => {
   try {
@@ -48,6 +49,31 @@ exports.getEmployees = async (req, res) => {
       role: "salesman"
     }).lean(); // Use .lean() for faster query if needed
 
+    // Get current month date range for sales count
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+    // Aggregate sales count per salesman for the current month
+    const salesCounts = await Sale.aggregate([
+      {
+        $match: {
+          branch_id: bid,
+          sales_date: { $gte: startOfMonth, $lt: endOfMonth },
+          salesman_id: { $in: employees.map(e => e.e_id) }
+        }
+      },
+      {
+        $group: {
+          _id: "$salesman_id",
+          salesCount: { $sum: 1 },
+          totalRevenue: { $sum: { $multiply: ["$sold_price", "$quantity"] } }
+        }
+      }
+    ]);
+
+    const salesMap = new Map(salesCounts.map(s => [s._id, { salesCount: s.salesCount, totalRevenue: s.totalRevenue }]));
+
     // ENHANCED DEBUG: Log count per status
     const statusCounts = employees.reduce((acc, emp) => {
       acc[emp.status] = (acc[emp.status] || 0) + 1;
@@ -56,11 +82,17 @@ exports.getEmployees = async (req, res) => {
     console.log('Status counts in branch:', statusCounts);
     console.log('All fetched employees:', employees.map(emp => ({ e_id: emp.e_id, status: emp.status, bid: emp.bid })));
 
-    const mappedEmployees = employees.map(emp => ({
-      ...emp,
-      branch_name: branchMap.get(emp.bid) || 'Not Assigned',
-      formattedHireDate: emp.hiredAt ? new Date(emp.hiredAt).toLocaleDateString() : 'N/A'
-    }));
+    const mappedEmployees = employees.map(emp => {
+      const salesData = salesMap.get(emp.e_id) || { salesCount: 0, totalRevenue: 0 };
+      return {
+        ...emp,
+        branch_name: branchMap.get(emp.bid) || 'Not Assigned',
+        formattedHireDate: emp.hiredAt ? new Date(emp.hiredAt).toLocaleDateString() : 'N/A',
+        monthlySalesCount: salesData.salesCount,
+        monthlyRevenue: salesData.totalRevenue,
+        base_salary: emp.base_salary || 0
+      };
+    });
 
     console.log('Returning', mappedEmployees.length, 'employees');
 

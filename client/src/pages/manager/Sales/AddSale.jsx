@@ -13,6 +13,7 @@ const AddSale = ({ handleBack }) => {
         saledate: new Date().toISOString().split('T')[0],
         unique_code: '',
         phone_number: '',
+        customer_email: '',
         address: '',
         company_id: '',
         product_id: '',
@@ -100,6 +101,9 @@ const AddSale = ({ handleBack }) => {
                 // Allows optional '+' followed by 10 to 15 digits
                 if (!value) message = 'Phone number is required.';
                 else if (!/^\+?\d{10,15}$/.test(value)) message = 'Invalid phone number format (10 digits).';
+                break;
+            case 'customer_email':
+                if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) message = 'Please enter a valid email address.';
                 break;
             case 'company_id':
                 if (!value) message = 'Please select a company.';
@@ -264,6 +268,19 @@ const AddSale = ({ handleBack }) => {
                             {validationErrors.phone_number && <span className={styles.validationError}>{validationErrors.phone_number}</span>}
                         </div>
                         <div>
+                            <label className={styles.fieldLabel}>Customer Email</label>
+                            <input 
+                                type="email" 
+                                name="customer_email" 
+                                value={formData.customer_email} 
+                                onChange={handleChange} 
+                                placeholder="customer@example.com"
+                                className={getFieldClassName('customer_email')}
+                                aria-invalid={!!validationErrors.customer_email}
+                            />
+                            {validationErrors.customer_email && <span className={styles.validationError}>{validationErrors.customer_email}</span>}
+                        </div>
+                        <div>
                             <label className={styles.fieldLabel}>Address</label>
                             <input type="text" name="address" value={formData.address} onChange={handleChange} className={styles.fieldInput} />
                         </div>
@@ -360,6 +377,15 @@ const AddSale = ({ handleBack }) => {
                                 aria-invalid={!!validationErrors.quantity}
                             />
                             {validationErrors.quantity && <span className={styles.validationError}>{validationErrors.quantity}</span>}
+                        </div>
+                        <div>
+                            <label className={styles.fieldLabel}>Total Price</label>
+                            <input 
+                                type="text" 
+                                value={formData.sold_price && formData.quantity ? `₹${(parseFloat(formData.sold_price) * parseInt(formData.quantity)).toLocaleString('en-IN')}` : '₹0'} 
+                                readOnly 
+                                className={`${styles.fieldInput} ${styles.disabledField}`} 
+                            />
                         </div>
                     </div>
                 </div>

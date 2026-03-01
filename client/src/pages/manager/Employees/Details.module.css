@@ -239,6 +239,153 @@
   display: block; /* Ensure it takes up its own line */
 }
 
+/* ---------------- LOW STOCK ALERT BANNER ---------------- */
+.lowStockBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  background: linear-gradient(135deg, #fff3cd, #ffeeba);
+  border: 1px solid #f0c36d;
+  border-left: 5px solid #e67e22;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 18px;
+  animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.lowStockBannerContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+  color: #856404;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.lowStockIcon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.lowStockNames {
+  display: block;
+  margin-top: 4px;
+  font-weight: 600;
+  color: #6d3a00;
+}
+
+/* ---------------- SORT CONTROLS ---------------- */
+.sortControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.sortLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2d3436;
+}
+
+.sortSelect {
+  padding: 8px 14px;
+  border: 1px solid #dcdfe6;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  background: #fdfdfd;
+  cursor: pointer;
+  min-width: 180px;
+  transition: border-color 0.3s;
+}
+
+.sortSelect:focus {
+  border-color: #333;
+  box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.12);
+  outline: none;
+}
+
+.sortOrderBtn {
+  padding: 8px 16px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  min-width: 80px;
+}
+
+.sortOrderBtn:hover {
+  background: #555;
+  transform: translateY(-1px);
+}
+
+/* ---------------- SALES & STATUS BADGES ---------------- */
+.salesBadge {
+  display: inline-block;
+  background: #d4edda;
+  color: #155724;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  min-width: 30px;
+  text-align: center;
+}
+
+.zeroSalesBadge {
+  display: inline-block;
+  background: #f8d7da;
+  color: #721c24;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  min-width: 30px;
+  text-align: center;
+}
+
+.statusActive {
+  color: #155724;
+  background: #d4edda;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.statusFired {
+  color: #721c24;
+  background: #f8d7da;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.statusResigned {
+  color: #856404;
+  background: #fff3cd;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
 /* ---------------- RESPONSIVE ---------------- */
 @media (max-width: 768px) {
   /* Removed margin-left: 0; as contentArea is now centered */
@@ -246,4 +393,8 @@
   .searchInput { width: 100%; }
   .pageButton, .addButton { width: 100%; }
   .fieldGroup > div { flex: 1 1 100%; }
+  .lowStockBanner { flex-direction: column; align-items: flex-start; }
+  .sortControls { flex-direction: column; align-items: flex-start; }
+  .sortSelect { width: 100%; }
+  .sortOrderBtn { width: 100%; }
 }

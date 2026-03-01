@@ -28,6 +28,7 @@ const AddSale = () => {
     sold_price: '',
     quantity: 1,
     phone_number: '',
+    customer_email: '',
     address: '',
     installation: '',
     installationType: '',
@@ -181,6 +182,10 @@ const AddSale = () => {
       case 'phone_number':
         if (value && !/^\d{10}$/.test(value)) error = 'Phone number must be exactly 10 digits';
         break;
+
+      case 'customer_email':
+        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) error = 'Please enter a valid email address';
+        break;
         
       case 'address':
         if (!value) error = 'Address is required';
@@ -294,6 +299,19 @@ const AddSale = () => {
                 {errors.phone_number && <p className={styles.fieldError}>{errors.phone_number}</p>}
               </div>
               <div className={styles.fieldItem}>
+                <label className={styles.fieldLabel}>Customer Email</label>
+                <input
+                  className={styles.fieldInput}
+                  type="email"
+                  name="customer_email"
+                  value={formData.customer_email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="customer@example.com"
+                />
+                {errors.customer_email && <p className={styles.fieldError}>{errors.customer_email}</p>}
+              </div>
+              <div className={styles.fieldItem}>
                 <label className={styles.fieldLabel}>Address *</label>
                 <input
                   className={styles.fieldInput}
@@ -385,6 +403,15 @@ const AddSale = () => {
                   min="1"
                 />
                 {errors.quantity && <p className={styles.fieldError}>{errors.quantity}</p>}
+              </div>
+              <div className={styles.fieldItem}>
+                <label className={styles.fieldLabel}>Total Price</label>
+                <input
+                  className={`${styles.fieldInput} ${styles.disabledField}`}
+                  type="text"
+                  value={formData.sold_price && formData.quantity ? `₹${(parseInt(formData.sold_price) * parseInt(formData.quantity)).toLocaleString('en-IN')}` : '₹0'}
+                  readOnly
+                />
               </div>
             </div>
           </div>

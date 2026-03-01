@@ -6,6 +6,7 @@ const Product = require("../../models/products");
 const Branch = require("../../models/branches");
 const Inventory = require("../../models/inventory");
 const User = require("../../models/User");
+const sendInvoiceEmail = require("../../utils/invoiceMailer");
 
 // --- HELPER: Get Manager & Branch ID Safely ---
 const getManagerDetails = async (req) => {
@@ -159,6 +160,7 @@ exports.addSale = async (req, res) => {
       sold_price,
       quantity,
       phone_number,
+      customer_email,
       address,
       installation,
       installationType,
@@ -223,6 +225,7 @@ exports.addSale = async (req, res) => {
       amount,
       profit_or_loss,
       phone_number,
+      customer_email: customer_email || null,
       address,
       installation,
       installationType,
@@ -232,6 +235,35 @@ exports.addSale = async (req, res) => {
 
     await newSale.save({ session });
     await session.commitTransaction();
+
+    // Fetch extra details for the invoice email
+    const branch = await Branch.findOne({ bid: branchId }).lean();
+
+    // Send invoice email to customer (non-blocking)
+    if (customer_email) {
+      sendInvoiceEmail({
+        sales_id,
+        customer_name,
+        customer_email,
+        phone_number,
+        address,
+        sales_date: saledate,
+        unique_code: unique_code || `UC${String(count).padStart(3, '0')}`,
+        product_name: product.Prod_name,
+        model_number: product.Model_no,
+        company_name: company.cname,
+        branch_name: branch ? branch.b_name : "N/A",
+        salesman_name: `${salesmanDoc.f_name} ${salesmanDoc.last_name}`,
+        sold_price: parseFloat(sold_price),
+        quantity: qty,
+        amount,
+        installation,
+        installationType,
+        installationcharge,
+        warrantyperiod: product.warrantyperiod || ""
+      });
+    }
+
     res.json({ success: true, message: "Sale added successfully", sale: newSale });
 
   } catch (error) {

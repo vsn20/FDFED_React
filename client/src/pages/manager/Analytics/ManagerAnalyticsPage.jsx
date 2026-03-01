@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../../api/api'; // Assuming your configured axios instance
 import styles from './ManagerAnalytics.module.css'; 
 
+const LOW_STOCK_THRESHOLD = 10;
+
 const ManagerAnalyticsPage = () => {
     const [dashboardData, setDashboardData] = useState({
         cumulativeProfit: null,
@@ -10,6 +12,7 @@ const ManagerAnalyticsPage = () => {
         previousMonthName: '',
         months: [], // For the dropdown
     });
+    const [lowStockItems, setLowStockItems] = useState([]);
     const [selectedMonthProfit, setSelectedMonthProfit] = useState('Select a month to view profit');
     const [profitStatus, setProfitStatus] = useState('na'); // 'na', 'profit', 'error'
     const [loading, setLoading] = useState(true);
@@ -42,6 +45,17 @@ const ManagerAnalyticsPage = () => {
         }
     }, []);
 
+    // 1.5 Fetch inventory to check for low stock items
+    const fetchLowStockItems = useCallback(async () => {
+        try {
+            const res = await api.get('/manager/inventory');
+            const allItems = res.data.data || [];
+            setLowStockItems(allItems.filter(item => item.quantity < LOW_STOCK_THRESHOLD));
+        } catch (err) {
+            console.error("Error fetching low stock data:", err);
+        }
+    }, []);
+
     // 2. Fetch specific monthly profit when a month is selected
     const fetchMonthlyProfit = useCallback(async (monthKey) => {
         if (!monthKey) {
@@ -69,7 +83,8 @@ const ManagerAnalyticsPage = () => {
 
     useEffect(() => {
         fetchDashboardData();
-    }, [fetchDashboardData]);
+        fetchLowStockItems();
+    }, [fetchDashboardData, fetchLowStockItems]);
     
     // Trigger monthly profit fetch when dropdown value changes
     useEffect(() => {
@@ -108,6 +123,32 @@ const ManagerAnalyticsPage = () => {
                 </p>
 
                 {error && <div className={styles.error}>{error}</div>}
+
+                {/* LOW STOCK ALERT SECTION */}
+                {lowStockItems.length > 0 && (
+                    <div className={styles.lowStockAlert}>
+                        <div className={styles.lowStockHeader}>
+                            <span className={styles.lowStockIcon}>⚠️</span>
+                            <h2>Low Stock Alert — {lowStockItems.length} Product{lowStockItems.length > 1 ? 's' : ''}</h2>
+                        </div>
+                        <p className={styles.lowStockSubtext}>
+                            The following products have stock below {LOW_STOCK_THRESHOLD} units and need restocking:
+                        </p>
+                        <div className={styles.lowStockList}>
+                            {lowStockItems.map((item) => (
+                                <div key={item._id} className={styles.lowStockItem}>
+                                    <div className={styles.lowStockProductInfo}>
+                                        <span className={styles.lowStockProductName}>{item.product_name}</span>
+                                        <span className={styles.lowStockCompany}>{item.company_name} • {item.model_no}</span>
+                                    </div>
+                                    <div className={`${styles.lowStockQuantity} ${item.quantity === 0 ? styles.outOfStock : ''}`}>
+                                        {item.quantity === 0 ? 'OUT OF STOCK' : `${item.quantity} left`}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
                 
                 <div className={styles.profitSection} style={{ display: error ? 'none' : 'block' }}>
                     <h2>Profit Overview (As of End of {previousMonthName || 'Previous Month'})</h2>

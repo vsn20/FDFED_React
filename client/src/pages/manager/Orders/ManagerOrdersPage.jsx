@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../../context/AuthContext';
 import api from '../../../api/api';
 import ManagerAddOrder from './ManagerAddOrder';
 import styles from '../Employees/Details.module.css';
+
+const LOW_STOCK_THRESHOLD = 10;
 
 const ManagerOrdersPage = () => {
     const { user } = useContext(AuthContext);
@@ -15,6 +17,7 @@ const ManagerOrdersPage = () => {
     const [view, setView] = useState('list');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [lowStockItems, setLowStockItems] = useState([]);
 
     // NEW STATES
     const [searchQuery, setSearchQuery] = useState("");
@@ -22,10 +25,21 @@ const ManagerOrdersPage = () => {
     const [ordersPerPage, setOrdersPerPage] = useState(5);
     const [rowsInput, setRowsInput] = useState("5");
 
+    const fetchLowStockItems = useCallback(async () => {
+        try {
+            const res = await api.get('/manager/inventory');
+            const allItems = res.data.data || [];
+            setLowStockItems(allItems.filter(item => item.quantity < LOW_STOCK_THRESHOLD));
+        } catch (err) {
+            console.error('Error fetching low stock data:', err);
+        }
+    }, []);
+
     useEffect(() => {
         if (view === 'list') {
             fetchOrders();
             fetchManagerProfile();
+            fetchLowStockItems();
         }
     }, [view]);
 
@@ -114,6 +128,22 @@ const ManagerOrdersPage = () => {
 
                 {view === 'list' && (
                     <>
+                        {/* LOW STOCK ALERT BANNER */}
+                        {lowStockItems.length > 0 && (
+                            <div className={styles.lowStockBanner}>
+                                <div className={styles.lowStockBannerContent}>
+                                    <span className={styles.lowStockIcon}>⚠️</span>
+                                    <div>
+                                        <strong>Low Stock Alert!</strong>
+                                        <span> {lowStockItems.length} product{lowStockItems.length > 1 ? 's' : ''} below {LOW_STOCK_THRESHOLD} units — consider placing orders:</span>
+                                        <span className={styles.lowStockNames}>
+                                            {lowStockItems.map(i => `${i.product_name} (${i.quantity})`).join(', ')}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         <div className={styles.headerContainer}>
                             <button className={styles.addButton} onClick={() => setView('add')}>
                                 Add Order

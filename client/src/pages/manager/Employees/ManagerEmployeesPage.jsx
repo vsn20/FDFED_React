@@ -30,6 +30,9 @@ const ManagerEmployeesPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [employeesPerPage, setEmployeesPerPage] = useState(5);
     const [rowsInput, setRowsInput] = useState("5");
+    // SORTING STATE
+    const [sortBy, setSortBy] = useState("default");
+    const [sortOrder, setSortOrder] = useState("desc");
 
     useEffect(() => {
         if (!addSalesman) {
@@ -60,14 +63,14 @@ const ManagerEmployeesPage = () => {
         }
     };
 
-    // ------------ PREFIX SEARCH implementation ------------
+    // ------------ PREFIX SEARCH + SORTING implementation ------------
     useEffect(() => {
-        let result = employees;
+        let result = [...employees];
 
         if (searchQuery.trim() !== "") {
             const q = searchQuery.toLowerCase();
 
-            result = employees.filter(e => {
+            result = result.filter(e => {
                 const id = e.e_id?.toString().toLowerCase() || "";
                 const fName = e.f_name?.toLowerCase() || "";
                 const lName = e.last_name?.toLowerCase() || "";
@@ -80,9 +83,37 @@ const ManagerEmployeesPage = () => {
             });
         }
 
+        // Apply sorting
+        if (sortBy !== "default") {
+            result.sort((a, b) => {
+                let valA, valB;
+                switch (sortBy) {
+                    case "monthlySalesCount":
+                        valA = a.monthlySalesCount || 0;
+                        valB = b.monthlySalesCount || 0;
+                        break;
+                    case "base_salary":
+                        valA = a.base_salary || 0;
+                        valB = b.base_salary || 0;
+                        break;
+                    case "monthlyRevenue":
+                        valA = a.monthlyRevenue || 0;
+                        valB = b.monthlyRevenue || 0;
+                        break;
+                    case "name":
+                        valA = (a.f_name || "").toLowerCase();
+                        valB = (b.f_name || "").toLowerCase();
+                        return sortOrder === "asc" ? valA.localeCompare(valB) : valB.localeCompare(valA);
+                    default:
+                        return 0;
+                }
+                return sortOrder === "asc" ? valA - valB : valB - valA;
+            });
+        }
+
         setFilteredEmployees(result);
         setCurrentPage(1); // Reset to first page on search
-    }, [searchQuery, employees]); // 'employees' now comes from Redux state
+    }, [searchQuery, employees, sortBy, sortOrder]); // 'employees' now comes from Redux state
 
 
     // ---------- PAGINATION calculations ----------
@@ -154,6 +185,29 @@ const ManagerEmployeesPage = () => {
                             style={{ marginBottom: "10px", padding: "8px", width: "50%" }}
                         />
 
+                        {/* SORT CONTROLS */}
+                        <div className={styles.sortControls}>
+                            <label className={styles.sortLabel}>Sort by:</label>
+                            <select
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className={styles.sortSelect}
+                            >
+                                <option value="default">Default</option>
+                                <option value="monthlySalesCount">Sales This Month</option>
+                                <option value="base_salary">Base Salary</option>
+                                <option value="monthlyRevenue">Monthly Revenue</option>
+                                <option value="name">Name</option>
+                            </select>
+                            <button
+                                className={styles.sortOrderBtn}
+                                onClick={() => setSortOrder(prev => prev === "asc" ? "desc" : "asc")}
+                                title={sortOrder === "asc" ? "Ascending" : "Descending"}
+                            >
+                                {sortOrder === "asc" ? "↑ Asc" : "↓ Desc"}
+                            </button>
+                        </div>
+
                         {/* NEW: Use Redux loading/error */}
                         {loading && <p>Loading employees...</p>}
                         {error && <p className={styles.errorMessage}>{error}</p>}
@@ -168,7 +222,8 @@ const ManagerEmployeesPage = () => {
                                             <th className={styles.th}>First Name</th>
                                             <th className={styles.th}>Last Name</th>
                                             <th className={styles.th}>Role</th>
-                                            <th className={styles.th}>Branch ID</th>
+                                            <th className={styles.th}>Sales This Month</th>
+                                            <th className={styles.th}>Base Salary</th>
                                             <th className={styles.th}>Status</th>
                                         </tr>
                                     </thead>
@@ -183,8 +238,21 @@ const ManagerEmployeesPage = () => {
                                                 <td className={styles.td} data-label="First Name">{employee.f_name}</td>
                                                 <td className={styles.td} data-label="Last Name">{employee.last_name}</td>
                                                 <td className={styles.td} data-label="Role">{employee.role}</td>
-                                                <td className={styles.td} data-label="Branch ID">{employee.bid || 'Not Assigned'}</td>
-                                                <td className={styles.td} data-label="Status">{employee.status}</td>
+                                                <td className={styles.td} data-label="Sales This Month">
+                                                    <span className={employee.monthlySalesCount > 0 ? styles.salesBadge : styles.zeroSalesBadge}>
+                                                        {employee.monthlySalesCount || 0}
+                                                    </span>
+                                                </td>
+                                                <td className={styles.td} data-label="Base Salary">₹{(employee.base_salary || 0).toLocaleString()}</td>
+                                                <td className={styles.td} data-label="Status">
+                                                    <span className={
+                                                        employee.status === 'active' ? styles.statusActive :
+                                                        employee.status === 'fired' ? styles.statusFired :
+                                                        styles.statusResigned
+                                                    }>
+                                                        {employee.status}
+                                                    </span>
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>

@@ -6,6 +6,7 @@ const Branch = require("../../models/branches");
 const Inventory = require("../../models/inventory"); // Assuming you have this model
 const User = require("../../models/User");
 const mongoose = require("mongoose");
+const sendInvoiceEmail = require("../../utils/invoiceMailer");
 
 // Helper function to get emp_id from req.user
 const getEmployeeId = async (req) => {
@@ -121,6 +122,7 @@ exports.addSale = async (req, res) => {
       sold_price,
       quantity,
       phone_number,
+      customer_email,
       address
     } = req.body;
 
@@ -164,6 +166,9 @@ exports.addSale = async (req, res) => {
     const installationcharge = product.installationcharge || null;
     const installation_status = installation === 'Required' ? 'Pending' : null;
 
+    // Get branch name for invoice
+    const branch = await Branch.findOne({ bid: employee.bid }).lean();
+
     // Create new Sale
     const newSale = new Sale({
       sales_id,
@@ -180,6 +185,7 @@ exports.addSale = async (req, res) => {
       amount,
       profit_or_loss,
       phone_number,
+      customer_email: customer_email || null,
       address,
       installation,
       installationType,
@@ -195,6 +201,32 @@ exports.addSale = async (req, res) => {
     await inventory.save({ session });
     
     await session.commitTransaction();
+
+    // Send invoice email to customer (non-blocking)
+    if (customer_email) {
+      sendInvoiceEmail({
+        sales_id,
+        customer_name,
+        customer_email,
+        phone_number,
+        address,
+        sales_date,
+        unique_code,
+        product_name: product.Prod_name,
+        model_number: product.Model_no,
+        company_name: company.cname,
+        branch_name: branch ? branch.b_name : "N/A",
+        salesman_name: `${employee.f_name} ${employee.last_name}`,
+        sold_price: parseFloat(sold_price),
+        quantity: parseInt(quantity),
+        amount,
+        installation,
+        installationType,
+        installationcharge,
+        warrantyperiod: product.warrantyperiod || ""
+      });
+    }
+
     res.json({ success: true, message: "Sale added successfully" });
   } catch (error) {
     await session.abortTransaction();

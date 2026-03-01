@@ -23,6 +23,7 @@ const productSchema = new mongoose.Schema({
     required: true 
   },
   Status: { type: String, enum: ['Hold', 'Accepted', 'Rejected'], default: 'Hold' },
+  rejection_reason: { type: String, default: null },
   prod_description: { type: String, required: true },
   warrantyperiod: { type: String, required: true },
   installation: { type: String, required: true, enum: ['Required', 'Not Required'] },

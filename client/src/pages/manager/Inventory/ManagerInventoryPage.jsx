@@ -3,6 +3,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import api from '../../../api/api';
 import styles from './ManagerInventory.module.css'; // ⬅ using SAME CSS as employees
 
+const LOW_STOCK_THRESHOLD = 10;
+
 const ManagerInventoryPage = () => {
     const [fullInventory, setFullInventory] = useState([]);
     const [filteredInventory, setFilteredInventory] = useState([]);
@@ -10,6 +12,7 @@ const ManagerInventoryPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
+    const [showLowStockOnly, setShowLowStockOnly] = useState(false);
 
     // PAGINATION
     const [currentPage, setCurrentPage] = useState(1);
@@ -39,19 +42,27 @@ const ManagerInventoryPage = () => {
         fetchInventory();
     }, [fetchInventory]);
 
-    // SEARCH FILTER (Product ID, Name, Company)
+    // Compute low stock items
+    const lowStockItems = fullInventory.filter(item => item.quantity < LOW_STOCK_THRESHOLD);
+
+    // SEARCH FILTER (Product ID, Name, Company) + Low Stock Filter
     useEffect(() => {
         const q = searchQuery.toLowerCase();
 
-        let result = fullInventory.filter(item =>
-            item.product_id?.toLowerCase().includes(q) ||
-            item.product_name?.toLowerCase().includes(q) ||
-            item.company_name?.toLowerCase().includes(q)
-        );
+        let result = fullInventory.filter(item => {
+            const matchesSearch =
+                item.product_id?.toLowerCase().includes(q) ||
+                item.product_name?.toLowerCase().includes(q) ||
+                item.company_name?.toLowerCase().includes(q);
+
+            const matchesLowStock = showLowStockOnly ? item.quantity < LOW_STOCK_THRESHOLD : true;
+
+            return matchesSearch && matchesLowStock;
+        });
 
         setFilteredInventory(result);
         setCurrentPage(1);
-    }, [searchQuery, fullInventory]);
+    }, [searchQuery, fullInventory, showLowStockOnly]);
 
     // PAGINATION CALCULATIONS
     const indexOfLast = currentPage * rowsPerPage;
@@ -80,6 +91,28 @@ const ManagerInventoryPage = () => {
                 <h1>Inventory ({branchName})</h1>
 
                 {error && <div className={styles.errorMessage}>{error}</div>}
+
+                {/* LOW STOCK ALERT BANNER */}
+                {lowStockItems.length > 0 && (
+                    <div className={styles.lowStockBanner}>
+                        <div className={styles.lowStockBannerContent}>
+                            <span className={styles.lowStockIcon}>⚠️</span>
+                            <div>
+                                <strong>Low Stock Alert!</strong>
+                                <span> {lowStockItems.length} product{lowStockItems.length > 1 ? 's' : ''} below {LOW_STOCK_THRESHOLD} units:</span>
+                                <span className={styles.lowStockNames}>
+                                    {lowStockItems.map(i => `${i.product_name} (${i.quantity})`).join(', ')}
+                                </span>
+                            </div>
+                        </div>
+                        <button
+                            className={styles.lowStockFilterBtn}
+                            onClick={() => setShowLowStockOnly(prev => !prev)}
+                        >
+                            {showLowStockOnly ? 'Show All' : 'Show Low Stock Only'}
+                        </button>
+                    </div>
+                )}
 
                 <div>
 
@@ -117,12 +150,19 @@ const ManagerInventoryPage = () => {
                                     </tr>
                                 ) : (
                                     currentItems.map((item) => (
-                                        <tr key={item._id} className={styles.tr}>
+                                        <tr key={item._id} className={`${styles.tr} ${item.quantity < LOW_STOCK_THRESHOLD ? styles.lowStockRow : ''}`}>
                                             <td>{item.product_id}</td>
                                             <td>{item.product_name}</td>
                                             <td>{item.model_no}</td>
                                             <td>{item.company_name}</td>
-                                            <td>{item.quantity}</td>
+                                            <td>
+                                                <span className={item.quantity < LOW_STOCK_THRESHOLD ? styles.lowStockQty : ''}>
+                                                    {item.quantity}
+                                                    {item.quantity < LOW_STOCK_THRESHOLD && (
+                                                        <span className={styles.lowStockBadge}> LOW</span>
+                                                    )}
+                                                </span>
+                                            </td>
                                             <td>{new Date(item.updatedAt).toLocaleDateString()}</td>
                                         </tr>
                                     ))

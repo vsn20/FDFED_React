@@ -64,6 +64,10 @@ const SaleSchema = new mongoose.Schema({
     required: true,
     match: [/^\+?[1-9]\d{1,14}$/, "Please enter a valid phone number"]
   }, // Customer phone number
+  customer_email: {
+    type: String,
+    default: null
+  }, // Customer email for invoice
   address: { 
     type: String 
   }, // Customer address
