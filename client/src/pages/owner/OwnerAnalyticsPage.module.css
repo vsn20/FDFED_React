@@ -12,21 +12,17 @@
 }
 
 .contentArea {
-  background: #ffffff;
-  border-radius: 15px;
-  padding: 25px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto; /* Center the card horizontally */
-  
-  /* Flex & Scroll Logic to match Sidebar */
+  margin: 0 auto;
+
+  /* Flex & Scroll logic to match Sidebar */
   flex: 1;
   overflow-y: auto;
-  
-  /* Hide scrollbar logic */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+
+  /* Hide scrollbar */
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge */
 }
 
 .contentArea::-webkit-scrollbar {
@@ -96,6 +92,151 @@
   color: #e74c3c;
 }
 
+/* --- SECTION STRUCTURE ---
+   .section        : top-level section block with a white card style
+   .sectionHeader  : flex row containing the title + optional subtitle
+   .sectionTitle   : the <h3> section heading
+*/
+.section {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 28px 28px 24px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.06);
+  border: 1px solid #eef2f7;
+  margin-bottom: 28px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 22px;
+  border-bottom: 2px solid #f0f4f8;
+  padding-bottom: 14px;
+}
+
+.sectionTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #2d3436;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* --- FILTER ROW (Salesman Performance section)
+   .filterRow    : flex row that holds both filter groups side by side
+   .filterGroup  : wrapper for label + select combo
+   .filterLabel  : small label text above the select
+   .filterSelect : styled <select> element
+*/
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 180px;
+}
+
+.filterLabel {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #718096;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.filterSelect {
+  padding: 8px 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #2d3436;
+  background: #f8fafc;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23718096' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.filterSelect:hover,
+.filterSelect:focus {
+  border-color: #6c63ff;
+}
+
+/* --- METRIC TOGGLE
+   .toggleWrapper : flex container for the two toggle buttons
+   .toggleBtn     : individual toggle button (Sales / Units)
+   .toggleActive  : highlighted state for the currently selected metric
+*/
+.toggleWrapper {
+  display: inline-flex;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f7fafc;
+}
+
+.toggleBtn {
+  padding: 7px 16px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  border: none;
+  background: transparent;
+  color: #718096;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  line-height: 1.4;
+}
+
+.toggleBtn:hover {
+  background: rgba(108, 99, 255, 0.06);
+  color: #4a5568;
+}
+
+.toggleActive {
+  background: #6c63ff;
+  color: #fff;
+  box-shadow: 0 1px 4px rgba(108, 99, 255, 0.3);
+}
+
+.toggleActive:hover {
+  background: #5a52e0;
+  color: #fff;
+}
+
+/* --- SALESMAN CARD
+   .salesmanCard : taller card variant for the horizontal bar chart
+                   so salesman names have enough row height
+*/
+.salesmanCard {
+  min-height: 480px;
+}
+
+/* --- EMPTY STATE
+   .emptyState : shown when no data matches current filters
+*/
+.emptyState {
+  text-align: center;
+  padding: 40px 20px;
+  color: #a0aec0;
+  font-size: 0.95rem;
+  font-style: italic;
+  border: 2px dashed #e2e8f0;
+  border-radius: 10px;
+  background: #fafbfc;
+}
+
 /* --- RESPONSIVE DESIGN --- */
 @media (max-width: 768px) {
   .container {
@@ -107,11 +248,25 @@
     padding: 15px;
   }
 
+  .section {
+    padding: 18px 16px;
+    margin-bottom: 18px;
+  }
+
   .graphGrid {
     grid-template-columns: 1fr;
   }
 
   .fullWidth {
     grid-column: span 1;
+  }
+
+  .filterRow {
+    flex-direction: column;
+  }
+
+  .filterGroup {
+    min-width: unset;
+    width: 100%;
   }
 }
