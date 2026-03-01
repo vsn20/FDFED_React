@@ -1,142 +1,217 @@
+/* Salaries.module.css – teal/slate theme */
+
+/* ── Page wrapper ── */
 .container {
-  margin-top: 90px;
+  min-height: calc(100vh - 130px);
+  background: linear-gradient(160deg, #f0f9ff 0%, #f8fafc 55%, #f0fdf4 100%);
   display: flex;
-  flex: 1;
   justify-content: center;
-  padding: 0 20px;
-  max-width: 100%;
+  align-items: flex-start;
+  padding: 24px 20px 40px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 16px;
 }
 
+/* ── Card ── */
 .contentArea {
-  background: #ffffff;
-  border-radius: 15px;
-  padding: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   width: 100%;
   max-width: 800px;
+  background: #ffffff;
+  border-radius: 28px;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 16px 48px rgba(15, 118, 110, 0.10);
+  padding: 36px 40px 44px;
+  animation: slideUp 0.4s ease;
 }
 
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Header ── */
 .header h1 {
-  color: #2c3e50;
-  margin-bottom: 25px;
-  font-size: 1.8rem;
-  text-align: center;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 24px;
+  padding-bottom: 18px;
+  border-bottom: 2px solid #e2e8f0;
+  text-align: left;
 }
 
+/* ── Error ── */
 .errorMessage {
-  color: #e74c3c;
-  background: #fdecea;
-  border: 1px solid #e74c3c;
-  border-radius: 5px;
-  padding: 10px;
-  margin: 10px 0;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+  border-radius: 14px;
+  padding: 12px 18px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-bottom: 20px;
 }
 
+/* ── Controls row ── */
 .controlsContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 28px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #e2e8f0;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 14px;
 }
 
 .dateTitle {
-  font-size: 1.4rem;
-  color: #2980b9;
-  font-weight: 600;
+  font-size: 1.25rem;
+  color: #0f172a;
+  font-weight: 700;
 }
 
 .controls {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 
 .selectInput {
-  padding: 8px 12px;
-  border: 1px solid #dfe6e9;
-  border-radius: 6px;
-  font-size: 1rem;
-  min-width: 150px;
+  padding: 9px 32px 9px 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  min-width: 160px;
+  color: #0f172a;
+  background: #fff;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%230f766e' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.selectInput:focus {
+  border-color: #0f766e;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
 }
 
 .generateBtn {
-  padding: 8px 20px;
-  background: #3498db;
-  color: white;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  background: linear-gradient(135deg, #0f766e, #0d9488);
+  color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 50px;
+  font-size: 0.88rem;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.2s;
+  font-family: inherit;
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.28);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .generateBtn:hover {
-  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(15, 118, 110, 0.38);
 }
 
-/* Salary Card Styles */
+/* ── Salary Card ── */
 .salaryCard {
-  background: #f8f9fd;
-  border: 1px solid #e6e9f0;
-  border-radius: 10px;
-  padding: 25px;
-  border-left: 5px solid #3498db;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 28px;
+  border-left: 5px solid #0f766e;
 }
 
 .salaryRow {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 12px;
-  font-size: 1.1rem;
+  align-items: center;
+  margin-bottom: 14px;
+  font-size: 0.95rem;
 }
 
 .label {
-  color: #7f8c8d;
-  font-weight: 500;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .value {
-  color: #2c3e50;
+  color: #0f172a;
   font-weight: 600;
+  font-size: 0.95rem;
 }
 
 .divider {
   height: 1px;
-  background: #dfe6e9;
-  margin: 15px 0;
+  background: #e2e8f0;
+  margin: 18px 0;
 }
 
 .totalRow {
-  font-size: 1.3rem;
-  color: #2c3e50;
   margin-bottom: 0;
 }
 
+.totalRow .label {
+  font-size: 0.88rem;
+  color: #0f172a;
+}
+
 .totalRow .value {
-  color: #27ae60; /* Green for money */
+  font-size: 1.2rem;
+  color: #0f766e;
 }
 
+/* ── Note ── */
 .note {
-  margin-top: 15px;
-  color: #e74c3c;
+  margin-top: 16px;
+  color: #991b1b;
   font-style: italic;
-  font-size: 0.95rem;
-  background: #fff0f0;
-  padding: 8px;
-  border-radius: 4px;
+  font-size: 0.85rem;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 10px;
+  padding: 10px 14px;
 }
 
+/* ── Loading / no-data ── */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.noData {
+  text-align: center;
+  margin-top: 20px;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* ── Responsive ── */
 @media (max-width: 600px) {
+  .contentArea { padding: 24px 20px 32px; }
   .controlsContainer {
     flex-direction: column;
     align-items: stretch;
-    text-align: center;
   }
-  .controls {
-    flex-direction: column;
-  }
+  .controls { flex-direction: column; }
+  .generateBtn { justify-content: center; }
+  .selectInput { width: 100%; }
 }

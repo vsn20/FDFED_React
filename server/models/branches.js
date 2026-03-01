@@ -5,7 +5,7 @@ const BranchSchema = new mongoose.Schema({
         type: String, 
         unique: true, 
         required: true 
-    }, // Branch ID, unique identifier
+    }, // Branch ID and unique identifier
     b_name: { 
         type: String, 
         required: true 
