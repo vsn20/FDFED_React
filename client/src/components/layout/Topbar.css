@@ -1,40 +1,197 @@
+/* ================================================================
+   Topbar.css — Electroland ✦ Midnight Precision
+   Unified dark shell · Razor-clean · Production-grade
+================================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+
+/* ── TOPBAR SHELL ──────────────────────────────────────────── */
 .topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  z-index: 1200;
+
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 12px 30px;
-  background: linear-gradient(90deg, #4b134f, #2c3e70, #3b3b3b, #1a5c2f);
-  color: white;
-  border-radius: 0; /* Removed border-radius to make it flush with edges */
-  position: fixed; /* Fix to top */
-  top: 0;
-  left: 0;
-  width: 100%; /* Full width */
-  z-index: 1000; /* Ensure it stays above other elements */
+  padding: 0 28px;
+
+  background: #0d0d14;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  font-family: 'Outfit', sans-serif;
+  -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
+
+  box-shadow:
+    0 1px 0 rgba(245, 168, 20, 0.12),
+    0 8px 40px rgba(0, 0, 0, 0.65);
 }
 
-.topbar-left {
-  font-weight: 600;
-  font-size: 16px;
+/* amber accent line */
+.topbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(245,168,20,0.0) 15%,
+    rgba(245,168,20,0.55) 40%,
+    rgba(253,211,77,0.85) 50%,
+    rgba(245,168,20,0.55) 60%,
+    rgba(245,168,20,0.0) 85%,
+    transparent 100%
+  );
+  animation: topbarGlow 3s ease-in-out infinite;
+}
+@keyframes topbarGlow {
+  0%,100% { opacity:.5; }
+  50%     { opacity:1;  }
 }
 
-.topbar-right {
+/* ── BRAND ─────────────────────────────────────────────────── */
+.topbar-brand {
   display: flex;
   align-items: center;
+  gap: 11px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.topbar-brand-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #f5a814 0%, #d97706 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  box-shadow:
+    0 0 0 1px rgba(245,168,20,.3),
+    0 4px 18px rgba(245,168,20,.3),
+    inset 0 1px 0 rgba(255,255,255,.15);
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease;
+  flex-shrink: 0;
+}
+.topbar-brand:hover .topbar-brand-icon {
+  transform: rotate(-12deg) scale(1.1);
+  box-shadow: 0 0 0 1px rgba(245,168,20,.5), 0 6px 28px rgba(245,168,20,.45), inset 0 1px 0 rgba(255,255,255,.2);
+}
+.topbar-brand-wordmark { display: flex; flex-direction: column; line-height: 1; gap: 2px; }
+.topbar-brand-name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.2rem; font-weight: 600; letter-spacing: .02em;
+  color: #f0ece4; line-height: 1;
+}
+.topbar-brand-name em { font-style: italic; color: #f5a814; }
+.topbar-brand-sub {
+  font-size: .52rem; font-weight: 600; letter-spacing: .2em;
+  text-transform: uppercase; color: rgba(240,236,228,.28);
 }
 
+/* ── DIVIDER ───────────────────────────────────────────────── */
+.topbar-sep {
+  width: 1px; height: 28px;
+  background: rgba(255,255,255,.07);
+  margin: 0 24px; flex-shrink: 0;
+}
+
+/* ── CENTER CONTEXT ────────────────────────────────────────── */
+.topbar-context {
+  flex: 1; min-width: 0;
+  display: flex; align-items: center; gap: 8px;
+}
+.topbar-context-text {
+  font-size: .72rem; font-weight: 500; letter-spacing: .14em;
+  text-transform: uppercase; color: rgba(240,236,228,.28);
+  white-space: nowrap;
+}
+
+/* ── RIGHT ─────────────────────────────────────────────────── */
+.topbar-right {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+
+/* Online pill */
+.topbar-status {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 100px;
+  background: rgba(22,163,74,.1); border: 1px solid rgba(22,163,74,.22);
+}
+.topbar-status-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #22c55e;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%  { box-shadow: 0 0 0 0   rgba(34,197,94,.5); }
+  50% { box-shadow: 0 0 0 5px rgba(34,197,94,.0); }
+  100%{ box-shadow: 0 0 0 0   rgba(34,197,94,.0); }
+}
+.topbar-status-text {
+  font-size: .6rem; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: rgba(34,197,94,.8);
+}
+
+/* User chip */
+.topbar-user {
+  display: flex; align-items: center; gap: 10px;
+  padding: 5px 14px 5px 6px;
+  border-radius: 100px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+  cursor: default;
+  transition: background .2s ease, border-color .2s ease;
+}
+.topbar-user:hover {
+  background: rgba(255,255,255,.07);
+  border-color: rgba(245,168,20,.22);
+}
+.topbar-avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, #f5a814, #c97c08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .7rem; font-weight: 700; color: #0d0d14;
+  box-shadow: 0 0 0 2px rgba(245,168,20,.25);
+}
+.topbar-user-name {
+  font-size: .8rem; font-weight: 500; color: rgba(240,236,228,.85);
+  white-space: nowrap; line-height: 1;
+}
+.topbar-user-role {
+  font-size: .58rem; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: #f5a814; line-height: 1;
+  margin-top: 2px;
+}
+
+/* Logout */
 .logout-btn {
-  background: #f1c40f;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: bold;
-  color: black;
-  transition: 0.3s;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 16px; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.09);
+  background: rgba(255,255,255,.03);
+  font-family: 'Outfit', sans-serif;
+  font-size: .74rem; font-weight: 500; letter-spacing: .06em;
+  color: rgba(240,236,228,.45); cursor: pointer;
+  transition: color .2s ease, border-color .2s ease, background .2s ease, transform .2s cubic-bezier(.34,1.56,.64,1);
+}
+.logout-btn:hover {
+  color: #f5a814;
+  border-color: rgba(245,168,20,.38);
+  background: rgba(245,168,20,.07);
+  transform: translateY(-1px);
+}
+.logout-btn:active { transform: scale(.97); }
+.logout-btn svg {
+  width: 13px; height: 13px; stroke: currentColor;
+  fill: none; stroke-width: 1.8;
+  stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
 }
 
-.logout-btn:hover {
-  background: #d4ac0d;
+@media (max-width: 900px) {
+  .topbar-sep, .topbar-context, .topbar-status { display: none; }
+  .topbar { padding: 0 18px; }
+}
+@media (max-width: 560px) {
+  .topbar-user-name, .topbar-user-role { display: none; }
+  .topbar-user { padding: 5px; }
+  .logout-btn-label { display: none; }
 }

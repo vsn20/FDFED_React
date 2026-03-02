@@ -1,0 +1,56 @@
+/* ================================================================
+   PrivateLayout.css — Electroland ✦ Midnight Precision
+   Main content shell that sits right of the sidebar
+================================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+/* ── ROOT ──────────────────────────────────────────────────── */
+.private-layout {
+  min-height: 100vh;
+  background: #0d0d14;
+  font-family: 'Outfit', 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── MAIN CONTENT AREA ─────────────────────────────────────── */
+.private-main {
+  margin-left: 240px;      /* sidebar width */
+  margin-top:  60px;       /* topbar height */
+  min-height: calc(100vh - 60px);
+
+  /* Two-tone: dark strip at top, warm cream for content */
+  background:
+    linear-gradient(180deg, #111120 0px, #111120 1px, #f7f2eb 1px, #f7f2eb 100%);
+
+  padding: 40px 44px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Razor-thin amber rule at top of content zone */
+.private-main::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(245,168,20,.2) 20%,
+    rgba(245,168,20,.45) 50%,
+    rgba(245,168,20,.2) 80%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ── RESPONSIVE ────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .private-main {
+    margin-left: 0;
+    padding: 28px 20px;
+  }
+}
+@media (max-width: 500px) {
+  .private-main { padding: 20px 14px; }
+}
