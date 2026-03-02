@@ -39,7 +39,7 @@ function Counter({ target, suffix = '', duration = 2000 }) {
 
 // ── Slides data ─────────────────────────────────────────────────────────────
 const SLIDES = [
-    { src: '/IntoHome2.jpg',  headline: 'Engineered for Life', sub: 'Premium appliances that transform how you live' },
+    { src: '/IntoHome2.jpg',  headline: 'Built to Elevate Living', sub: 'Premium appliances that transform how you live' },
     { src: '/IntoHome.jpg',   headline: 'Discover Excellence', sub: 'Top-rated products, curated for your home' },
     { src: '/IntoHome3.jpg',  headline: 'Stock Mastery',       sub: 'Your inventory, perfectly managed' },
     { src: '/IntoHome4.jpg',  headline: 'Latest Offers',       sub: 'Unbeatable deals on world-class appliances' },
@@ -171,7 +171,7 @@ function Home() {
 
                 {/* Hero content */}
                 <div className={`el-hero__content ${heroLoaded ? 'el-hero__content--loaded' : ''}`}>
-                    <div className="el-hero__overline">Electroland — Est. 2020</div>
+                    <div className="el-hero__overline">Electroland — Est. 2024</div>
                     <h1 className="el-hero__headline">
                         {SLIDES[slide].headline.split(' ').map((word, i) => (
                             <span key={`${slide}-${i}`} className="el-hero__word" style={{ animationDelay: `${i * 0.08}s` }}>
@@ -240,10 +240,10 @@ function Home() {
             <section ref={statsRef} className={`el-stats ${statsVis ? 'el-stats--visible' : ''}`}>
                 <div className="el-stats__inner">
                     {[
-                        { n: 5000, suf: '+', label: 'Products Sold' },
-                        { n: 12,   suf: '+', label: 'Branch Locations' },
+                        { n: 500, suf: '+', label: 'Products Sold' },
+                        { n: 5,   suf: '+', label: 'Branch Locations' },
                         { n: 98,   suf: '%', label: 'Customer Satisfaction' },
-                        { n: 4,    suf: '+', label: 'Years of Excellence' },
+                        { n: 2,    suf: '+', label: 'Years of Excellence' },
                     ].map((s, i) => (
                         <div key={i} className="el-stats__item" style={{ transitionDelay: `${i * 0.1}s` }}>
                             <div className="el-stats__number">
@@ -261,7 +261,7 @@ function Home() {
             <section ref={aboutRef} className={`el-about ${aboutVis ? 'el-about--visible' : ''}`}>
                 <div className="el-about__img-wrap">
                     <img src="/shopsmart.jpg" alt="Electroland showroom" className="el-about__img" />
-                    <div className="el-about__img-badge">Since 2020</div>
+                    <div className="el-about__img-badge">Since 2024</div>
                 </div>
                 <div className="el-about__body">
                     <div className="el-about__tag">Who We Are</div>

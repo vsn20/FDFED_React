@@ -115,7 +115,7 @@ export default function SplashScreen({ onDone }) {
                 <div className="sp-rule" aria-hidden="true" />
 
                 <div className={`sp-tagline${taglineShow ? ' sp-tagline--visible' : ''}`}>
-                    Engineered for life
+                   Built to Elevate Living
                 </div>
             </div>
 
