@@ -1,129 +1,224 @@
-import React, { useState, useEffect } from 'react';
-import api from '../api/api'; 
+import React, { useState, useEffect, useRef } from 'react';
+import api from '../api/api';
 import styles from './OurProducts.module.css';
 
-const OurProducts = () => {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+function useReveal(threshold = 0.12) {
+    const ref = useRef(null);
+    const [visible, setVisible] = useState(false);
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const obs = new IntersectionObserver(
+            ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+            { threshold }
+        );
+        obs.observe(el);
+        return () => obs.disconnect();
+    }, [threshold]);
+    return [ref, visible];
+}
+
+const getImageUrl = (path) => {
+    if (!path) return '/placeholder.jpg';
+    if (path.startsWith('http')) return path;
+    let clean = path.replace(/\\/g, '/').replace(/^public\//, '');
+    if (clean.startsWith('/')) clean = clean.substring(1);
+    return `http://localhost:5001/${clean}`;
+};
+
+const SkeletonCard = ({ delay = 0 }) => (
+    <div className={styles.skeletonCard} style={{ animationDelay: `${delay}s` }}>
+        <div className={styles.skeletonImg} />
+        <div className={styles.skeletonBody}>
+            <div className={styles.skeletonLine} style={{ width: '55%' }} />
+            <div className={styles.skeletonLine} style={{ width: '80%' }} />
+            <div className={styles.skeletonLine} style={{ width: '65%' }} />
+        </div>
+    </div>
+);
+
+const ProductCard = ({ product, index }) => {
+    const [slide, setSlide]     = useState(0);
+    const [hovered, setHovered] = useState(false);
+    const [ref, visible]        = useReveal(0.1);
+    const photos = product.prod_photos || [];
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await api.get('/ourproducts'); 
-                if (response.data.success) {
-                    setProducts(response.data.data);
-                } else {
-                    setError('Failed to load products');
-                }
-            } catch (err) {
-                console.error('Error fetching our products:', err);
-                setError('Failed to load products. Please try again later.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProducts();
-    }, []);
-
-    if (loading) return <div className={styles.loading}>Loading products...</div>;
+        if (photos.length > 1) {
+            const t = setInterval(() =>
+                setSlide(p => (p + 1) % photos.length), hovered ? 1800 : 3500);
+            return () => clearInterval(t);
+        }
+    }, [photos.length, hovered]);
 
     return (
-        <div className={styles.container}>
-            <div className={styles.contentArea}>
-                <h1>Our Products</h1>
-                
-                {error && <div className={styles.errorMessage}>{error}</div>}
-                
-                {products.length === 0 && !error ? (
-                    <div className={styles.noProducts}>No accepted products available at the moment.</div>
-                ) : (
-                    <div className={styles.productsContainer}>
-                        {products.map(product => (
-                            <ProductCard key={product.prod_id} product={product} />
+        <div
+            ref={ref}
+            className={`${styles.card} ${visible ? styles.cardVisible : ''}`}
+            style={{ animationDelay: `${(index % 4) * 0.07}s` }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+        >
+            {/* Photo slideshow */}
+            <div className={styles.photoWrap}>
+                {photos.length === 0 ? (
+                    <img src="/placeholder.jpg" alt="Product"
+                        className={`${styles.photo} ${styles.photoActive}`} />
+                ) : photos.map((ph, i) => (
+                    <img
+                        key={i}
+                        src={getImageUrl(ph)}
+                        alt={`${product.Prod_name || 'Product'} ${i + 1}`}
+                        className={`${styles.photo} ${i === slide ? styles.photoActive : ''}`}
+                        onError={e => { e.target.onerror = null; e.target.src = '/placeholder.jpg'; }}
+                    />
+                ))}
+                <div className={styles.photoGradient} />
+                <div className={styles.photoTitle}>{product.Prod_name || 'Product'}</div>
+                {photos.length > 1 && (
+                    <div className={styles.dots}>
+                        {photos.map((_, i) => (
+                            <span
+                                key={i}
+                                className={`${styles.dot} ${i === slide ? styles.dotActive : ''}`}
+                                onClick={e => { e.stopPropagation(); setSlide(i); }}
+                            />
                         ))}
                     </div>
                 )}
+            </div>
+
+            {/* Card body */}
+            <div className={styles.cardBody}>
+                <div className={styles.cardHeader}>
+                    <div className={styles.cardIconWrap}>🏠</div>
+                    <div className={styles.cardTitleGroup}>
+                        <div className={styles.cardTitle}>
+                            {product.Prod_name || `Product ${product.prod_id}`}
+                        </div>
+                        <div className={styles.cardBadge}>Available</div>
+                    </div>
+                </div>
+
+                <div className={styles.detailsInner}>
+                    <div className={styles.detailRow}>
+                        <div className={styles.detailIcon}>🆔</div>
+                        <span><span className={styles.detailLabel}>ID:</span> {product.prod_id}</span>
+                    </div>
+                    <div className={styles.detailRow}>
+                        <div className={styles.detailIcon}>📏</div>
+                        <span><span className={styles.detailLabel}>Model:</span> {product.Model_no}</span>
+                    </div>
+                    <div className={styles.detailRow}>
+                        <div className={styles.detailIcon}>🏢</div>
+                        <span><span className={styles.detailLabel}>Company:</span> {product.com_name}</span>
+                    </div>
+                </div>
             </div>
         </div>
     );
 };
 
-// Sub-component for individual product card with slideshow
-const ProductCard = ({ product }) => {
-    const [currentSlide, setCurrentSlide] = useState(0);
+const OurProducts = () => {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading]   = useState(true);
+    const [error, setError]       = useState(null);
+    const [search, setSearch]     = useState('');
+    const [heroRef, heroVisible]  = useReveal(0.05);
 
     useEffect(() => {
-        if (product.prod_photos && product.prod_photos.length > 1) {
-            const interval = setInterval(() => {
-                setCurrentSlide(prev => (prev + 1) % product.prod_photos.length);
-            }, 3000); // Changed to 3s for better viewing
-            return () => clearInterval(interval);
-        }
-    }, [product.prod_photos]);
+        api.get('/ourproducts')
+            .then(res => {
+                if (res.data.success) setProducts(res.data.data);
+                else setError('Failed to load products');
+            })
+            .catch(() => setError('Failed to load products. Please try again later.'))
+            .finally(() => setLoading(false));
+    }, []);
 
-    const getImageUrl = (path) => {
-        if (!path) return '/placeholder.jpg';
-        
-        // If it's already a full URL (e.g., Cloudinary), return it
-        if (path.startsWith('http')) return path;
-
-        // Clean the path: replace backslashes and remove 'public/' if mistakenly stored in DB
-        let cleanPath = path.replace(/\\/g, '/').replace(/^public\//, '');
-        
-        // Ensure it doesn't start with a slash to avoid double slashes issues with some servers
-        if (cleanPath.startsWith('/')) cleanPath = cleanPath.substring(1);
-
-        // Construct full URL pointing to your backend
-        // Make sure your backend server.js has app.use('/uploads', express.static('uploads'))
-        return `http://localhost:5001/${cleanPath}`;
-    };
-
-    const renderSlides = () => {
-        if (!product.prod_photos || product.prod_photos.length === 0) {
-            return (
-                <img 
-                    src='/placeholder.jpg' 
-                    alt="No Photo Available" 
-                    className={`${styles.slide} ${styles.active}`}
-                />
-            );
-        }
-        
-        return product.prod_photos.map((photo, index) => (
-            <img 
-                key={index} 
-                src={getImageUrl(photo)} 
-                alt={`${product.Prod_name} ${index + 1}`}
-                // Using styles.active assuming CSS is fixed to .active { opacity: 1 }
-                className={`${styles.slide} ${index === currentSlide ? styles.active : ''}`}
-                onError={(e) => { 
-                    e.target.onerror = null; // Prevent infinite loop
-                    e.target.src = '/placeholder.jpg'; 
-                }}
-            />
-        ));
-    };
+    const filtered = products.filter(p =>
+        !search ||
+        (p.Prod_name || '').toLowerCase().includes(search.toLowerCase()) ||
+        (p.com_name  || '').toLowerCase().includes(search.toLowerCase()) ||
+        (p.Model_no  || '').toLowerCase().includes(search.toLowerCase())
+    );
 
     return (
-        <div className={styles.productItem}>
-            <div className={styles.slideshowContainer}>
-                {renderSlides()}
+        <div className={styles.root}>
+            {/* Page header */}
+            <div ref={heroRef} className={`${styles.hero} ${heroVisible ? styles.heroVisible : ''}`}>
+                <div className={styles.heroContent}>
+                    <div className={styles.heroTag}>Full Catalogue</div>
+                    <h1 className={styles.heroTitle}>Our <em>Products</em></h1>
+                    <p className={styles.heroSub}>
+                        Every appliance we carry — quality-certified and ready for your home
+                    </p>
+                </div>
             </div>
-            <div className={styles.productDetails}>
-                <p>
-                    <span role="img" aria-label="id">🆔</span> 
-                    <span>Product ID:</span> {product.prod_id}
-                </p>
-                <p>
-                    <span role="img" aria-label="ruler">📏</span> 
-                    <span>Model Number:</span> {product.Model_no}
-                </p>
-                <p>
-                    <span role="img" aria-label="company">🏢</span> 
-                    <span>Company Name:</span> {product.com_name}
-                </p>
+
+            {/* Search bar */}
+            {!loading && products.length > 0 && (
+                <div className={styles.searchWrap}>
+                    <div className={styles.searchInner}>
+                        <svg className={styles.searchIcon} viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" strokeWidth="2">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="M21 21l-4.35-4.35" strokeLinecap="round" />
+                        </svg>
+                        <input
+                            type="text"
+                            className={styles.searchInput}
+                            placeholder="Search by name, model, or company…"
+                            value={search}
+                            onChange={e => setSearch(e.target.value)}
+                        />
+                        {search && (
+                            <button className={styles.searchClear}
+                                onClick={() => setSearch('')} aria-label="Clear">✕</button>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {/* Grid section */}
+            <div className={styles.content}>
+                {loading && (
+                    <div className={styles.grid}>
+                        {Array.from({ length: 8 }).map((_, i) => (
+                            <SkeletonCard key={i} delay={i * 0.05} />
+                        ))}
+                    </div>
+                )}
+
+                {error && (
+                    <div className={styles.errorState}>
+                        <span className={styles.errorIcon}>⚠️</span>
+                        <p>{error}</p>
+                    </div>
+                )}
+
+                {!loading && !error && filtered.length === 0 && (
+                    <div className={styles.emptyState}>
+                        <span className={styles.emptyIcon}>🔍</span>
+                        <p>{search ? `No products match "${search}"` : 'No products available at the moment.'}</p>
+                    </div>
+                )}
+
+                {!loading && filtered.length > 0 && (
+                    <>
+                        <div className={styles.countBar}>
+                            <span className={styles.countNum}>{filtered.length}</span>
+                            <span className={styles.countLabel}>
+                                {search ? 'results found' : 'products available'}
+                            </span>
+                        </div>
+                        <div className={styles.grid}>
+                            {filtered.map((product, i) => (
+                                <ProductCard key={product.prod_id} product={product} index={i} />
+                            ))}
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

@@ -1,189 +1,306 @@
-/* Main container for the branches page content */
-.contentArea {
-  background: #ffffff;
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  flex: 1;
-  /* Note: You may want to remove height/overflow 
-    if the component's parent already handles this.
-  */
-  height: calc(100vh - 90px); 
-  overflow-y: auto;
-}
+/* ============================================================
+   OurBranches.module.css — Electroland "Obsidian Edition" v2
+   Alternating: LIGHT page-header ↔ DARK branches grid
+   Matches HomePage section rhythm
+   ============================================================ */
 
-/* Hide scrollbar */
-.contentArea::-webkit-scrollbar {
-  display: none;
-}
-.contentArea {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap');
 
-/* Page Title */
-.title {
-  color: #2d3436;
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 2rem;
-  font-weight: 600;
+/* ─── PAGE WRAPPER ───────────────────────────────────────── */
+.contentArea {
+  background: #faf5ee;
+  min-height: calc(100vh - 68px);
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #1a1a2e;
   position: relative;
-  display: inline-block;
+  overflow-x: hidden;
 }
 
-/* Title underline */
-.title::after {
+/* ══════════════════════════════════════════════════════════
+   PAGE HEADER — on light bg
+══════════════════════════════════════════════════════════ */
+.pageHeader {
+  background: transparent;
+  padding: 72px 48px 64px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Top amber accent bar */
+.pageHeader::before {
   content: '';
   position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50%;
-  height: 4px;
-  background: linear-gradient(to right, #ff7e5f, #feb47b);
-  border-radius: 2px;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, #f59e0b 30%, #fcd34d 70%, transparent 100%);
 }
 
-/* Error Message */
-.errorMessage {
-  color: #e63946;
-  text-align: center;
-  margin-bottom: 20px;
-  font-weight: bold;
-  font-size: 1.1rem;
+.overline {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #b8860b;
+  margin-bottom: 16px;
+}
+.overline::before,
+.overline::after {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: #b8860b;
+  opacity: 0.7;
 }
 
-/* Loading Text */
-.loading {
-  text-align: center;
-  padding: 20px;
-  color: #636e72;
+.title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.6rem, 5vw, 4rem);
+  font-weight: 600;
+  color: #1a1a2e;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 16px;
+}
+.title em {
+  font-style: italic;
+  color: #f59e0b;
 }
 
-/* Grid for holding branch cards */
+.titleSub {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: #6a6a8a;
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ══════════════════════════════════════════════════════════
+   BRANCHES GRID SECTION — on light bg
+══════════════════════════════════════════════════════════ */
+.gridSection {
+  background: transparent;
+  padding: 0 48px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── GRID ───────────────────────────────────────────────── */
 .branchesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 25px;
-  padding: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 28px;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
-/* Individual Branch Card */
+/* ─── BRANCH CARD — white card on light bg ───────────────── */
 .branchCard {
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
+  background: #ffffff;
+  border: 1px solid rgba(26, 26, 46, 0.09);
+  border-radius: 16px;
+  padding: 32px 28px;
   overflow: hidden;
+  box-shadow: 0 2px 16px rgba(26, 26, 46, 0.06);
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease,
+    box-shadow 0.35s ease;
+
+  opacity: 0;
+  transform: translateY(28px);
+  animation: cardReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes cardReveal {
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .branchCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow:
+    0 16px 48px rgba(26, 26, 46, 0.12),
+    0 0 24px rgba(245, 158, 11, 0.08);
 }
 
-/* Top border effect on card */
+/* Amber top bar on hover */
 .branchCard::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 5px;
-  background: linear-gradient(to right, #ff7e5f, #feb47b);
-  transition: height 0.3s ease;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f59e0b, #fcd34d);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 3px 3px 0 0;
+}
+.branchCard:hover::before { transform: scaleX(1); }
+
+.branchCard::after { display: none; }
+
+/* ─── CARD HEADER ────────────────────────────────────────── */
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(26, 26, 46, 0.07);
 }
 
-.branchCard:hover::before {
-  height: 10px;
-}
-
-/* Card Title (Branch Name) */
-.cardTitle {
-  color: #2d3436;
-  font-size: 1.4rem;
-  margin-bottom: 10px;
-  font-weight: 600;
+.cardIconWrap {
+  width: 44px; height: 44px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 10px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.2rem;
+  transition: background 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.branchCard:hover .cardIconWrap {
+  background: rgba(245, 158, 11, 0.2);
+  transform: scale(1.1) rotate(-5deg);
 }
 
-/* Card Title Icon */
-.cardTitle::before {
-  content: '🏢';
-  font-size: 1.5rem;
+.cardTitleGroup {}
+
+.cardTitle {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  margin-bottom: 5px;
 }
 
-/* Container for branch info (manager, email, etc.) */
+.cardBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #b8860b;
+  opacity: 0.9;
+}
+.cardBadge::before {
+  content: '';
+  display: inline-block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #16a34a;
+}
+
+/* ─── INFO ITEMS ─────────────────────────────────────────── */
 .branchInfo {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  font-size: 0.95rem;
-  color: #4a5568;
+  gap: 12px;
 }
 
-/* Individual info item (e.g., "Manager: ...") */
 .infoItem {
-  margin: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  margin: 0;
+  font-size: 0.88rem;
+  color: #6a6a8a;
+  font-weight: 300;
+  line-height: 1.5;
+  transition: color 0.25s ease;
+}
+.infoItem:hover { color: #1a1a2e; }
+
+.infoIcon {
+  width: 30px; height: 30px;
+  background: rgba(26, 26, 46, 0.04);
+  border: 1px solid rgba(26, 26, 46, 0.08);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+.infoItem:hover .infoIcon {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
 }
 
-/* The label part (e.g., "Manager:") */
 .infoItem span {
   font-weight: 500;
-  color: #2d3436;
+  color: #2a2a4a;
+  margin-right: 2px;
 }
 
-/* --- Media Queries --- */
-
-@media (max-width: 768px) {
-  .contentArea {
-    padding: 15px;
-    height: auto; /* Better for mobile */
-  }
-
-  .title {
-    font-size: 1.5rem;
-  }
-
-  .branchesGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .branchCard {
-    padding: 15px;
-  }
-
-  .cardTitle {
-    font-size: 1.2rem;
-  }
-
-  .branchInfo {
-    font-size: 0.9rem;
-  }
+/* ─── LOADING STATE ──────────────────────────────────────── */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 20px;
+  color: #8a8aaa;
+  font-size: 0.88rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  background: #faf5ee;
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
-  .title {
-    font-size: 1.8rem;
-  }
+.loadingSpinner {
+  width: 36px; height: 36px;
+  border: 2px solid rgba(245, 158, 11, 0.2);
+  border-top-color: #f59e0b;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  .branchesGrid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
+/* ─── ERROR STATE ────────────────────────────────────────── */
+.errorMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  padding: 48px 24px;
+  color: #dc2626;
+  font-size: 0.95rem;
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 14px;
+  max-width: 480px;
+  margin: 60px auto 0;
+}
 
-  .cardTitle {
-    font-size: 1.3rem;
-  }
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .pageHeader { padding: 56px 28px 48px; }
+  .gridSection { padding: 0 28px 60px; }
+  .branchesGrid { gap: 20px; }
+}
 
-  .branchInfo {
-    font-size: 0.92rem;
-  }
+@media (max-width: 600px) {
+  .pageHeader { padding: 40px 20px 36px; }
+  .gridSection { padding: 0 16px 48px; }
+  .branchesGrid { grid-template-columns: 1fr; gap: 16px; }
+  .branchCard { padding: 24px 20px; }
+  .title { font-size: 2.2rem; }
 }

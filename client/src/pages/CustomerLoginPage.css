@@ -1,156 +1,319 @@
+/* ================================================================
+   CustomerLoginPage.css — Electroland ✦ Obsidian Edition
+   OTP digit boxes · Step progress · Cinematic split
+   Background updated to match OurBranches warm-light palette
+================================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+
+/* ── WRAPPER ───────────────────────────────────────────────── */
 .customer-login-body {
-    min-height: 80vh;
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+  min-height: calc(100vh - 68px);
+  background: #faf5ee;                   /* ← OurBranches warm cream */
+  display: flex;
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  position: relative;
+}
+.customer-login-body::after {
+  content: ''; position: fixed; inset: 0; z-index: 999; pointer-events: none;
+  opacity: .018;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 
+/* ── SPLIT ─────────────────────────────────────────────────── */
 .cl-main-container {
-    display: flex;
-    width: 100%;
-    max-width: 1200px;
-    background: white;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    min-height: 600px;
+  display: flex; width: 100%; min-height: calc(100vh - 68px);
+  border-radius: 0; box-shadow: none; background: transparent; overflow: hidden;
 }
 
+/* ── IMAGE ─────────────────────────────────────────────────── */
 .cl-image-section {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
+  flex: 0 0 52%; position: relative; overflow: hidden;
 }
-
 .cl-image-section img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: brightness(.38) saturate(.55);
+  transform: scale(1.07);
+  transition: transform 9s ease, filter .6s ease;
 }
-
+.cl-image-section:hover img {
+  transform: scale(1.02); filter: brightness(.48) saturate(.68);
+}
 .cl-image-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.1);
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(105deg, rgba(7,7,15,.75) 0%, transparent 55%),
+    linear-gradient(to top, rgba(7,7,15,.92) 0%, rgba(7,7,15,.2) 50%, transparent 100%),
+    linear-gradient(to bottom, rgba(7,7,15,.4) 0%, transparent 25%);
+}
+/* Right amber edge */
+.cl-image-section::after {
+  content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 1px; z-index: 3;
+  background: linear-gradient(to bottom, transparent, rgba(245,158,11,.28), transparent);
+}
+/* Brand stamp */
+.cl-image-section::before {
+  content: 'Electroland';
+  position: absolute; top: 44px; left: 52px; z-index: 4;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: .65rem; font-weight: 600; letter-spacing: .3em;
+  text-transform: uppercase; color: #f59e0b; opacity: .85;
+}
+.cl-image-copy {
+  position: absolute; bottom: 52px; left: 52px; right: 52px; z-index: 4;
+}
+.cl-image-tag {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: .62rem; font-weight: 600; letter-spacing: .2em;
+  text-transform: uppercase; color: #f59e0b; margin-bottom: 14px;
+}
+.cl-image-tag::before { content: ''; width: 20px; height: 1px; background: #f59e0b; }
+.cl-image-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2.2rem, 3.8vw, 3.6rem); font-weight: 300;
+  color: #faf5ea; line-height: 1.08; letter-spacing: -.02em; margin-bottom: 14px;
+}
+.cl-image-title em { font-style: italic; color: #f59e0b; }
+.cl-image-sub {
+  font-size: .85rem; font-weight: 300; color: rgba(250,245,234,.5);
+  line-height: 1.65; max-width: 300px;
 }
 
+/* ── FORM PANEL ────────────────────────────────────────────── */
 .cl-auth-container {
-    flex: 1;
-    background: #fff;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  flex: 0 0 48%;
+  background: #ffffff;                   /* ← white card, like OurBranches cards */
+  border-left: 1px solid rgba(26,26,46,.08);
+  display: flex; align-items: center; justify-content: center;
+  padding: 56px 72px; position: relative; overflow: hidden;
+}
+.cl-auth-container::before {
+  content: ''; position: absolute; bottom: -80px; right: -80px;
+  width: 450px; height: 450px; pointer-events: none;
+  background: radial-gradient(circle, rgba(245,158,11,.045), transparent 68%);
+}
+/* Top amber bar */
+.cl-auth-container::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, #f59e0b 30%, #fcd34d 70%, transparent);
 }
 
+/* Inner form box */
+.cl-auth-container > .cl-form-box {
+  width: 100%; max-width: 400px; position: relative; z-index: 1;
+}
+
+/* ── STEP PROGRESS ─────────────────────────────────────────── */
+.cl-progress {
+  display: flex; align-items: center; gap: 0; margin-bottom: 38px;
+}
+.cl-step {
+  display: flex; flex-direction: column; align-items: center; gap: 7px; flex: 1;
+}
+.cl-step-circle {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .72rem; font-weight: 600; letter-spacing: .02em;
+  transition: background .35s ease, border-color .35s ease, color .35s ease, box-shadow .35s ease;
+}
+.cl-step-circle.done {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  border: none; color: #ffffff;
+  box-shadow: 0 4px 16px rgba(245,158,11,.3);
+}
+.cl-step-circle.active {
+  background: rgba(245,158,11,.1); border: 1.5px solid #f59e0b; color: #b8860b;
+}
+.cl-step-circle.idle {
+  background: rgba(26,26,46,.05); border: 1px solid rgba(26,26,46,.15);
+  color: rgba(26,26,46,.3);
+}
+.cl-step-label {
+  font-size: .58rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(26,26,46,.3); transition: color .35s ease;
+}
+.cl-step-label.active { color: #b8860b; }
+.cl-step-connector {
+  height: 1px; flex: 1; max-width: 48px;
+  background: rgba(26,26,46,.12); margin-bottom: 20px;
+  transition: background .35s ease;
+}
+.cl-step-connector.done { background: #f59e0b; }
+
+/* ── HEADING ───────────────────────────────────────────────── */
 .cl-auth-container h2 {
-    color: #2C3E50;
-    margin-bottom: 30px;
-    font-size: 2em;
-    position: relative;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-align: center;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.75rem, 2.8vw, 2.4rem); font-weight: 600;
+  color: #1a1a2e;                        /* ← dark text on light bg */
+  line-height: 1.12; margin-bottom: 7px;
+  letter-spacing: -.01em; text-transform: none; text-align: left; position: static;
+}
+.cl-auth-container h2::after { display: none !important; }
+.cl-step-desc {
+  font-size: .84rem; font-weight: 300; color: #6a6a8a;
+  line-height: 1.5; margin-bottom: 28px;
 }
 
-.cl-auth-container h2:after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50px;
-    height: 3px;
-    background: linear-gradient(135deg, #34495E, #2C3E50);
-}
-
-.cl-form {
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-}
-
-.cl-input {
-    width: 90%;
-    padding: 15px;
-    margin: 15px auto;
-    border: none;
-    border-radius: 25px;
-    background: #f5f6fa;
-    box-shadow: inset 4px 4px 8px #e0e1e5, inset -4px -4px 8px #ffffff;
-    transition: all 0.3s ease;
-    display: block;
-    font-size: 16px;
-}
-
-.cl-input:focus {
-    outline: none;
-    box-shadow: 0 0 10px rgba(52, 73, 94, 0.3);
-}
-
-.cl-btn {
-    width: 90%;
-    padding: 15px;
-    margin: 20px auto;
-    border: none;
-    border-radius: 25px;
-    background: linear-gradient(135deg, #34495E, #2C3E50);
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    display: block;
-}
-
-.cl-btn:hover {
-    background: linear-gradient(to right, rgb(66, 32, 70), rgb(30, 26, 71), rgb(77, 38, 44), #155217, #2E8B57);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.cl-btn:active, .cl-btn.clicked {
-    transform: scale(0.95);
-}
-
+/* ── ERROR ─────────────────────────────────────────────────── */
 .cl-error-message {
-    color: #e74c3c;
-    margin: 15px auto;
-    padding: 10px;
-    background: #ffebee;
-    border-radius: 5px;
-    width: 90%;
-    text-align: center;
+  display: flex; align-items: flex-start; gap: 9px;
+  padding: 11px 14px; margin-bottom: 22px;
+  background: rgba(239,68,68,.06); border: 1px solid rgba(239,68,68,.2);
+  border-radius: 8px; color: #dc2626; font-size: .82rem; line-height: 1.4;
+  animation: errIn .3s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes errIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ── FORM ──────────────────────────────────────────────────── */
+.cl-form {
+  width: 100%;
+  animation: stepIn .38s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes stepIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.cl-form.step-back {
+  animation: stepInBack .38s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes stepInBack {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Floating label fields */
+.cl-field-wrap { position: relative; margin-bottom: 18px; }
+.cl-input {
+  width: 100%; padding: 20px 18px 8px;
+  background: #faf5ee;                   /* ← OurBranches bg tint */
+  border: 1px solid rgba(26,26,46,.12);
+  border-radius: 10px; color: #1a1a2e;
+  font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 400;
+  outline: none; display: block; box-sizing: border-box;
+  transition: border-color .28s ease, background .28s ease, box-shadow .28s ease;
+}
+.cl-input::placeholder { color: transparent; }
+.cl-input:focus {
+  border-color: rgba(245,158,11,.45); background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(245,158,11,.1), 0 4px 14px rgba(26,26,46,.08);
+}
+.cl-field-label {
+  position: absolute; left: 18px; top: 15px;
+  font-size: .88rem; font-weight: 300; color: #6a6a8a; pointer-events: none;
+  transition: top .2s cubic-bezier(.16,1,.3,1), font-size .2s cubic-bezier(.16,1,.3,1),
+              color .2s ease, letter-spacing .2s ease;
+}
+.cl-input:focus ~ .cl-field-label,
+.cl-input:not(:placeholder-shown) ~ .cl-field-label {
+  top: 7px; font-size: .6rem; letter-spacing: .1em;
+  text-transform: uppercase; color: #b8860b;
+}
+
+/* ── OTP DIGIT BOXES ───────────────────────────────────────── */
+.cl-otp-label {
+  font-size: .62rem; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: #6a6a8a; margin-bottom: 12px;
+  display: block;
+}
+.cl-otp-grid {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  max-width: 320px;               /* ← constrain total OTP width */
+}
+.cl-otp-digit {
+  flex: 1;
+  min-width: 0;                   /* ← prevent overflow */
+  max-width: 48px;                /* ← cap individual box width */
+  height: 52px;
+  padding: 0;
+  background: #faf5ee;
+  border: 1px solid rgba(26,26,46,.14);
+  border-radius: 10px;
+  color: #1a1a2e;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 600; text-align: center; outline: none;
+  transition: border-color .25s ease, box-shadow .25s ease, transform .2s ease;
+  caret-color: #f59e0b;
+}
+.cl-otp-digit:focus {
+  border-color: rgba(245,158,11,.5);
+  box-shadow: 0 0 0 3px rgba(245,158,11,.12), 0 4px 14px rgba(26,26,46,.08);
+  transform: translateY(-2px);
+  background: #ffffff;
+}
+.cl-otp-digit.filled {
+  border-color: rgba(245,158,11,.45);
+  background: rgba(245,158,11,.06);
+  color: #b8860b;
+}
+
+/* Sent-to info */
+.cl-sent-info {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; margin-bottom: 20px;
+  background: rgba(245,158,11,.07); border: 1px solid rgba(245,158,11,.2);
+  border-radius: 8px;
+  font-size: .82rem; font-weight: 300; color: #6a6a8a;
+}
+.cl-sent-info svg { flex-shrink: 0; }
+
+/* ── BUTTON ────────────────────────────────────────────────── */
+.cl-btn {
+  width: 100%; padding: 15px 28px;
+  border: none; border-radius: 10px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff; font-family: 'DM Sans', sans-serif;
+  font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+  box-shadow: 0 4px 28px rgba(245,158,11,.25);
+  transition: transform .25s cubic-bezier(.16,1,.3,1), box-shadow .28s ease;
+  position: relative; overflow: hidden;
+}
+.cl-btn::before {
+  content: ''; position: absolute; top: 0; left: -120%; width: 55%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.22), transparent);
+  transition: left .58s cubic-bezier(.16,1,.3,1);
+}
+.cl-btn:hover::before { left: 160%; }
+.cl-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 38px rgba(245,158,11,.35); }
+.cl-btn:active { transform: scale(.98); }
+.cl-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.cl-spinner {
+  width: 15px; height: 15px;
+  border: 2px solid rgba(255,255,255,.25); border-top-color: #ffffff;
+  border-radius: 50%; animation: spin .65s linear infinite; flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── CHANGE NUMBER ─────────────────────────────────────────── */
 .cl-change-number {
-    margin-top: 15px;
-    color: #34495E;
-    cursor: pointer;
-    text-decoration: underline;
-    font-size: 0.9em;
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 18px; font-size: .78rem; font-weight: 400;
+  color: #6a6a8a; cursor: pointer; text-decoration: none;
+  transition: color .22s ease;
 }
+.cl-change-number::before { content: '←'; }
+.cl-change-number:hover { color: #b8860b; }
 
-@media (max-width: 768px) {
-    .cl-main-container {
-        flex-direction: column;
-        margin: 20px 0;
-    }
-    .cl-image-section {
-        min-height: 200px;
-        max-height: 300px;
-    }
-    .cl-auth-container {
-        padding: 20px;
-    }
+/* ── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .cl-main-container { flex-direction: column; }
+  .cl-image-section { flex: none; min-height: 280px; }
+  .cl-image-section::after { display: none; }
+  .cl-auth-container { flex: none; padding: 52px 36px; }
+}
+@media (max-width: 500px) {
+  .cl-auth-container { padding: 44px 22px; }
+  .cl-otp-grid { max-width: 100%; gap: 6px; }
+  .cl-otp-digit { height: 46px; font-size: 1.3rem; max-width: 44px; }
+  .cl-image-section { min-height: 220px; }
+  .cl-image-section::before { left: 24px; }
+  .cl-image-copy { left: 24px; bottom: 28px; }
 }

@@ -1,0 +1,306 @@
+/* ============================================================
+   SplashScreen.css — ELECTROLAND Cinematic Intro
+   Obsidian · Amber · Electric · Cinematic
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:wght@300;600&family=DM+Sans:wght@300;500&display=swap');
+
+/* ─── ROOT ───────────────────────────────────────────────── */
+.sp-root {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #080810;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+  pointer-events: all;
+}
+
+/* ─── EXIT ANIMATION ──────────────────────────────────────── */
+.sp-root--exit {
+  animation: sp-curtainUp 0.9s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+@keyframes sp-curtainUp {
+  0%   { clip-path: inset(0 0 0 0); opacity: 1; }
+  60%  { clip-path: inset(0 0 0 0); opacity: 1; }
+  100% { clip-path: inset(0 0 100% 0); opacity: 0; }
+}
+
+/* ─── GRID OVERLAY ───────────────────────────────────────── */
+.sp-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(245,158,11,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,158,11,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0;
+  animation: sp-gridIn 0.6s ease 0.1s forwards;
+  pointer-events: none;
+}
+
+@keyframes sp-gridIn {
+  to { opacity: 1; }
+}
+
+/* ─── SCANLINES ──────────────────────────────────────────── */
+.sp-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.18) 2px,
+    rgba(0,0,0,0.18) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+  animation: sp-scanMove 8s linear infinite;
+}
+
+@keyframes sp-scanMove {
+  0%   { background-position-y: 0; }
+  100% { background-position-y: 100px; }
+}
+
+/* ─── CENTER STAGE ───────────────────────────────────────── */
+.sp-stage {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ─── BRAND LINE (top eyebrow) ───────────────────────────── */
+.sp-eyebrow {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: rgba(245,158,11,0.7);
+  margin-bottom: 20px;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: sp-fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) 0.4s forwards;
+}
+
+@keyframes sp-fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── WORDMARK CONTAINER ─────────────────────────────────── */
+.sp-wordmark {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  position: relative;
+}
+
+/* ─── EACH LETTER ─────────────────────────────────────────── */
+.sp-letter {
+  font-family: 'Bebas Neue', 'Cormorant Garamond', serif;
+  font-size: clamp(5rem, 13vw, 12rem);
+  font-weight: 400;
+  line-height: 1;
+  color: #faf5ea;
+  letter-spacing: 0.06em;
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(60px) scaleY(0.6);
+  filter: blur(12px);
+  position: relative;
+  transition: none;
+}
+
+.sp-letter--in {
+  animation: sp-letterIn 0.55s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+@keyframes sp-letterIn {
+  0%   { opacity: 0; transform: translateY(60px) scaleY(0.6); filter: blur(12px); }
+  60%  { opacity: 1; filter: blur(0px); }
+  80%  { transform: translateY(-6px) scaleY(1.04); }
+  100% { opacity: 1; transform: translateY(0) scaleY(1); filter: blur(0px); }
+}
+
+/* Electric flicker on entry */
+.sp-letter--flicker {
+  animation: sp-letterIn 0.55s cubic-bezier(0.16,1,0.3,1) forwards,
+             sp-flicker 0.3s ease forwards;
+}
+
+@keyframes sp-flicker {
+  0%   { color: #f59e0b; text-shadow: 0 0 40px rgba(245,158,11,0.9), 0 0 80px rgba(245,158,11,0.5); }
+  30%  { color: #faf5ea; text-shadow: none; }
+  55%  { color: #f59e0b; text-shadow: 0 0 20px rgba(245,158,11,0.7); }
+  80%  { color: #faf5ea; text-shadow: none; }
+  100% { color: #faf5ea; text-shadow: none; }
+}
+
+/* ─── GLOW STATE (all letters visible) ───────────────────── */
+.sp-wordmark--glow .sp-letter {
+  animation: sp-masterGlow 1.2s ease forwards;
+}
+
+@keyframes sp-masterGlow {
+  0%   { color: #faf5ea; text-shadow: none; }
+  30%  { color: #fcd34d; text-shadow: 0 0 60px rgba(245,158,11,0.7), 0 0 120px rgba(245,158,11,0.3); }
+  60%  { color: #faf5ea; text-shadow: 0 0 20px rgba(245,158,11,0.2); }
+  100% { color: #faf5ea; text-shadow: 0 0 30px rgba(245,158,11,0.15); }
+}
+
+/* ─── TAGLINE ─────────────────────────────────────────────── */
+.sp-tagline {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(0.72rem, 1.2vw, 0.88rem);
+  font-weight: 300;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(250,245,234,0.45);
+  margin-top: 18px;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.sp-tagline--visible {
+  animation: sp-fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+/* ─── LOADING BAR ─────────────────────────────────────────── */
+.sp-bar-wrap {
+  position: absolute;
+  bottom: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(200px, 30vw, 340px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  animation: sp-fadeUp 0.5s ease 0.8s forwards;
+}
+
+.sp-bar-track {
+  width: 100%;
+  height: 1px;
+  background: rgba(250,245,234,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.sp-bar-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #fcd34d);
+  box-shadow: 0 0 10px rgba(245,158,11,0.8), 0 0 20px rgba(245,158,11,0.4);
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.05s linear;
+}
+
+.sp-bar-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245,158,11,0.5);
+}
+
+/* ─── CORNER DECORATIONS ──────────────────────────────────── */
+.sp-corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  opacity: 0;
+  animation: sp-fadeIn 0.4s ease 0.6s forwards;
+}
+
+@keyframes sp-fadeIn {
+  to { opacity: 1; }
+}
+
+.sp-corner--tl { top: 40px; left: 40px; border-top: 1px solid rgba(245,158,11,0.4); border-left: 1px solid rgba(245,158,11,0.4); }
+.sp-corner--tr { top: 40px; right: 40px; border-top: 1px solid rgba(245,158,11,0.4); border-right: 1px solid rgba(245,158,11,0.4); }
+.sp-corner--bl { bottom: 40px; left: 40px; border-bottom: 1px solid rgba(245,158,11,0.4); border-left: 1px solid rgba(245,158,11,0.4); }
+.sp-corner--br { bottom: 40px; right: 40px; border-bottom: 1px solid rgba(245,158,11,0.4); border-right: 1px solid rgba(245,158,11,0.4); }
+
+/* ─── VOLTAGE SPARKS ─────────────────────────────────────── */
+.sp-spark {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #f59e0b;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.sp-spark--1 { top: 30%; left: 15%; animation: sp-sparkFloat 1.8s ease-in-out 1.2s infinite; }
+.sp-spark--2 { top: 65%; left: 82%; animation: sp-sparkFloat 2.2s ease-in-out 1.5s infinite; }
+.sp-spark--3 { top: 20%; left: 72%; animation: sp-sparkFloat 1.6s ease-in-out 1.8s infinite; }
+.sp-spark--4 { top: 75%; left: 28%; animation: sp-sparkFloat 2s ease-in-out 1.0s infinite; }
+
+@keyframes sp-sparkFloat {
+  0%   { opacity: 0; transform: translate(0,0) scale(1); box-shadow: none; }
+  25%  { opacity: 1; box-shadow: 0 0 6px 2px rgba(245,158,11,0.8); }
+  50%  { transform: translate(var(--dx, 20px), var(--dy, -30px)) scale(1.5); opacity: 0.6; }
+  100% { opacity: 0; transform: translate(var(--dx2, -15px), var(--dy2, -60px)) scale(0); }
+}
+
+.sp-spark--1 { --dx: 18px; --dy: -28px; --dx2: -8px; --dy2: -55px; }
+.sp-spark--2 { --dx: -22px; --dy: -35px; --dx2: 12px; --dy2: -65px; }
+.sp-spark--3 { --dx: 15px; --dy: 25px; --dx2: -5px; --dy2: 50px; }
+.sp-spark--4 { --dx: -16px; --dy: -20px; --dx2: 8px; --dy2: -48px; }
+
+/* ─── AMBIENT GLOW BEHIND WORDMARK ───────────────────────── */
+.sp-ambient {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  height: 40vh;
+  background: radial-gradient(ellipse, rgba(245,158,11,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  animation: sp-ambientIn 1s ease 0.8s forwards;
+}
+
+@keyframes sp-ambientIn {
+  to { opacity: 1; }
+}
+
+/* ─── HORIZONTAL RULE LINES ───────────────────────────────── */
+.sp-rule {
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245,158,11,0.35), transparent);
+  margin: 14px auto 0;
+  animation: sp-ruleExpand 0.8s cubic-bezier(0.16,1,0.3,1) 1.6s forwards;
+}
+
+@keyframes sp-ruleExpand {
+  to { width: clamp(200px, 40vw, 500px); }
+}
+
+/* ─── MEDIA QUERIES ───────────────────────────────────────── */
+@media (max-width: 600px) {
+  .sp-corner--tl { top: 20px; left: 20px; }
+  .sp-corner--tr { top: 20px; right: 20px; }
+  .sp-corner--bl { bottom: 20px; left: 20px; }
+  .sp-corner--br { bottom: 20px; right: 20px; }
+  .sp-bar-wrap { bottom: 36px; }
+}

@@ -1,136 +1,193 @@
-import React, { useState, useEffect } from 'react';
-import api from '../api/api'; 
+import React, { useState, useEffect, useRef } from 'react';
+import api from '../api/api';
 import styles from './NewProducts.module.css';
 
-const NewProducts = () => {
-    const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+function useReveal(threshold = 0.12) {
+    const ref = useRef(null);
+    const [visible, setVisible] = useState(false);
+    useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const obs = new IntersectionObserver(
+            ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+            { threshold }
+        );
+        obs.observe(el);
+        return () => obs.disconnect();
+    }, [threshold]);
+    return [ref, visible];
+}
+
+const getImageUrl = (path) => {
+    if (!path) return '/placeholder.jpg';
+    if (path.startsWith('http')) return path;
+    let clean = path.replace(/\\/g, '/').replace(/^public\//, '');
+    if (clean.startsWith('/')) clean = clean.substring(1);
+    return `http://localhost:5001/${clean}`;
+};
+
+const SkeletonCard = ({ delay = 0 }) => (
+    <div className={styles.skeletonCard} style={{ animationDelay: `${delay}s` }}>
+        <div className={styles.skeletonImg} />
+        <div className={styles.skeletonBody}>
+            <div className={styles.skeletonLine} style={{ width: '55%' }} />
+            <div className={styles.skeletonLine} style={{ width: '80%' }} />
+            <div className={styles.skeletonLine} style={{ width: '65%' }} />
+        </div>
+    </div>
+);
+
+const ProductCard = ({ product, index }) => {
+    const [slide, setSlide]     = useState(0);
+    const [hovered, setHovered] = useState(false);
+    const [ref, visible]        = useReveal(0.1);
+    const photos = product.prod_photos || [];
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                // Ensure your backend has a route for /newproducts
-                const response = await api.get('/newproducts'); 
-                
-                if (response.data.success) {
-                    setProducts(response.data.data);
-                } else {
-                    setError('Failed to load products');
-                }
-            } catch (err) {
-                console.error('Error fetching new products:', err);
-                setError('Failed to load products. Please try again later.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProducts();
-    }, []);
-
-    if (loading) return <div className={styles.loading}>Loading new products...</div>;
+        if (photos.length > 1) {
+            const t = setInterval(() =>
+                setSlide(p => (p + 1) % photos.length), hovered ? 1800 : 3500);
+            return () => clearInterval(t);
+        }
+    }, [photos.length, hovered]);
 
     return (
-        <div className={styles.container}>
-            <div className={styles.contentArea}>
-                <h1>New Products</h1>
-                
-                {error && <div className={styles.errorMessage}>{error}</div>}
-                
-                {products.length === 0 && !error ? (
-                    <div className={styles.noProducts}>No new products found in the last 15 days.</div>
-                ) : (
-                    <div className={styles.productsContainer}>
-                        {products.map(product => (
-                            <ProductCard key={product.prod_id} product={product} />
+        <div
+            ref={ref}
+            className={`${styles.card} ${visible ? styles.cardVisible : ''}`}
+            style={{ animationDelay: `${(index % 4) * 0.08}s` }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+        >
+            {/* NEW badge */}
+            <div className={styles.newBadge}>NEW</div>
+
+            {/* Photo slideshow */}
+            <div className={styles.photoWrap}>
+                {photos.length === 0 ? (
+                    <img src="/placeholder.jpg" alt="Product"
+                        className={`${styles.photo} ${styles.photoActive}`} />
+                ) : photos.map((ph, i) => (
+                    <img
+                        key={i}
+                        src={getImageUrl(ph)}
+                        alt={`${product.Prod_name || 'Product'} ${i + 1}`}
+                        className={`${styles.photo} ${i === slide ? styles.photoActive : ''}`}
+                        onError={e => { e.target.onerror = null; e.target.src = '/placeholder.jpg'; }}
+                    />
+                ))}
+                <div className={styles.photoGradient} />
+                <div className={styles.photoTitle}>{product.Prod_name || 'Product'}</div>
+                {photos.length > 1 && (
+                    <div className={styles.dots}>
+                        {photos.map((_, i) => (
+                            <span
+                                key={i}
+                                className={`${styles.dot} ${i === slide ? styles.dotActive : ''}`}
+                                onClick={e => { e.stopPropagation(); setSlide(i); }}
+                            />
                         ))}
                     </div>
                 )}
+            </div>
+
+            {/* Card body — mirrors OurBranches structure */}
+            <div className={styles.cardBody}>
+                <div className={styles.cardHeader}>
+                    <div className={styles.cardIconWrap}>📦</div>
+                    <div className={styles.cardTitleGroup}>
+                        <div className={styles.cardTitle}>
+                            {product.Prod_name || `Product ${product.prod_id}`}
+                        </div>
+                        <div className={styles.cardBadge}>Just Arrived</div>
+                    </div>
+                </div>
+
+                <div className={styles.detailsInner}>
+                    <div className={styles.detailRow}>
+                        <div className={styles.detailIcon}>🆔</div>
+                        <span><span className={styles.detailLabel}>ID:</span> {product.prod_id}</span>
+                    </div>
+                    <div className={styles.detailRow}>
+                        <div className={styles.detailIcon}>📏</div>
+                        <span><span className={styles.detailLabel}>Model:</span> {product.Model_no}</span>
+                    </div>
+                    <div className={styles.detailRow}>
+                        <div className={styles.detailIcon}>🏢</div>
+                        <span><span className={styles.detailLabel}>Company:</span> {product.com_name}</span>
+                    </div>
+                </div>
             </div>
         </div>
     );
 };
 
-// Sub-component for individual product card
-const ProductCard = ({ product }) => {
-    const [currentSlide, setCurrentSlide] = useState(0);
+const NewProducts = () => {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading]   = useState(true);
+    const [error, setError]       = useState(null);
+    const [heroRef, heroVisible]  = useReveal(0.05);
 
-    // Auto-advance slideshow
     useEffect(() => {
-        if (product.prod_photos && product.prod_photos.length > 1) {
-            const interval = setInterval(() => {
-                setCurrentSlide(prev => (prev + 1) % product.prod_photos.length);
-            }, 3000); // 3 seconds
-            return () => clearInterval(interval);
-        }
-    }, [product.prod_photos]);
-
-    // --- FIX: Robust Image URL Helper ---
-    const getImageUrl = (path) => {
-        if (!path) return '/placeholder.jpg';
-        
-        // If it is already a complete URL (Cloudinary, S3, etc.)
-        if (path.startsWith('http')) return path;
-
-        // Clean the path:
-        // 1. Replace backslashes with forward slashes
-        // 2. Remove 'public/' if mistakenly stored in the DB path
-        let cleanPath = path.replace(/\\/g, '/').replace(/^public\//, '');
-        
-        // Remove leading slash if present
-        if (cleanPath.startsWith('/')) cleanPath = cleanPath.substring(1);
-
-        // Point to your backend server (Port 5001)
-        return `http://localhost:5001/${cleanPath}`; 
-    };
-
-    const renderSlides = () => {
-        // 1. Handle case with no photos
-        if (!product.prod_photos || product.prod_photos.length === 0) {
-            return (
-                <img 
-                    src='/placeholder.jpg' 
-                    alt="No Photo"
-                    className={`${styles.slide} ${styles.active}`} 
-                />
-            );
-        }
-
-        // 2. Map through photos
-        return product.prod_photos.map((photo, index) => (
-            <img 
-                key={index}
-                src={getImageUrl(photo)} 
-                alt={`${product.Prod_name} ${index + 1}`}
-                // Apply 'active' class only to the current slide
-                className={`${styles.slide} ${index === currentSlide ? styles.active : ''}`}
-                onError={(e) => { 
-                    e.target.onerror = null; // Prevent infinite loop
-                    e.target.src = '/placeholder.jpg'; 
-                }}
-            />
-        ));
-    };
+        api.get('/newproducts')
+            .then(res => {
+                if (res.data.success) setProducts(res.data.data);
+                else setError('Failed to load products');
+            })
+            .catch(() => setError('Failed to load products. Please try again later.'))
+            .finally(() => setLoading(false));
+    }, []);
 
     return (
-        <div className={styles.productItem}>
-            <div className={styles.slideshowContainer}>
-                {renderSlides()}
+        <div className={styles.root}>
+            {/* Page header */}
+            <div ref={heroRef} className={`${styles.hero} ${heroVisible ? styles.heroVisible : ''}`}>
+                <div className={styles.heroContent}>
+                    <div className={styles.heroTag}>Fresh Arrivals</div>
+                    <h1 className={styles.heroTitle}>New <em>Products</em></h1>
+                    <p className={styles.heroSub}>
+                        Explore our latest additions — arrived within the last 15 days
+                    </p>
+                </div>
             </div>
-            <div className={styles.productDetails}>
-                <p>
-                    <span role="img" aria-label="id">🆔</span> 
-                    <span>Product ID:</span> {product.prod_id}
-                </p>
-                <p>
-                    <span role="img" aria-label="ruler">📏</span> 
-                    <span>Model Number:</span> {product.Model_no}
-                </p>
-                <p>
-                    <span role="img" aria-label="company">🏢</span> 
-                    <span>Company Name:</span> {product.com_name}
-                </p>
+
+            {/* Grid section */}
+            <div className={styles.content}>
+                {loading && (
+                    <div className={styles.grid}>
+                        {Array.from({ length: 8 }).map((_, i) => (
+                            <SkeletonCard key={i} delay={i * 0.05} />
+                        ))}
+                    </div>
+                )}
+
+                {error && (
+                    <div className={styles.errorState}>
+                        <span className={styles.errorIcon}>⚠️</span>
+                        <p>{error}</p>
+                    </div>
+                )}
+
+                {!loading && !error && products.length === 0 && (
+                    <div className={styles.emptyState}>
+                        <span className={styles.emptyIcon}>📋</span>
+                        <p>No new products found in the last 15 days.</p>
+                    </div>
+                )}
+
+                {!loading && products.length > 0 && (
+                    <>
+                        <div className={styles.countBar}>
+                            <span className={styles.countNum}>{products.length}</span>
+                            <span className={styles.countLabel}>new arrivals</span>
+                        </div>
+                        <div className={styles.grid}>
+                            {products.map((product, i) => (
+                                <ProductCard key={product.prod_id} product={product} index={i} />
+                            ))}
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );
