@@ -1,282 +1,574 @@
-/* Products.module.css */
+/* ================================================================
+   Products.module.css — Electroland ✦ Midnight Precision
+   Card-based product layout · Grid view · Detail & Edit forms
+================================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400;1,600&display=swap');
+
+/* ── VARIABLES ─────────────────────────────────────────────── */
+:root {
+  --cream:       #f7f2eb;
+  --white:       #ffffff;
+  --ink:         #1a1520;
+  --ink-mid:     #3d3648;
+  --ink-soft:    #6b6478;
+  --ink-faint:   #a09aab;
+  --amber:       #f5a814;
+  --amber-deep:  #d97706;
+  --amber-glow:  rgba(245,168,20,.22);
+  --amber-wash:  rgba(245,168,20,.08);
+  --amber-bdr:   rgba(245,168,20,.28);
+  --bdr:         rgba(26,21,32,.09);
+  --bdr-soft:    rgba(26,21,32,.06);
+  --accepted:       #15803d;
+  --accepted-bg:    rgba(22,163,74,.08);
+  --accepted-bdr:   rgba(22,163,74,.22);
+  --rejected:       #dc2626;
+  --rejected-bg:    rgba(239,68,68,.08);
+  --rejected-bdr:   rgba(239,68,68,.22);
+  --hold:           #b45309;
+  --hold-bg:        rgba(217,119,6,.09);
+  --hold-bdr:       rgba(217,119,6,.26);
+  --shadow-card: 0 2px 20px rgba(26,21,32,.07), 0 1px 4px rgba(26,21,32,.04);
+  --shadow-lift: 0 12px 40px rgba(26,21,32,.13), 0 3px 10px rgba(26,21,32,.06);
+  --ease:        cubic-bezier(.16,1,.3,1);
+  --ease-back:   cubic-bezier(.34,1.56,.64,1);
+  --ff-d:        'Cormorant Garamond', Georgia, serif;
+  --ff-b:        'Outfit', sans-serif;
+}
+
+/* ── PAGE WRAPPER ──────────────────────────────────────────── */
 .container {
   width: 100%;
   padding: 20px;
   box-sizing: border-box;
+  font-family: var(--ff-b);
+  -webkit-font-smoothing: antialiased;
 }
 
+/* ── CONTENT AREA ──────────────────────────────────────────── */
 .contentArea {
-  background: #ffffff;
-  border-radius: 15px;
-  padding: 25px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  height: calc(100vh - 90px); /* Adjust as needed */
+  background: var(--white);
+  border-radius: 18px;
+  padding: 28px 30px;
+  box-shadow: var(--shadow-lift);
+  border: 1px solid var(--bdr-soft);
+  height: calc(100vh - 90px);
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  animation: pageIn .45s var(--ease) both;
+}
+.contentArea::-webkit-scrollbar { display: none; }
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.contentArea::-webkit-scrollbar {
-  display: none;
-}
-
+/* ── PAGE TITLE ────────────────────────────────────────────── */
 .contentArea h1 {
-  color: #2d3436;
-  margin-bottom: 20px;
-  font-size: 1.5rem;
+  font-family: var(--ff-d);
+  font-size: clamp(1.8rem, 3vw, 2.3rem);
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -.02em;
+  line-height: 1.05;
+  margin: 0 0 24px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.contentArea h1::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 2.1rem;
+  background: linear-gradient(180deg, var(--amber), var(--amber-deep));
+  border-radius: 3px;
+  flex-shrink: 0;
 }
 
+/* ── HEADER CONTAINER ──────────────────────────────────────── */
 .headerContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
   gap: 10px;
 }
 
+/* ── NAV TABS ──────────────────────────────────────────────── */
 .headerButtons {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   flex-wrap: wrap;
+  background: rgba(26,21,32,.04);
+  border: 1px solid var(--bdr);
+  padding: 5px;
+  border-radius: 11px;
 }
 
 .navButton {
-  padding: 8px 16px;
-  background-color: #f0f0f0;
-  color: #2d3436;
-  border: 1px solid #e0e0e0;
-  border-radius: 5px;
+  padding: 8px 20px;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid transparent;
+  border-radius: 7px;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: background-color 0.3s, box-shadow 0.3s;
+  font-family: var(--ff-b);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  transition: color .22s var(--ease), background .22s var(--ease),
+              border-color .22s, transform .22s var(--ease-back),
+              box-shadow .22s ease;
 }
-
-.navButton.active {
-  background-color: #2d3436;
-  color: white;
-  border-color: #2d3436;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
 .navButton:hover:not(.active) {
-  background-color: #e9e9e9;
+  background: var(--white);
+  color: var(--ink);
+  border-color: var(--bdr);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
+}
+.navButton.active {
+  background: var(--ink);
+  color: var(--amber);
+  border-color: var(--ink);
+  box-shadow: 0 4px 14px rgba(26,21,32,.22);
 }
 
+/* ── BACK BUTTON ───────────────────────────────────────────── */
 .backButton {
-  padding: 8px 16px;
-  background-color: #2d3436;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 20px;
+  border-radius: 9px;
+  border: 1px solid var(--bdr);
+  background: var(--white);
+  font-family: var(--ff-b);
+  font-size: .76rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+  color: var(--ink-soft);
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s;
+  box-shadow: var(--shadow-card);
+  transition: color .2s, border-color .2s, background .2s, transform .2s var(--ease-back);
 }
-
+.backButton::before {
+  content: '←';
+  font-size: .85rem;
+  transition: transform .2s var(--ease);
+}
 .backButton:hover {
-  background-color: #636e72;
+  color: var(--amber-deep);
+  border-color: var(--amber-bdr);
+  background: var(--amber-wash);
+  transform: translateY(-1px);
+}
+.backButton:hover::before { transform: translateX(-3px); }
+
+/* ── VIEW CONTAINER ────────────────────────────────────────── */
+.viewContainer {
+  animation: fadeSlideIn .38s var(--ease) both;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px) scale(.995); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
 }
 
-/* Product Grid Styles */
+/* ══════════════════════════════════════════════════════════════
+   PRODUCT GRID
+══════════════════════════════════════════════════════════════ */
 .productsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
 }
 
+/* ── PRODUCT CARD ──────────────────────────────────────────── */
 .productCard {
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  text-align: center;
+  background: var(--white);
+  border: 1px solid var(--bdr);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  overflow: hidden;
-}
-
-.productCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
-}
-
-/* Styles for the Slideshow (Used in Grid View) */
-.slideshowContainer {
   position: relative;
-  width: 100%;
-  height: 150px; /* Default height for product grid */
-  overflow: hidden;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  background-color: #f0f0f0;
-}
-
-.slide {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  transition: transform .3s var(--ease), box-shadow .3s ease, border-color .3s;
   opacity: 0;
-  transition: opacity 0.5s ease-in-out; /* Smooth fade transition */
+  animation: cardIn .45s var(--ease) forwards;
 }
+.productCard:nth-child(1) {animation-delay:.04s}
+.productCard:nth-child(2) {animation-delay:.08s}
+.productCard:nth-child(3) {animation-delay:.12s}
+.productCard:nth-child(4) {animation-delay:.16s}
+.productCard:nth-child(5) {animation-delay:.20s}
+.productCard:nth-child(6) {animation-delay:.24s}
+.productCard:nth-child(7) {animation-delay:.28s}
+.productCard:nth-child(8) {animation-delay:.32s}
+.productCard:nth-child(9) {animation-delay:.36s}
+.productCard:nth-child(10){animation-delay:.40s}
+.productCard:nth-child(11){animation-delay:.44s}
+.productCard:nth-child(12){animation-delay:.48s}
 
-.slide.activeSlide {
-  opacity: 1; /* Show the active slide */
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(16px) scale(.99); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
 }
+.productCard:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lift);
+  border-color: var(--amber-bdr);
+}
+/* Amber accent bar on hover */
+.productCard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--amber), var(--amber-deep));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .4s var(--ease);
+  border-radius: 3px 3px 0 0;
+  z-index: 2;
+}
+.productCard:hover::before { transform: scaleX(1); }
 
+/* ── PRODUCT DETAILS (card body) ───────────────────────────── */
 .productDetails {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  font-size: 0.9rem;
+  gap: 0;
+  padding: 14px 16px 16px;
 }
-
 .productDetails span {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: .8rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
 }
 
 .productDetails .prodId {
+  font-family: var(--ff-b);
+  font-size: .64rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  background: rgba(26,21,32,.05);
+  border: 1px solid var(--bdr-soft);
+  padding: 2px 8px;
+  border-radius: 5px;
+  display: inline-block;
+  margin-bottom: 6px;
+  align-self: flex-start;
+}
+
+/* Product name — first real span after prodId */
+.productDetails span:nth-child(2) {
+  font-family: var(--ff-d);
+  font-size: 1.08rem;
   font-weight: 600;
-  color: #2d3436;
-  font-size: 1rem;
+  color: var(--ink);
+  letter-spacing: -.01em;
+  line-height: 1.2;
+  margin-bottom: 4px;
+  white-space: normal;
 }
 
 .productDetails .status {
-  font-weight: 500;
-  padding: 3px 8px;
-  border-radius: 12px;
+  margin-top: 10px;
+  font-family: var(--ff-b);
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 100px;
   display: inline-block;
-  align-self: center;
-  font-size: 0.8rem;
+  align-self: flex-start;
 }
 
+/* ── STATUS VARIANTS ───────────────────────────────────────── */
 .statusAccepted {
-  background-color: #d4efdf;
-  color: #196f3d;
+  background: var(--accepted-bg);
+  border: 1px solid var(--accepted-bdr);
+  color: var(--accepted);
 }
-
 .statusRejected {
-  background-color: #fadbd8;
-  color: #922b21;
+  background: var(--rejected-bg);
+  border: 1px solid var(--rejected-bdr);
+  color: var(--rejected);
 }
-
 .statusHold {
-  background-color: #fdebd0;
-  color: #b9770e;
+  background: var(--hold-bg);
+  border: 1px solid var(--hold-bdr);
+  color: var(--hold);
 }
 
-/* Details & Edit Form Styles */
+/* ══════════════════════════════════════════════════════════════
+   SLIDESHOW (Grid Card)
+══════════════════════════════════════════════════════════════ */
+.slideshowContainer {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  background: #f0ecf5;
+  border-bottom: 1px solid var(--bdr-soft);
+}
+.slide {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity .55s ease-in-out;
+}
+.slide.activeSlide { opacity: 1; }
+
+/* ══════════════════════════════════════════════════════════════
+   PRODUCT DETAILS PAGE
+══════════════════════════════════════════════════════════════ */
+
+/* Photos strip */
+.photosContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #fdfaf6;
+  border: 1px solid var(--bdr);
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
+}
+.detailsPhoto {
+  height: 160px;
+  width: auto;
+  max-width: 210px;
+  object-fit: cover;
+  border-radius: 9px;
+  border: 1px solid var(--bdr);
+  box-shadow: 0 3px 10px rgba(26,21,32,.08);
+  transition: transform .28s var(--ease), box-shadow .28s ease;
+}
+.detailsPhoto:hover {
+  transform: scale(1.04);
+  box-shadow: 0 8px 24px rgba(26,21,32,.14);
+}
+
+/* ── INFO FORM CARD ────────────────────────────────────────── */
 .formSection {
+  background: var(--white);
+  border: 1px solid var(--bdr);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
   margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid #e6e9f0;
-  border-radius: 5px;
 }
 
 .sectionTitle {
-  color: #2d3436;
-  font-size: 1.2rem;
-  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--bdr-soft);
+  font-family: var(--ff-b);
+  font-size: .64rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: #fdfaf6;
+  margin: 0;
+}
+.sectionTitle::before {
+  content: '';
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 6px var(--amber-glow);
+  flex-shrink: 0;
 }
 
 .fieldGroup {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0;
+  padding: 0;
 }
+.fieldGroup > div {
+  padding: 18px 24px;
+  border-right: 1px solid var(--bdr-soft);
+  border-bottom: 1px solid var(--bdr-soft);
+}
+.fieldGroup > div:nth-child(3n) { border-right: none; }
 
 .fieldLabel {
   display: block;
-  margin-bottom: 5px;
-  color: #2d3436;
-  font-weight: 500;
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 7px;
 }
 
 .fieldInput,
 .fieldSelect {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #e6e9f0;
-  border-radius: 5px;
-  font-size: 1rem;
+  padding: 10px 14px;
+  background: #faf7f3;
+  border: 1px solid var(--bdr);
+  border-radius: 8px;
+  font-family: var(--ff-b);
+  font-size: .84rem;
+  font-weight: 500;
+  color: var(--ink-mid);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color .2s, box-shadow .2s, background .2s;
 }
-
+.fieldInput:focus,
+.fieldSelect:focus {
+  border-color: var(--amber-bdr);
+  box-shadow: 0 0 0 3px var(--amber-wash);
+  background: var(--white);
+}
 .fieldInput:disabled {
-  background: #f0f0f0;
+  background: rgba(26,21,32,.03);
+  color: var(--ink-soft);
   cursor: not-allowed;
+  border-color: var(--bdr-soft);
 }
-
-/* --- UPDATED STYLES FOR DETAILS PAGE PHOTOS --- */
-.photosContainer {
-  display: flex;
-  flex-wrap: wrap; /* Allows images to wrap to the next line if needed */
-  gap: 10px;
-  justify-content: center; /* Center the images */
-  margin-bottom: 20px;
-  padding: 10px;
-  border: 1px solid #e6e9f0;
-  border-radius: 5px;
-  background: #fdfdfd;
-}
-
-/* New style for each individual photo on the details page */
-.detailsPhoto {
-  height: 150px; /* Taller than grid, but not too large */
-  width: auto;
-  max-width: 200px; /* Limit width */
-  object-fit: cover;
-  border-radius: 5px;
-  border: 1px solid #f0f0f0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-/* --- REMOVED .detailsSlideshow style --- */
-/* (It's no longer needed) */
-
-.formButton {
-  display: inline-block;
-  padding: 12px 20px;
-  background: #2d3436;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1rem;
+.fieldSelect {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a09aab' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  background-color: #faf7f3;
   cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  margin-top: 10px;
+}
+.fieldSelect:focus { background-color: var(--white); }
+
+/* Rejection textarea inherits fieldInput */
+.fieldInput[rows] {
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.55;
+  font-size: .82rem;
+}
+
+/* ── ACTION BUTTON ─────────────────────────────────────────── */
+.formButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: var(--ink);
+  color: var(--amber);
+  border: none;
+  border-radius: 9px;
+  font-family: var(--ff-b);
+  font-size: .8rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 16px;
   margin-right: 10px;
-  transition: background 0.3s;
+  box-shadow: 0 4px 18px rgba(26,21,32,.18);
+  transition: background .25s, box-shadow .25s, transform .22s var(--ease-back);
 }
-
+.formButton::after {
+  content: '→';
+  font-size: .9rem;
+  transition: transform .22s var(--ease);
+}
 .formButton:hover {
-  background: #636e72;
+  background: #2f2840;
+  box-shadow: 0 8px 28px rgba(26,21,32,.28);
+  transform: translateY(-2px);
 }
+.formButton:hover::after { transform: translateX(4px); }
+.formButton:active { transform: translateY(0); }
 
+/* ── MESSAGES ──────────────────────────────────────────────── */
 .errorMessage {
-  color: red;
-  margin-top: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 10px 16px;
+  background: var(--rejected-bg);
+  border: 1px solid var(--rejected-bdr);
+  border-radius: 8px;
+  font-size: .8rem;
+  font-weight: 500;
+  color: var(--rejected);
+}
+.errorMessage::before { content: '✕'; font-size: .7rem; font-weight: 700; }
+
+/* Success message utility (used inline) */
+/* Keep the inline style on success for now; override via this if needed */
+
+/* ── EMPTY STATE ───────────────────────────────────────────── */
+.productsGrid > p {
+  grid-column: 1 / -1;
+  padding: 64px 24px;
+  text-align: center;
+  background: var(--white);
+  border: 1px dashed var(--bdr);
+  border-radius: 16px;
+  font-family: var(--ff-d);
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--ink-faint);
+  letter-spacing: .01em;
 }
 
+/* ── LOADING STATES ────────────────────────────────────────── */
+.contentArea > p,
+.productsGrid > p[style],
+p:only-child {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .82rem;
+  color: var(--ink-soft);
+  letter-spacing: .04em;
+}
+
+/* ── RESPONSIVE ────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .fieldGroup { grid-template-columns: repeat(2, 1fr); }
+  .fieldGroup > div:nth-child(3n) { border-right: 1px solid var(--bdr-soft); }
+  .fieldGroup > div:nth-child(2n) { border-right: none; }
+}
 @media (max-width: 768px) {
   .contentArea {
     height: auto;
-    padding: 15px;
+    padding: 18px 16px;
+    border-radius: 14px;
   }
-
-  .contentArea h1 {
-    font-size: 1.2rem;
-  }
-  
-  /* Adjust photo size on mobile */
-  .detailsPhoto {
-    height: 120px;
-  }
+  .productsGrid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+  .fieldGroup { grid-template-columns: 1fr; }
+  .fieldGroup > div { border-right: none !important; }
+  .detailsPhoto { height: 120px; max-width: 160px; }
+  .headerButtons { background: transparent; border: none; padding: 0; gap: 8px; }
+}
+@media (max-width: 480px) {
+  .contentArea h1 { font-size: 1.5rem; }
+  .navButton { padding: 8px 14px; font-size: .73rem; }
+  .productsGrid { grid-template-columns: 1fr; }
 }
