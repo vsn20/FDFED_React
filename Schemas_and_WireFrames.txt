@@ -1,0 +1,299 @@
+All files read successfully. Here's the complete summary:
+
+---
+
+## 1. Database Schemas (Mongoose Models)
+
+### Branch ([server/models/branches.js](server/models/branches.js))
+| Field | Type | Constraints |
+|-------|------|-------------|
+| `bid` | String | **unique**, **required** — Branch ID |
+| `b_name` | String | **required** — Branch name |
+| `location` | String | **required** — Branch location |
+| `manager_id` | ObjectId | ref: `"Employee"`, default: `null` |
+| `manager_name` | String | default: `"Not Assigned"` |
+| `manager_email` | String | default: `"N/A"` |
+| `manager_ph_no` | String | default: `"N/A"` |
+| `manager_assigned` | Boolean | default: `false` |
+| `createdAt` | Date | default: `Date.now` |
+| `active` | String | enum: `["active", "inactive"]`, default: `"active"` |
+
+---
+
+### Company ([server/models/company.js](server/models/company.js))
+| Field | Type | Constraints |
+|-------|------|-------------|
+| `c_id` | String | **unique**, **required** |
+| `cname` | String | **required** |
+| `email` | String | **required** |
+| `phone` | String | **required** |
+| `address` | String | **required** |
+| `createdAt` | Date | default: `Date.now` |
+| `active` | String | enum: `["active", "inactive"]`, default: `"active"` |
+
+---
+
+### Complaint ([server/models/complaint.js](server/models/complaint.js))
+| Field | Type | Constraints |
+|-------|------|-------------|
+| `complaint_id` | String | **unique**, **required** |
+| `sale_id` | String | ref: `"Sale"`, **required** |
+| `product_id` | String | ref: `"Product"`, **required** |
+| `company_id` | String | ref: `"Company"`, **required** |
+| `complaint_info` | String | **required** |
+| `complaint_date` | Date | default: `Date.now` |
+| `phone_number` | String | **required**, match: `/^\+?[1-9]\d{1,14}$/` |
+| `status` | String | enum: `["Open", "Closed"]`, default: `"Open"` |
+| `createdAt` | Date | default: `Date.now` |
+
+---
+
+### Customer ([server/models/customer.js](server/models/customer.js))
+| Field | Type | Constraints |
+|-------|------|-------------|
+| `customer_id` | String | **unique**, **required** |
+| `first_name` | String | **required** |
+| `last_name` | String | **required** |
+| `phno` | String | **required** |
+| `email` | String | **required**, **unique** |
+| `createdBy` | String | **required** |
+| `createdAt` | Date | default: `Date.now` |
+
+---
+
+### Employee ([server/models/employees.js](server/models/employees.js))
+| Field | Type | Constraints |
+|-------|------|-------------|
+| `e_id` | String | **unique**, **required** |
+| `f_name` | String | **required** |
+| `last_name` | String | **required** |
+| `role` | String | enum: `["owner", "manager", "salesman"]`, **required** |
+| `bid` | String | ref: `"Branch"`, default: `null` |
+| `email` | String | **unique**, **required** |
+| `phone_no` | String | default: `null`, match: `/^[0-9]{10}$/` |
+| `hiredAt` | Date | default: `Date.now` |
+| `address` | String | default: `null` |
+| `status` | String | enum: `["active", "resigned", "fired"]`, default: `"active"` |
+| `resignation_date` | Date | default: `null` |
+| `fired_date` | Date | default: `null` |
+| `reason_for_exit` | String | default: `null` |
+| `acno` | String | **required** |
+| `ifsc` | String | **required** |
+| `bankname` | String | **required** |
+| `base_salary` | Number | **required** |
+| `createdBy` | String | **required** |
+
+---
+
+### Inventory ([server/models/inventory.js](server/models/inventory.js))
+| Field | Type | Constraints |
+|-------|------|-------------|
+| `branch_id` | String | ref: `"Branch"`, **required** |
+| `branch_name` | String | **required** |
+| `product_id` | String | ref: `"Product"`, **required** |
+| `product_name` | String | **required** |
+| `company_id` | String | ref: `"Company"`, **required** |
+| `company_name` | String | **required** |
+| `model_no` | String | **required** |
+| `quantity` | Number | **required**, default: `0` |
+| `updatedAt` | Date | default: `Date.now` |
+
+**Compound Index:** `{ branch_id: 1, product_id: 1, company_id: 1 }` — **unique**
+
+---
+
+### Message ([server/models/message.js](server/models/message.js))
+| Field | Type | Constraints |
+|-------|------|-------------|
+| `from` | String | **required** |
+| `to` | String | **required** |
+| `category` | String | **required** |
+| `message` | String | **required** |
+| `timestamp` | Date | default: `Date.now` |
+| `branch_id` | String | optional |
+| `c_id` | String | optional |
+| `emp_id` | String | optional |
+
+---
+
+### Order ([server/models/orders.js](server/models/orders.js))
+| Field | Type | Constraints |
+|-------|------|-------------|
+| `order_id` | String | **unique**, **required** |
+| `branch_id` | String | **required**, ref: `"Branch"` |
+| `branch_name` | String | **required** |
+| `company_id` | String | **required**, ref: `"Company"` |
+| `company_name` | String | **required** |
+| `product_id` | String | **required**, ref: `"Product"` |
+| `product_name` | String | **required** |
+| `quantity` | Number | **required** |
+| `ordered_date` | Date | **required** |
+| `delivery_date` | Date | default: `null` |
+| `status` | String | enum: `["pending", "cancelled", "shipped", "delivered", "accepted"]`, default: `"pending"` |
+| `installation_type` | String | default: `"None"` |
+
+**Options:** `{ timestamps: true }` (adds `createdAt`/`updatedAt` automatically)
+**Pre-save hook:** Lowercases `status` before save.
+
+---
+
+### Product ([server/models/products.js](server/models/products.js))
+| Field | Type | Constraints |
+|-------|------|-------------|
+| `prod_id` | String | **required**, **unique** |
+| `Prod_name` | String | **required** |
+| `Com_id` | String | **required** |
+| `Model_no` | String | **required** |
+| `com_name` | String | **required** |
+| `prod_year` | String | **required** |
+| `stock` | Number | **required** |
+| `Retail_price` | Number | **required** |
+| `miniselling` | Number | default: `1` |
+| `installationcharge` | Number | default: `0` |
+| `stockavailability` | String | enum: `["instock", "outofstock"]`, default: `"instock"`, **required** |
+| `Status` | String | enum: `["Hold", "Accepted", "Rejected"]`, default: `"Hold"` |
+| `rejection_reason` | String | default: `null` |
+| `prod_description` | String | **required** |
+| `warrantyperiod` | String | **required** |
+| `installation` | String | **required**, enum: `["Required", "Not Required"]` |
+| `installationType` | String | enum: `["Paid", "Free"]` |
+| `prod_photos` | [String] | Array of strings |
+| `createdAt` | Date | default: `Date.now` |
+| `approvedAt` | Date | — |
+
+---
+
+### Sale ([server/models/sale.js](server/models/sale.js))
+| Field | Type | Constraints |
+|-------|------|-------------|
+| `sales_id` | String | **unique**, **required** |
+| `branch_id` | String | ref: `"Branch"`, **required** |
+| `salesman_id` | String | ref: `"Employee"`, **required** |
+| `company_id` | String | ref: `"Company"`, **required** |
+| `product_id` | String | ref: `"Product"`, **required** |
+| `customer_name` | String | **required** |
+| `sales_date` | Date | **required** |
+| `unique_code` | String | **unique**, **required** |
+| `purchased_price` | Number | **required** |
+| `sold_price` | Number | **required** |
+| `quantity` | Number | **required** |
+| `amount` | Number | **required** |
+| `profit_or_loss` | Number | **required** |
+| `phone_number` | String | **required**, match: `/^\+?[1-9]\d{1,14}$/` |
+| `customer_email` | String | default: `null` |
+| `address` | String | — |
+| `review` | String | — |
+| `rating` | Number | min: `1`, max: `5`, default: `null` |
+| `installation` | String | **required**, enum: `["Required", "Not Required"]` |
+| `installationType` | String | enum: `["Paid", "Free"]` |
+| `installationcharge` | String | — |
+| `installation_status` | String | enum: `["Pending", "Completed", null]`, default: `null` |
+| `createdAt` | Date | default: `Date.now` |
+
+---
+
+### User ([server/models/User.js](server/models/User.js))
+| Field | Type | Constraints |
+|-------|------|-------------|
+| `userId` | String | **required** (msg: "User ID is required"), **unique**, ref: `"Employee"` |
+| `emp_id` | String | trim, default: `null` |
+| `c_id` | String | trim, default: `null` (employee OR company user) |
+| `password` | String | **required** (msg: "Password is required"), minlength: `6` |
+| `createdAt` | Date | default: `Date.now` |
+
+---
+
+## 2. Complete Routing Tree ([client/src/App.jsx](client/src/App.jsx))
+
+### Public Routes (wrapped in `<PublicLayout>`)
+
+| Path | Component |
+|------|-----------|
+| `/` | `HomePage` |
+| `/newproducts` | `NewProducts` |
+| `/ourproducts` | `OurProducts` |
+| `/topproducts` | `TopProducts` |
+| `/login` | `LoginPage` |
+| `/our-branches` | `OurBranches` |
+| `/about-us` | `AboutUs` |
+| `/companylogin` | `CompanyLogin` |
+| `/customerlogin` | `CustomerLoginPage` |
+| `/contact-us` | `ContactUs` |
+| `/forgot-password` | `ForgotPassword` |
+
+### Post-Login Redirect
+
+| Path | Component | Behavior |
+|------|-----------|----------|
+| `/dashboard` | `PostLoginRedirect` (protected) | Redirects by role: owner → `/owner/analytics`, manager → `/manager/analytics`, salesman → `/salesman/analytics`, company → `/company/analytics`, customer → `/customer/previouspurchases` |
+
+### Private Routes (wrapped in `<ProtectedRoute>` + `<PrivateLayout>`)
+
+#### Owner Routes (role: `owner`)
+
+| Path | Component |
+|------|-----------|
+| `/owner/analytics` | `OwnerAnalyticsPage` |
+| `/owner/employees` | `EmployeesPage` |
+| `/owner/companies` | `CompanyPage` |
+| `/owner/branches` | `BranchPage` |
+| `/owner/products` | `Products` |
+| `/owner/sales` | `OwnerSales` |
+| `/owner/orders` | `AdminOrders` |
+| `/owner/inventory` | `Admin_Inventory` |
+| `/owner/salaries` | `Admin_salary` |
+| `/owner/profits` | `Admin_Profits` |
+| `/owner/messages` | `Admin_messages` |
+
+#### Manager Routes (role: `manager`)
+
+| Path | Component |
+|------|-----------|
+| `/manager/employees` | `ManagerEmployeesPage` |
+| `/manager/employees/:e_id` | `ManagerEmployeeDetails` |
+| `/manager/profile` | `ManagerProfileEdit` |
+| `/manager/orders` | `ManagerOrdersPage` |
+| `/manager/orders/:id` | `ManagerOrderDetails` |
+| `/manager/inventory` | `ManagerInventoryPage` |
+| `/manager/sales` | `Manager_Sales` |
+| `/manager/salary` | `ManagerSalaryPage` |
+| `/manager/analytics` | `ManagerAnalyticsPage` |
+| `/manager/messages` | `ManagerMessages` |
+
+#### Salesman Routes (role: `salesman`)
+
+| Path | Component |
+|------|-----------|
+| `/salesman/analytics` | `SalesmanAnalyticsPage` |
+| `/salesman/profile` | `Details` |
+| `/salesman/sales/*` | `Sales` (wildcard sub-routes) |
+| `/salesman/inventory` | `Inventory` |
+| `/salesman/salaries` | `Salaries` |
+| `/salesman/messages` | `SalesmanMessages` |
+
+#### Company Routes (role: `company`)
+
+| Path | Component |
+|------|-----------|
+| `/company/analytics` | `CompanyAnalyticsPage` |
+| `/company/products` | `CompanyProducts` |
+| `/company/orders` | `CompanyOrders` |
+| `/company/complaints` | `CompanyComplaints` |
+| `/company/sales` | `CompanySales` |
+| `/company/sales/:id` | `CompanySaleDetails` |
+| `/company/messages` | `Companymessages` |
+
+#### Customer Routes (role: `customer`)
+
+| Path | Component |
+|------|-----------|
+| `/customer/previouspurchases` | `PreviousPurchases` |
+| `/customer/complaints` | `Complaints_Customer` |
+| `/customer/review` | `Reviews` |
+| `/customer/blogs` | `CustomerBlogs` |
+
+### Catch-All
+
+| Path | Component |
+|------|-----------|
+| `*` | `NotFoundPage` |
