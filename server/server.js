@@ -7,7 +7,9 @@ const fs = require('fs');
 const morgan = require('morgan');
 const rfs = require('rotating-file-stream'); // Rotating File Stream
 const rateLimit = require('express-rate-limit'); // Rate limiting
+const swaggerUi = require('swagger-ui-express');
 const connectDB = require('./config/db');
+const { swaggerSpec } = require('./config/swagger');
 const http = require('http');
 const { Server } = require("socket.io");
 
@@ -134,13 +136,13 @@ app.use(morgan('[:date[clf]] :method :url :status :response-time ms - :user-id -
 // ========================================================
 
 // ============ RATE LIMITER MIDDLEWARE ============
-// Limit each IP to 100 requests per 15 minutes
+// Limit each IP to 1000 requests per 1 minute
 const apiLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 15 minutes
-  max: 1000, // Limit each IP to 100 requests per windowMs
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 1000, // Limit each IP to 1000 requests per windowMs
   message: {
     success: false,
-    message: 'Too many requests from this IP, please try again after 15 minutes'
+    message: 'Too many requests from this IP, please try again after 1 minute'
   },
   standardHeaders: true, // Return rate limit info in headers
   legacyHeaders: false,  // Disable X-RateLimit-* headers
@@ -152,13 +154,13 @@ const apiLimiter = rateLimit({
   }
 });
 
-// Stricter limiter for auth routes (5 attempts per 15 minutes)
+// Stricter limiter for auth routes (100 attempts per 1 minute)
 const authLimiter = rateLimit({
   windowMs: 1 * 60 * 1000,
   max: 100,
   message: {
     success: false,
-    message: 'Too many login attempts, please try again after 15 minutes'
+    message: 'Too many login attempts, please try again after 1 minute'
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -176,6 +178,9 @@ app.use('/api/', apiLimiter);
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Swagger docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, '../client/public/uploads')));
@@ -204,7 +209,7 @@ app.use('/api/owner/sales', require('./routes/owner/SalesRoutes'));
 app.use('/api/owner/orders', require('./routes/owner/OrderRoutes'));
 app.use('/api/owner/inventory', require('./routes/owner/InventoryRoutes'));
 app.use('/api/owner/salaries', require('./routes/owner/SalariesRoutes'));
-app.use('/api/owner/profits', require('./routes/owner/profitRoutes'));
+app.use('/api/owner/profits', require('./routes/owner/ProfitRoutes'));
 app.use('/api/owner/analytics', require('./routes/owner/ownerDashboardRoutes'));
 
 // *** MESSAGING ROUTE ***
@@ -238,13 +243,12 @@ app.use('/api/salesman/messages', require('./routes/salesman/salesmanMessageRout
 app.use('/api/company', require('./routes/company'));
 
 // Customer Routes
-app.use('/api/customer/previouspurchases', require('./routes/customer/previousPurchasesRoutes'));
+app.use('/api/customer/previouspurchases', require('./routes/Customer/PreviousPurchasesRoutes'));
 app.use('/api/customer/complaints', require('./routes/Customer/Complaint_Routes'));
 app.use('/api/customer/reviews', require('./routes/Customer/ReviewRoute'));
 app.use('/api/customer/blogs', require('./routes/Customer/blogsRoutes'));
 
 // Public Routes
-app.use('/api/our-branches', require('./routes/publicroutes'));
 app.use('/api/newproducts', require('./routes/newProductsRoutes'));
 app.use('/api/ourproducts', require('./routes/OurProductsRoutes'));
 app.use('/api/topproducts', require('./routes/TopPoductsRoutes'));

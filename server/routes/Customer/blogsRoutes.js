@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { getCustomerBlogs } = require('../../controllers/company/blogsController');
-const { protect } = require('../../middleware/authMiddleware');
+const { protect, authorize } = require('../../middleware/authMiddleware');
 
-// @route   GET /api/customer/blogs
-router.get('/', protect, getCustomerBlogs);
+router.get('/', protect, authorize('customer'), getCustomerBlogs);
 
 module.exports = router;

@@ -2,9 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const { getReviews, submitReview } = require('../../controllers/customer/ReviewController');
-const { protect } = require('../../middleware/authMiddleware');
+const { protect, authorize } = require('../../middleware/authMiddleware');
 
-router.get('/', protect, getReviews);
-router.post('/', protect, submitReview);
+router.get('/', protect, authorize('customer'), getReviews);
+router.post('/', protect, authorize('customer'), submitReview);
 
 module.exports = router;

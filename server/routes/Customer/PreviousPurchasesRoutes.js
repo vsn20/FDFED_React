@@ -1,13 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { getCustomerPurchases } = require('../../controllers/customer/PreviousPurchases');
+const { protect, authorize } = require('../../middleware/authMiddleware');
 
-// FIX: Destructure 'protect' from the middleware file
-// previously: const authMiddleware = require(...)
-const { protect } = require('../../middleware/authMiddleware'); 
-
-// @route   GET /api/customer/previouspurchases
-// FIX: Use 'protect' instead of 'authMiddleware'
-router.get('/', protect, getCustomerPurchases);
+router.get('/', protect, authorize('customer'), getCustomerPurchases);
 
 module.exports = router;

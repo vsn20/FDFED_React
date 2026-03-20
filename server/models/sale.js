@@ -89,8 +89,8 @@ const SaleSchema = new mongoose.Schema({
     type: String, 
     enum: ['Paid', 'Free'] 
   }, // Installation type
-  installationcharge: { 
-    type: String 
+  installationcharge: {
+    type: Number
   }, // Installation charge
   installation_status: { 
     type: String, 

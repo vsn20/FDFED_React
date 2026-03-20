@@ -2,11 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const { getComplaints, getEligibleSales, addComplaint } = require('../../controllers/customer/ComplaintController');
-const { protect } = require('../../middleware/authMiddleware'); // Use existing auth middleware
+const { protect, authorize } = require('../../middleware/authMiddleware');
 
-// All routes are protected by JWT
-router.get('/', protect, getComplaints);
-router.get('/eligible', protect, getEligibleSales);
-router.post('/add', protect, addComplaint);
+// All routes are protected by JWT + customer role
+router.get('/', protect, authorize('customer'), getComplaints);
+router.get('/eligible', protect, authorize('customer'), getEligibleSales);
+router.post('/add', protect, authorize('customer'), addComplaint);
 
 module.exports = router;
