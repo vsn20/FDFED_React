@@ -3,6 +3,8 @@ const router = express.Router();
 const { 
     getManagerSales, 
     addSale, 
+    initiateOnlinePayment,
+    verifyOnlinePaymentAndCreateSale,
     getSaleById, 
     updateSale,
     getSalesmen,
@@ -17,6 +19,8 @@ router.post('/', protect, authorize('manager'), addSale);
 router.get('/form-data/salesmen', protect, authorize('manager'), getSalesmen);
 router.get('/form-data/companies', protect, authorize('manager'), getCompanies);
 router.get('/form-data/products/:companyId', protect, authorize('manager'), getProductsByCompany);
+router.post('/payments/initiate-online', protect, authorize('manager'), initiateOnlinePayment);
+router.post('/payments/verify-online', protect, authorize('manager'), verifyOnlinePaymentAndCreateSale);
 
 router.get('/:id', protect, authorize('manager'), getSaleById);
 router.put('/:id', protect, authorize('manager'), updateSale);

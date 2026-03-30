@@ -110,6 +110,18 @@ const SaleDetails = () => {
               <label className={styles.fieldLabel}>Profit/Loss</label>
               <input className={styles.fieldInput} type="text" value={`₹${parseFloat(sale.profit_or_loss).toFixed(0)}`} readOnly />
             </div>
+            <div>
+              <label className={styles.fieldLabel}>Payment Method</label>
+              <input className={styles.fieldInput} type="text" value={(sale.payment_method || 'cash').toUpperCase()} readOnly />
+            </div>
+            <div>
+              <label className={styles.fieldLabel}>Payment Status</label>
+              <input className={styles.fieldInput} type="text" value={(sale.payment_status || 'paid').toUpperCase()} readOnly />
+            </div>
+            <div>
+              <label className={styles.fieldLabel}>Payment Reference</label>
+              <input className={styles.fieldInput} type="text" value={sale.payment_reference_id || 'N/A'} readOnly />
+            </div>
           </div>
         </div>
         

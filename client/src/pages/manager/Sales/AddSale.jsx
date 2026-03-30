@@ -22,12 +22,14 @@ const AddSale = ({ handleBack }) => {
         quantity: 1,
         installation: 'Not Required',
         installationType: '',
-        installationcharge: ''
+        installationcharge: '',
+        payment_method: 'cash'
     });
 
     const [error, setError] = useState('');
     const [validationErrors, setValidationErrors] = useState({}); // New state for field errors
     const [loading, setLoading] = useState(false);
+    const [onlineLoading, setOnlineLoading] = useState(false);
 
     useEffect(() => {
         const fetchInitialData = async () => {
@@ -117,10 +119,24 @@ const AddSale = ({ handleBack }) => {
             case 'quantity':
                 if (!value || isNaN(parseInt(value)) || parseInt(value) <= 0) message = 'Quantity must be a positive whole number.';
                 break;
+            case 'payment_method':
+                if (!value) message = 'Please select a payment method.';
+                break;
             default:
                 break;
         }
         return message;
+    };
+
+    const loadRazorpayScript = () => {
+        if (window.Razorpay) return Promise.resolve(true);
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
     };
 
     const validateForm = () => {
@@ -178,12 +194,68 @@ const AddSale = ({ handleBack }) => {
         }
 
         try {
-            await api.post('/manager/sales', payload);
-            handleBack();
+            if (payload.payment_method === 'cash') {
+                setLoading(true);
+                await api.post('/manager/sales', payload);
+                handleBack();
+                return;
+            }
+
+            setOnlineLoading(true);
+            const sdkLoaded = await loadRazorpayScript();
+            if (!sdkLoaded) {
+                throw new Error('Razorpay SDK failed to load. Check internet connection and try again.');
+            }
+
+            const initResponse = await api.post('/manager/sales/payments/initiate-online', payload);
+            const paymentData = initResponse.data;
+
+            const options = {
+                key: paymentData.key_id,
+                amount: paymentData.amount_paise,
+                currency: paymentData.currency,
+                name: 'Electroland',
+                description: `Manager Sale - ${payload.unique_code || 'Online Payment'}`,
+                order_id: paymentData.order_id,
+                prefill: {
+                    name: payload.customer_name,
+                    contact: payload.phone_number || undefined,
+                    email: payload.customer_email || undefined
+                },
+                notes: {
+                    payment_reference_id: paymentData.payment_reference_id
+                },
+                handler: async function (response) {
+                    try {
+                        await api.post('/manager/sales/payments/verify-online', {
+                            payment_reference_id: paymentData.payment_reference_id,
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature
+                        });
+                        handleBack();
+                    } catch (verifyErr) {
+                        setError(verifyErr.response?.data?.message || 'Payment succeeded but verification failed.');
+                    } finally {
+                        setOnlineLoading(false);
+                    }
+                },
+                modal: {
+                    ondismiss: () => {
+                        setOnlineLoading(false);
+                        setError('Payment cancelled by user.');
+                    }
+                },
+                theme: { color: '#1d4ed8' }
+            };
+
+            const razorpay = new window.Razorpay(options);
+            razorpay.open();
         } catch (err) {
             console.error(err);
             setError(err.response?.data?.message || "Error adding sale");
             setLoading(false);
+            setOnlineLoading(false);
         }
     };
 
@@ -387,11 +459,27 @@ const AddSale = ({ handleBack }) => {
                                 className={`${styles.fieldInput} ${styles.disabledField}`} 
                             />
                         </div>
+                        <div>
+                            <label className={styles.fieldLabel}>Payment Method</label>
+                            <select
+                                name="payment_method"
+                                value={formData.payment_method}
+                                onChange={handleChange}
+                                className={getFieldClassName('payment_method')}
+                                aria-invalid={!!validationErrors.payment_method}
+                            >
+                                <option value="cash">Cash</option>
+                                <option value="online">Online (Razorpay)</option>
+                            </select>
+                            {validationErrors.payment_method && <span className={styles.validationError}>{validationErrors.payment_method}</span>}
+                        </div>
                     </div>
                 </div>
 
-                <button type="submit" className={styles.submitButton} disabled={loading}>
-                    {loading ? 'Processing...' : 'Submit Sale'}
+                <button type="submit" className={styles.submitButton} disabled={loading || onlineLoading}>
+                    {(loading || onlineLoading)
+                        ? 'Processing...'
+                        : (formData.payment_method === 'online' ? 'Pay with Razorpay' : 'Submit Sale')}
                 </button>
             </form>
         </div>

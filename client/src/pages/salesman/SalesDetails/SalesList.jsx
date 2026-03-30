@@ -116,6 +116,8 @@ const SalesList = () => {
               <th>Company</th>
               <th>Total Price</th>
               <th>Profit / Loss</th>
+              <th>Payment Method</th>
+              <th>Payment Status</th>
               <th>Sale Date</th>
             </tr>
           </thead>
@@ -137,11 +139,13 @@ const SalesList = () => {
                   >
                     ₹{parseFloat(sale.profit_or_loss).toFixed(0)}
                   </td>
+                  <td data-label="Payment Method">{(sale.payment_method || 'cash').toUpperCase()}</td>
+                  <td data-label="Payment Status">{(sale.payment_status || 'paid').toUpperCase()}</td>
                   <td data-label="Sale Date">{new Date(sale.saledate).toLocaleDateString()}</td>
                 </tr>
               ))
             ) : (
-              <tr><td colSpan="6" className={styles.noData}>No sales match your filters.</td></tr>
+              <tr><td colSpan="8" className={styles.noData}>No sales match your filters.</td></tr>
             )}
           </tbody>
         </table>

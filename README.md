@@ -173,7 +173,20 @@ JWT_SECRET=your_jwt_secret_key
 NODEMAILER_USER=your_email@gmail.com
 NODEMAILER_PASSWORD=your_app_password
 CORS_ORIGIN=http://localhost:5173
+RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxx
+RAZORPAY_KEY_SECRET=xxxxxxxxxxxxxxxx
 ```
+
+### Razorpay Test Setup (Salesman Scanner Payment)
+
+1. Create a Razorpay account and switch to **Test Mode**.
+2. Open Razorpay Dashboard -> Settings -> API Keys.
+3. Generate test keys and set them in server `.env` as:
+	- `RAZORPAY_KEY_ID`
+	- `RAZORPAY_KEY_SECRET`
+4. Restart the server after updating environment variables.
+
+Note: Scanner payment for salesman sale uses a fixed amount from `sold_price * quantity` and sale record is created only after successful payment confirmation.
 
 ### 4. Install Client Dependencies
 

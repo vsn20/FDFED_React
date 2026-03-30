@@ -6,7 +6,7 @@ import {
     fetchProductsByCompany, 
     createSale, 
     clearProducts, 
-    resetStatus 
+  resetStatus
 } from '../../../redux/slices/salesmanSalesSlice';
 import api from '../../../api/api'; 
 import styles from './AddSale.module.css';
@@ -32,11 +32,13 @@ const AddSale = () => {
     address: '',
     installation: '',
     installationType: '',
-    installationcharge: ''
+    installationcharge: '',
+    payment_method: 'cash'
   });
   
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState('');
+  const [onlineLoading, setOnlineLoading] = useState(false);
 
   // 1. Initial Load
   useEffect(() => {
@@ -191,6 +193,10 @@ const AddSale = () => {
         if (!value) error = 'Address is required';
         else if (value.trim().length < 3) error = 'Address must be at least 3 characters long';
         break;
+
+      case 'payment_method':
+        if (!value) error = 'Payment method is required';
+        break;
         
       default:
         break;
@@ -204,12 +210,23 @@ const AddSale = () => {
     const { name, value } = e.target;
     validateField(name, value);
   };
+
+  const loadRazorpayScript = () => {
+    if (window.Razorpay) return Promise.resolve(true);
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError('');
     
-    const fieldsToValidate = ['customer_name', 'sales_date', 'unique_code', 'company_id', 'product_id', 'sold_price', 'quantity', 'phone_number', 'address'];
+    const fieldsToValidate = ['customer_name', 'sales_date', 'unique_code', 'company_id', 'product_id', 'sold_price', 'quantity', 'phone_number', 'address', 'payment_method'];
     let hasErrors = false;
     
     for (const name of fieldsToValidate) {
@@ -221,9 +238,76 @@ const AddSale = () => {
       setFormError('Please correct the errors in the form');
       return;
     }
-    
-    dispatch(createSale(formData));
+
+    if (formData.payment_method === 'cash') {
+      dispatch(createSale({ ...formData, payment_status: 'paid' }));
+      return;
+    }
+
+    try {
+      setFormError('');
+      setOnlineLoading(true);
+      const sdkLoaded = await loadRazorpayScript();
+      if (!sdkLoaded) {
+        throw new Error('Razorpay SDK failed to load. Check internet connection and try again.');
+      }
+
+      const initResponse = await api.post('/salesman/sales/payments/initiate-online', formData);
+      const paymentData = initResponse.data;
+
+      const options = {
+        key: paymentData.key_id,
+        amount: paymentData.amount_paise,
+        currency: paymentData.currency,
+        name: 'Electroland',
+        description: `Sale payment - ${formData.unique_code}`,
+        order_id: paymentData.order_id,
+        prefill: {
+          name: formData.customer_name,
+          contact: formData.phone_number || undefined,
+          email: formData.customer_email || undefined
+        },
+        notes: {
+          payment_reference_id: paymentData.payment_reference_id
+        },
+        handler: async function (response) {
+          try {
+            await api.post('/salesman/sales/payments/verify-online', {
+              payment_reference_id: paymentData.payment_reference_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature
+            });
+
+            navigate('/salesman/sales', {
+              state: { successMessage: 'Online payment successful. Sale added successfully!' }
+            });
+          } catch (verifyError) {
+            setFormError(verifyError.response?.data?.message || 'Payment succeeded but verification failed. Please contact admin.');
+          } finally {
+            setOnlineLoading(false);
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            setOnlineLoading(false);
+            setFormError('Payment cancelled by user.');
+          }
+        },
+        theme: {
+          color: '#1d4ed8'
+        }
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (err) {
+      setFormError(err.response?.data?.message || err.message || 'Failed to initiate online payment');
+      setOnlineLoading(false);
+    }
   };
+
+  const isOnlineFlow = formData.payment_method === 'online';
 
   return (
     <div className={styles.formContainer}>
@@ -387,6 +471,7 @@ const AddSale = () => {
                   step="1" 
                   min="0"
                   placeholder=""
+                  disabled={onlineLoading}
                 />
                 {errors.sold_price && <p className={styles.fieldError}>{errors.sold_price}</p>}
               </div>
@@ -401,8 +486,24 @@ const AddSale = () => {
                   onBlur={handleBlur}
                   step="1"
                   min="1"
+                  disabled={onlineLoading}
                 />
                 {errors.quantity && <p className={styles.fieldError}>{errors.quantity}</p>}
+              </div>
+              <div className={styles.fieldItem}>
+                <label className={styles.fieldLabel}>Payment Method *</label>
+                <select
+                  className={styles.fieldInput}
+                  name="payment_method"
+                  value={formData.payment_method}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  disabled={onlineLoading}
+                >
+                  <option value="cash">Cash</option>
+                  <option value="online">Online (Razorpay)</option>
+                </select>
+                {errors.payment_method && <p className={styles.fieldError}>{errors.payment_method}</p>}
               </div>
               <div className={styles.fieldItem}>
                 <label className={styles.fieldLabel}>Total Price</label>
@@ -414,6 +515,14 @@ const AddSale = () => {
                 />
               </div>
             </div>
+
+            {isOnlineFlow && (
+              <div className={styles.paymentPanel}>
+                <p className={styles.paymentHint}>
+                  On submit, Razorpay Checkout will open and customer can choose any available method (UPI, card, netbanking, wallet).
+                </p>
+              </div>
+            )}
           </div>
 
           <div className={styles.formSection}>
@@ -438,8 +547,8 @@ const AddSale = () => {
             <button type="button" className={styles.backButton} onClick={() => navigate('/salesman/sales')}>
               Cancel
             </button>
-            <button type="submit" className={styles.submitButton} disabled={status === 'loading'}>
-              {status === 'loading' ? 'Submitting...' : 'Add Sale'}
+            <button type="submit" className={styles.submitButton} disabled={status === 'loading' || onlineLoading}>
+              {status === 'loading' || onlineLoading ? 'Submitting...' : (isOnlineFlow ? 'Pay with Razorpay' : 'Add Sale')}
             </button>
           </div>
         </div>

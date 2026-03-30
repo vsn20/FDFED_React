@@ -29,6 +29,24 @@ export const createSale = createAsyncThunk('salesmanSales/add', async (saleData,
     }
 });
 
+export const initiateScannerPayment = createAsyncThunk('salesmanSales/initiateScannerPayment', async (saleData, { rejectWithValue }) => {
+    try {
+        const response = await api.post('/salesman/sales/payments/initiate-scanner', saleData);
+        return response.data;
+    } catch (err) {
+        return rejectWithValue(err.response?.data?.message || 'Error initiating scanner payment');
+    }
+});
+
+export const fetchScannerPaymentStatus = createAsyncThunk('salesmanSales/fetchScannerPaymentStatus', async (paymentReferenceId, { rejectWithValue }) => {
+    try {
+        const response = await api.get(`/salesman/sales/payments/status/${paymentReferenceId}`);
+        return response.data;
+    } catch (err) {
+        return rejectWithValue(err.response?.data?.message || 'Error fetching scanner payment status');
+    }
+});
+
 
 export const fetchCompanies = createAsyncThunk('salesmanSales/fetchCompanies', async () => {
     const response = await api.get('/salesman/sales/helpers/companies');
@@ -50,7 +68,9 @@ const salesmanSalesSlice = createSlice({
         products: [],
         status: 'idle',    
         error: null,
-        success: false    
+        success: false,
+        scannerPayment: null,
+        scannerPaymentStatus: 'idle'
     },
     reducers: {
         resetStatus: (state) => {
@@ -61,6 +81,10 @@ const salesmanSalesSlice = createSlice({
         },
         clearProducts: (state) => {
             state.products = [];
+        },
+        clearScannerPayment: (state) => {
+            state.scannerPayment = null;
+            state.scannerPaymentStatus = 'idle';
         }
     },
     extraReducers: (builder) => {
@@ -112,9 +136,42 @@ const salesmanSalesSlice = createSlice({
             })
             .addCase(fetchProductsByCompany.fulfilled, (state, action) => {
                 state.products = action.payload;
+            })
+
+            // Scanner payment init
+            .addCase(initiateScannerPayment.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(initiateScannerPayment.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.scannerPayment = action.payload;
+                state.scannerPaymentStatus = action.payload.payment_status || 'pending';
+            })
+            .addCase(initiateScannerPayment.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            })
+
+            // Scanner payment status
+            .addCase(fetchScannerPaymentStatus.pending, (state) => {
+                state.scannerPaymentStatus = 'checking';
+            })
+            .addCase(fetchScannerPaymentStatus.fulfilled, (state, action) => {
+                state.scannerPaymentStatus = action.payload.payment_status || 'pending';
+                if (state.scannerPayment) {
+                    state.scannerPayment = {
+                        ...state.scannerPayment,
+                        ...action.payload
+                    };
+                }
+            })
+            .addCase(fetchScannerPaymentStatus.rejected, (state, action) => {
+                state.scannerPaymentStatus = 'failed';
+                state.error = action.payload;
             });
     }
 });
 
-export const { resetStatus, clearProducts } = salesmanSalesSlice.actions;
+export const { resetStatus, clearProducts, clearScannerPayment } = salesmanSalesSlice.actions;
 export default salesmanSalesSlice.reducer;

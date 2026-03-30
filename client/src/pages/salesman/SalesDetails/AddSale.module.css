@@ -141,6 +141,77 @@ select.fieldInput {
   margin-top: 6px;
 }
 
+.paymentPanel {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px dashed #0f766e;
+  border-radius: 14px;
+  background: #f0fdfa;
+}
+
+.paymentHint {
+  margin: 0;
+  color: #0f766e;
+  font-size: 0.9rem;
+}
+
+.paymentStatusRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: #0f172a;
+  font-size: 0.9rem;
+}
+
+.paymentStatusText {
+  text-transform: capitalize;
+}
+
+.qrBlock {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.qrImage {
+  width: 180px;
+  height: 180px;
+  border-radius: 10px;
+  border: 1px solid #bfdbfe;
+  background: #fff;
+  padding: 6px;
+}
+
+.paymentLink {
+  display: inline-block;
+  margin-top: 10px;
+  color: #1d4ed8;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.paymentLink:hover {
+  text-decoration: underline;
+}
+
+.clearPaymentButton {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: #0f766e;
+  color: #fff;
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+
+.clearPaymentButton:hover {
+  background: #0d615a;
+}
+
 .submitButton {
   display: inline-flex;
   align-items: center;

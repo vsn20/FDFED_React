@@ -97,11 +97,44 @@ const SaleSchema = new mongoose.Schema({
     enum: ['Pending', 'Completed', null], 
     default: null 
   }, // Installation status
+  payment_method: {
+    type: String,
+    enum: ['cash', 'scanner', 'online'],
+    default: 'cash'
+  },
+  payment_status: {
+    type: String,
+    enum: ['pending', 'paid', 'failed', 'expired'],
+    default: 'paid'
+  },
+  payment_provider: {
+    type: String,
+    default: 'manual'
+  },
+  payment_reference_id: {
+    type: String,
+    default: null
+  },
+  payment_id: {
+    type: String,
+    default: null
+  },
+  paid_at: {
+    type: Date,
+    default: null
+  },
+  payment_amount: {
+    type: Number,
+    default: null
+  },
   createdAt: { 
     type: Date, 
     default: Date.now 
   } // Creation timestamp
 });
+
+SaleSchema.index({ payment_reference_id: 1 }, { sparse: true });
+SaleSchema.index({ payment_status: 1 });
 
 const Sale = mongoose.models.Sale || mongoose.model("Sale", SaleSchema);
 module.exports = Sale;

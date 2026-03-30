@@ -144,6 +144,14 @@ const SaleDetails = ({ saleId, handleBack }) => {
                     {/* Metadata row */}
                     <div className="receipt-meta-grid">
                         <div className="receipt-meta-item">
+                            <div className="receipt-meta-label">Payment Method</div>
+                            <div className="receipt-meta-value">{(sale.payment_method || 'cash').toUpperCase()}</div>
+                        </div>
+                        <div className="receipt-meta-item">
+                            <div className="receipt-meta-label">Payment Status</div>
+                            <div className="receipt-meta-value">{(sale.payment_status || 'paid').toUpperCase()}</div>
+                        </div>
+                        <div className="receipt-meta-item">
                             <div className="receipt-meta-label">Branch</div>
                             <div className="receipt-meta-value">{sale.branch_name || '—'}</div>
                         </div>
