@@ -2,6 +2,12 @@ const User = require('../models/User');
 const Employee = require('../models/employees');
 const jwt = require('jsonwebtoken');
 
+const normalizeEmployeeRole = (role = '') => {
+    const normalized = String(role).trim().toLowerCase();
+    if (normalized === 'sales manager' || normalized === 'salesmanager') return 'manager';
+    return normalized;
+};
+
 // 1. Implement the Signup Logic (Migrated from signup.js)
 exports.signup = async (req, res) => {
     const { userId, email, password, confirmPassword } = req.body;
@@ -49,7 +55,7 @@ exports.signup = async (req, res) => {
         const payload = {
             user: {
                 id: newUser.userId,
-                role: employee.role,
+                role: normalizeEmployeeRole(employee.role),
                 name: employee.f_name
             }
         };
@@ -103,7 +109,7 @@ exports.login = async (req, res) => {
         const payload = {
             user: {
                 id: user.userId,
-                role: employee.role,
+                role: normalizeEmployeeRole(employee.role),
                 name: employee.f_name
             }
         };

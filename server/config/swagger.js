@@ -891,18 +891,42 @@ const swaggerDefinition = {
             'application/json': {
               schema: {
                 type: 'object',
-                required: ['f_name', 'last_name', 'email'],
+                required: ['f_name', 'last_name', 'email', 'phone_no', 'acno', 'ifsc', 'bankname', 'base_salary'],
                 properties: {
                   f_name: { type: 'string' },
                   last_name: { type: 'string' },
                   email: { type: 'string', format: 'email' },
-                  phone_no: { type: 'string', nullable: true }
+                  phone_no: { type: 'string', description: '10 digit phone number' },
+                  acno: { type: 'string' },
+                  ifsc: { type: 'string', description: 'Bank IFSC code (e.g., SBIN0001234)' },
+                  bankname: { type: 'string' },
+                  base_salary: { type: 'number', minimum: 0.01 },
+                  address: { type: 'string', nullable: true }
+                }
+              },
+              examples: {
+                addSalesman: {
+                  value: {
+                    f_name: 'Rahul',
+                    last_name: 'Patel',
+                    email: 'rahul.patel@example.com',
+                    phone_no: '9876543210',
+                    acno: '123456789012',
+                    ifsc: 'SBIN0001234',
+                    bankname: 'State Bank of India',
+                    base_salary: 25000,
+                    address: 'Main Street, Pune'
+                  }
                 }
               }
             }
           }
         },
-        responses: { 201: { description: 'Salesman added' } }
+        responses: {
+          201: { description: 'Salesman added' },
+          400: { description: 'Missing/invalid required fields' },
+          403: { description: 'User is not authorized as manager' }
+        }
       }
     },
     '/api/manager/employees/me': {
@@ -1244,17 +1268,42 @@ const swaggerDefinition = {
             'application/json': {
               schema: {
                 type: 'object',
-                required: ['to', 'message'],
+                required: ['category', 'message'],
                 properties: {
-                  to: { type: 'string' },
-                  subject: { type: 'string' },
+                  category: {
+                    type: 'string',
+                    enum: ['admin', 'all_companies', 'specific_company', 'specific_salesman'],
+                    description: 'Message target type. Use specific_* categories when sending to one recipient.'
+                  },
+                  to: {
+                    type: 'string',
+                    description: 'Recipient ID. Required for category specific_company and specific_salesman.'
+                  },
                   message: { type: 'string' }
+                }
+              },
+              examples: {
+                toAdmin: {
+                  value: {
+                    category: 'admin',
+                    message: 'Please review branch monthly performance report.'
+                  }
+                },
+                toSpecificSalesman: {
+                  value: {
+                    category: 'specific_salesman',
+                    to: 'EMP204',
+                    message: 'Please update today\'s customer follow-up status.'
+                  }
                 }
               }
             }
           }
         },
-        responses: { 200: { description: 'Message sent' } }
+        responses: {
+          200: { description: 'Message sent' },
+          400: { description: 'Invalid category or missing required fields for selected category' }
+        }
       }
     },
 

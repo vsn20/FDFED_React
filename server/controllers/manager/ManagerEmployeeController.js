@@ -3,6 +3,11 @@ const User = require("../../models/User");
 const Branch = require("../../models/branches");
 const Sale = require("../../models/sale");
 
+const isManagerRole = (role = "") => {
+  const normalized = String(role).trim().toLowerCase();
+  return normalized === "manager" || normalized === "sales manager" || normalized === "salesmanager";
+};
+
 exports.getEmployees = async (req, res) => {
   try {
     console.log('Manager getEmployees hit - req.user:', req.user);
@@ -27,7 +32,7 @@ exports.getEmployees = async (req, res) => {
       return res.status(404).json({ success: false, message: "Manager profile not found" });
     }
 
-    if (managerEmployee.role !== "manager") {
+    if (!isManagerRole(managerEmployee.role)) {
       console.log('Role mismatch:', managerEmployee.role);
       return res.status(403).json({ success: false, message: "Access denied" });
     }
@@ -128,7 +133,7 @@ exports.getManagerProfile = async (req, res) => {
       return res.status(404).json({ success: false, message: "Manager profile not found" });
     }
 
-    if (managerEmployee.role !== "manager") {
+    if (!isManagerRole(managerEmployee.role)) {
       console.log('Role mismatch:', managerEmployee.role);
       return res.status(403).json({ success: false, message: "Access denied" });
     }
@@ -165,7 +170,7 @@ exports.getSingleEmployee = async (req, res) => {
       return res.status(404).json({ success: false, message: "Manager profile not found" });
     }
 
-    if (managerEmployee.role !== "manager") {
+    if (!isManagerRole(managerEmployee.role)) {
       return res.status(403).json({ success: false, message: "Access denied" });
     }
 
@@ -233,7 +238,7 @@ exports.updateEmployee = async (req, res) => {
       return res.status(404).json({ success: false, message: "Manager profile not found" });
     }
 
-    if (managerEmployee.role !== "manager") {
+    if (!isManagerRole(managerEmployee.role)) {
       return res.status(403).json({ success: false, message: "Access denied" });
     }
 
@@ -360,7 +365,7 @@ exports.updateManagerProfile = async (req, res) => {
       return res.status(404).json({ success: false, message: "Manager profile not found" });
     }
 
-    if (managerEmployee.role !== "manager") {
+    if (!isManagerRole(managerEmployee.role)) {
       return res.status(403).json({ success: false, message: "Access denied" });
     }
 
@@ -417,24 +422,22 @@ exports.addSalesman = async (req, res) => {
       ifsc,
       bankname,
       base_salary,
-      address,
-      role,
-      bid
+      address
     } = req.body;
 
-    // Enforce role and bid
-    if (role !== "salesman") {
-      return res.status(400).json({
-        success: false,
-        message: "Role must be 'salesman'"
-      });
-    }
-
     // Validate required fields
-    if (!f_name || !last_name || !email || !acno || !ifsc || !bankname || !base_salary) {
+    if (!f_name || !last_name || !email || !acno || !ifsc || !bankname || base_salary === undefined || base_salary === null || base_salary === "") {
       return res.status(400).json({
         success: false,
         message: "All required fields must be provided"
+      });
+    }
+
+    const parsedSalary = Number(base_salary);
+    if (!Number.isFinite(parsedSalary) || parsedSalary <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Base salary must be a positive number"
       });
     }
 
@@ -445,7 +448,7 @@ exports.addSalesman = async (req, res) => {
     }
 
     const managerEmployee = await Employee.findOne({ e_id: userDoc.emp_id });
-    if (!managerEmployee || managerEmployee.role !== "manager") {
+    if (!managerEmployee || !isManagerRole(managerEmployee.role)) {
       return res.status(403).json({ success: false, message: "Access denied" });
     }
 
@@ -473,7 +476,7 @@ exports.addSalesman = async (req, res) => {
       acno,
       ifsc,
       bankname,
-      base_salary,
+      base_salary: parsedSalary,
       createdBy: managerEmployee.e_id,
       hiredAt: new Date(),
       resignation_date: null,

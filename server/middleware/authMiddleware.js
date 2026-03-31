@@ -1,6 +1,12 @@
 // middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
 
+const normalizeRole = (role = '') => {
+  const normalized = String(role).trim().toLowerCase();
+  if (normalized === 'sales manager' || normalized === 'salesmanager') return 'manager';
+  return normalized;
+};
+
 exports.protect = async (req, res, next) => {
   let token;
   
@@ -31,8 +37,11 @@ exports.authorize = (...roles) => {
     if (!req.user) {
       return res.status(401).json({ message: 'User not authenticated' });
     }
-    
-    if (!roles.includes(req.user.role)) {
+
+    const normalizedUserRole = normalizeRole(req.user.role);
+    const normalizedAllowedRoles = roles.map(normalizeRole);
+
+    if (!normalizedAllowedRoles.includes(normalizedUserRole)) {
       return res.status(403).json({ 
         message: `User role ${req.user.role} is not authorized to access this route` 
       });
