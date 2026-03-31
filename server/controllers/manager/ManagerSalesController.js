@@ -14,40 +14,34 @@ const sendInvoiceEmail = require("../../utils/invoiceMailer");
 // --- HELPER: Get Manager & Branch ID Safely ---
 const getManagerDetails = async (req) => {
   try {
-    // 1. Validate Request User
     if (!req.user || !req.user.id) {
       throw new Error("User not authenticated or invalid token payload");
     }
 
-    const loginId = req.user.id; // This is 'userId' from User model (e.g., "MGR_LOGIN")
+    const loginId = req.user.id;
     console.log(`[getManagerDetails] Processing for Login ID: ${loginId}`);
 
-    // 2. Resolve Employee ID from User Table
-    // We must find the User record first to get the linked 'emp_id'
     const userDoc = await User.findOne({ userId: loginId });
-    
+
     if (!userDoc) {
-        // Fallback: If no User record (rare), maybe the token ID IS the emp_id? 
-        // We check this just in case, but primary path is via User model.
-        console.warn(`[Warning] No User found for userId: ${loginId}. Checking Employee directly.`);
+      console.warn(`[Warning] No User found for userId: ${loginId}. Checking Employee directly.`);
     }
 
     const employeeId = userDoc ? userDoc.emp_id : loginId;
 
     if (!employeeId) {
-        throw new Error(`No Employee ID (emp_id) linked to User: ${loginId}`);
+      throw new Error(`No Employee ID (emp_id) linked to User: ${loginId}`);
     }
 
-    // 3. Fetch Employee Document
+    // Always find employee by e_id (string custom ID)
     const employee = await Employee.findOne({ e_id: employeeId });
 
     if (!employee) {
       throw new Error(`Manager profile not found for Employee ID: ${employeeId}`);
     }
 
-    // 4. Validate Role and Branch
-    if (employee.role.toLowerCase() !== 'manager') {
-       console.warn(`[Warning] User ${employee.e_id} has role '${employee.role}', expected 'manager'`);
+    if (employee.role.toLowerCase() !== "manager") {
+      console.warn(`[Warning] User ${employee.e_id} has role '${employee.role}', expected 'manager'`);
     }
 
     if (!employee.bid) {
@@ -57,8 +51,26 @@ const getManagerDetails = async (req) => {
     return employee;
   } catch (error) {
     console.error("[getManagerDetails] Error:", error.message);
-    throw error; // Propagate to controller methods to send 500/400 response
+    throw error;
   }
+};
+
+// --- HELPER: Find Employee by ObjectId OR e_id ---
+// Website sends MongoDB _id (ObjectId); Swagger/API sends e_id string like "EMP005"
+const findEmployeeByIdOrEid = async (salesman_id, session) => {
+  let salesmanDoc = null;
+
+  // Try ObjectId lookup first (used by website dropdown)
+  if (mongoose.Types.ObjectId.isValid(salesman_id)) {
+    salesmanDoc = await Employee.findById(salesman_id).session(session);
+  }
+
+  // Fallback: try e_id string lookup (used by direct API / Swagger)
+  if (!salesmanDoc) {
+    salesmanDoc = await Employee.findOne({ e_id: salesman_id }).session(session);
+  }
+
+  return salesmanDoc;
 };
 
 const getRazorpayClient = () => {
@@ -72,6 +84,7 @@ const getRazorpayClient = () => {
   return new Razorpay({ key_id: keyId, key_secret: keySecret });
 };
 
+// --- HELPER: Resolve all context needed to create a sale ---
 const resolveManagerSaleContext = async ({ payload, manager, session, validateUnique = true }) => {
   const {
     salesman_id,
@@ -83,8 +96,20 @@ const resolveManagerSaleContext = async ({ payload, manager, session, validateUn
     purchased_price
   } = payload;
 
-  const salesmanDoc = await Employee.findOne({ e_id: salesman_id }).session(session);
+  // FIX: Use dual-lookup helper instead of findById only
+  const salesmanDoc = await findEmployeeByIdOrEid(salesman_id, session);
   if (!salesmanDoc) throw new Error("Selected salesman not found");
+
+  // Validate salesman belongs to the same branch as manager
+  if (salesmanDoc.bid !== manager.bid) {
+    throw new Error("Selected salesman does not belong to your branch");
+  }
+
+  // Validate salesman is active
+  if (salesmanDoc.status !== "active") {
+    throw new Error("Selected salesman is not active");
+  }
+
   const actualSalesmanId = salesmanDoc.e_id;
 
   if (validateUnique && unique_code) {
@@ -125,24 +150,29 @@ const resolveManagerSaleContext = async ({ payload, manager, session, validateUn
   };
 };
 
+// --- HELPER: Create sale document from resolved context ---
 const createManagerSaleFromContext = async ({ payload, manager, session, context, paymentMeta }) => {
-  const count = await Sale.countDocuments().session(session) + 1;
-  const sales_id = `S${String(count).padStart(3, '0')}`;
-  const generatedUniqueCode = payload.unique_code || `UC${String(count).padStart(3, '0')}`;
-  const installation_status = payload.installation === 'Required' ? 'Pending' : null;
+  const count = (await Sale.countDocuments().session(session)) + 1;
+  const sales_id = `S${String(count).padStart(3, "0")}`;
+  const generatedUniqueCode = payload.unique_code || `UC${String(count).padStart(3, "0")}`;
+  const installation_status = payload.installation === "Required" ? "Pending" : null;
 
+  // Deduct inventory
   context.inventory.quantity -= context.qty;
   context.inventory.updatedAt = new Date();
   await context.inventory.save({ session });
 
+  // FIX: Normalize sales_date — payload may use 'sales_date' or 'saledate'
+  const sales_date = payload.sales_date || payload.saledate || new Date();
+
   const newSale = new Sale({
     sales_id,
     branch_id: manager.bid,
-    salesman_id: context.actualSalesmanId,
+    salesman_id: context.actualSalesmanId,   // Always stored as e_id string
     company_id: payload.company_id,
     product_id: payload.product_id,
     customer_name: payload.customer_name,
-    sales_date: payload.sales_date || new Date(),
+    sales_date,
     unique_code: generatedUniqueCode,
     purchased_price: parseFloat(payload.purchased_price),
     sold_price: parseFloat(payload.sold_price),
@@ -181,50 +211,41 @@ exports.getManagerSales = async (req, res) => {
     const manager = await getManagerDetails(req);
     const branchId = manager.bid;
 
-    // Fetch sales (lean for performance)
     const sales = await Sale.find({ branch_id: branchId }).lean().sort({ sales_date: -1 });
 
-    // Manually map relationships
-    const formattedSales = await Promise.all(sales.map(async (sale) => {
+    const formattedSales = await Promise.all(
+      sales.map(async (sale) => {
         let salesmanName = "Unknown";
         let companyName = "Unknown";
         let productName = "Unknown";
-        let branchName = "Unknown";
 
-        // Fetch Salesman Name
         if (sale.salesman_id) {
-            // Try finding by string ID (e_id)
-            let sm = await Employee.findOne({ e_id: sale.salesman_id }).lean();
-            // Fallback to ObjectId if legacy data exists
-            if (!sm && mongoose.Types.ObjectId.isValid(sale.salesman_id)) {
-                sm = await Employee.findById(sale.salesman_id).lean();
-            }
-            if (sm) salesmanName = `${sm.f_name} ${sm.last_name}`;
+          // salesman_id is always stored as e_id string
+          const sm = await Employee.findOne({ e_id: sale.salesman_id }).lean();
+          if (sm) salesmanName = `${sm.f_name} ${sm.last_name}`;
         }
 
-        // Fetch Company Name
         if (sale.company_id) {
-            const company = await Company.findOne({ c_id: sale.company_id }).lean();
-            if (company) companyName = company.cname;
+          const company = await Company.findOne({ c_id: sale.company_id }).lean();
+          if (company) companyName = company.cname;
         }
 
-        // Fetch Product Name
         if (sale.product_id) {
-            const product = await Product.findOne({ prod_id: sale.product_id }).lean();
-            if (product) productName = product.Prod_name;
+          const product = await Product.findOne({ prod_id: sale.product_id }).lean();
+          if (product) productName = product.Prod_name;
         }
 
         return {
-            ...sale,
-            salesman_name: salesmanName,
-            company_name: companyName,
-            product_name: productName,
-            branch_name: manager.bid // We know the branch name from context if needed, or fetch it
+          ...sale,
+          salesman_name: salesmanName,
+          company_name: companyName,
+          product_name: productName,
+          branch_name: manager.bid
         };
-    }));
+      })
+    );
 
     res.json(formattedSales);
-
   } catch (err) {
     console.error("[getManagerSales] Controller Error:", err.message);
     res.status(500).json({ message: err.message || "Server Error fetching sales" });
@@ -234,23 +255,22 @@ exports.getManagerSales = async (req, res) => {
 exports.getSaleById = async (req, res) => {
   try {
     const manager = await getManagerDetails(req);
-    
+
     const sale = await Sale.findOne({ sales_id: req.params.id, branch_id: manager.bid }).lean();
     if (!sale) return res.status(404).json({ message: "Sale not found" });
 
-    // Populate details manually
     const salesman = await Employee.findOne({ e_id: sale.salesman_id }).lean();
     const company = await Company.findOne({ c_id: sale.company_id }).lean();
     const product = await Product.findOne({ prod_id: sale.product_id }).lean();
     const branch = await Branch.findOne({ bid: sale.branch_id }).lean();
 
     res.json({
-        ...sale,
-        salesman_name: salesman ? `${salesman.f_name} ${salesman.last_name}` : "Unknown",
-        company_name: company ? company.cname : "Unknown",
-        product_name: product ? product.Prod_name : "Unknown",
-        model_number: product ? product.Model_no : "N/A",
-        branch_name: branch ? branch.b_name : "Unknown"
+      ...sale,
+      salesman_name: salesman ? `${salesman.f_name} ${salesman.last_name}` : "Unknown",
+      company_name: company ? company.cname : "Unknown",
+      product_name: product ? product.Prod_name : "Unknown",
+      model_number: product ? product.Model_no : "N/A",
+      branch_name: branch ? branch.b_name : "Unknown"
     });
   } catch (err) {
     console.error("[getSaleById] Error:", err.message);
@@ -267,7 +287,8 @@ exports.addSale = async (req, res) => {
     const {
       salesman_id,
       customer_name,
-      saledate,
+      sales_date,        // FIX: use sales_date (matches Sale model & Swagger)
+      saledate,          // also accept legacy saledate from website frontend
       unique_code,
       company_id,
       product_id,
@@ -283,14 +304,15 @@ exports.addSale = async (req, res) => {
       payment_method = "cash"
     } = req.body;
 
-    if (payment_method !== "cash") {
-      throw new Error("Online payments must use manager online payment APIs");
+    // FIX: Allow cash and scanner; only block online (must use Razorpay APIs)
+    if (payment_method === "online") {
+      throw new Error("Online payments must use the manager online payment APIs");
     }
 
     const payload = {
       salesman_id,
       customer_name,
-      saledate,
+      sales_date: sales_date || saledate,   // normalize both field names
       unique_code,
       company_id,
       product_id,
@@ -313,7 +335,7 @@ exports.addSale = async (req, res) => {
       session,
       context,
       paymentMeta: {
-        payment_method: "cash",
+        payment_method,                  // cash or scanner
         payment_status: "paid",
         payment_provider: "manual",
         payment_reference_id: null,
@@ -324,10 +346,8 @@ exports.addSale = async (req, res) => {
 
     await session.commitTransaction();
 
-    // Fetch extra details for the invoice email
+    // Send invoice email (non-blocking)
     const branch = await Branch.findOne({ bid: manager.bid }).lean();
-
-    // Send invoice email to customer (non-blocking)
     if (customer_email) {
       sendInvoiceEmail({
         sales_id: created.sales_id,
@@ -335,7 +355,7 @@ exports.addSale = async (req, res) => {
         customer_email,
         phone_number,
         address,
-        sales_date: saledate,
+        sales_date: payload.sales_date,
         unique_code: created.generatedUniqueCode,
         product_name: context.product.Prod_name,
         model_number: context.product.Model_no,
@@ -352,8 +372,7 @@ exports.addSale = async (req, res) => {
       });
     }
 
-    res.json({ success: true, message: "Sale added successfully", sale: created.newSale });
-
+    res.status(201).json({ success: true, message: "Sale added successfully", sale: created.newSale });
   } catch (error) {
     await session.abortTransaction();
     console.error("[addSale] Transaction Failed:", error.message);
@@ -364,27 +383,27 @@ exports.addSale = async (req, res) => {
 };
 
 exports.updateSale = async (req, res) => {
-    try {
-        const manager = await getManagerDetails(req);
-        const { customer_name, phone_number, address, installation_status } = req.body;
-        
-        const sale = await Sale.findOne({ sales_id: req.params.id, branch_id: manager.bid });
-        if(!sale) return res.status(404).json({ message: "Sale not found" });
+  try {
+    const manager = await getManagerDetails(req);
+    const { customer_name, phone_number, address, installation_status } = req.body;
 
-        if (customer_name) sale.customer_name = customer_name;
-        if (phone_number) sale.phone_number = phone_number;
-        if (address) sale.address = address;
-        if (installation_status) sale.installation_status = installation_status;
+    const sale = await Sale.findOne({ sales_id: req.params.id, branch_id: manager.bid });
+    if (!sale) return res.status(404).json({ message: "Sale not found" });
 
-        await sale.save();
-        res.json({ success: true, message: "Sale updated", sale });
-    } catch (err) {
-        console.error("[updateSale] Error:", err.message);
-        res.status(500).json({ message: err.message });
-    }
-}
+    if (customer_name) sale.customer_name = customer_name;
+    if (phone_number) sale.phone_number = phone_number;
+    if (address) sale.address = address;
+    if (installation_status) sale.installation_status = installation_status;
 
-// Manager Online Payment: Step 1 - Initiate Razorpay order
+    await sale.save();
+    res.json({ success: true, message: "Sale updated", sale });
+  } catch (err) {
+    console.error("[updateSale] Error:", err.message);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// --- Manager Online Payment: Step 1 - Initiate Razorpay order ---
 exports.initiateOnlinePayment = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -452,7 +471,7 @@ exports.initiateOnlinePayment = async (req, res) => {
   }
 };
 
-// Manager Online Payment: Step 2 - Verify and create sale
+// --- Manager Online Payment: Step 2 - Verify and create sale ---
 exports.verifyOnlinePaymentAndCreateSale = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -532,7 +551,7 @@ exports.verifyOnlinePaymentAndCreateSale = async (req, res) => {
           customer_email: payload.customer_email,
           phone_number: payload.phone_number,
           address: payload.address,
-          sales_date: payload.sales_date,
+          sales_date: payload.sales_date || payload.saledate,
           unique_code: created.generatedUniqueCode,
           product_name: context.product.Prod_name,
           model_number: context.product.Model_no,
@@ -576,42 +595,40 @@ exports.verifyOnlinePaymentAndCreateSale = async (req, res) => {
 // --- FORM DATA CONTROLLERS ---
 
 exports.getSalesmen = async (req, res) => {
-    try {
-        const manager = await getManagerDetails(req);
-        // Find salesmen in the same branch
-        const salesmen = await Employee.find({ 
-            bid: manager.bid, 
-            role: "salesman", 
-            status: "active" 
-        }).select('f_name last_name e_id _id');
-        
-        res.json(salesmen);
-    } catch (err) {
-        console.error("[getSalesmen] Error:", err.message);
-        res.status(500).json({ message: err.message });
-    }
+  try {
+    const manager = await getManagerDetails(req);
+    const salesmen = await Employee.find({
+      bid: manager.bid,
+      role: "salesman",
+      status: "active"
+    }).select("f_name last_name e_id _id");
+
+    res.json(salesmen);
+  } catch (err) {
+    console.error("[getSalesmen] Error:", err.message);
+    res.status(500).json({ message: err.message });
+  }
 };
 
 exports.getCompanies = async (req, res) => {
-    try {
-        // Just checking auth validity via manager check
-        await getManagerDetails(req); 
-        const companies = await Company.find({ active: "active" }).select('c_id cname');
-        res.json(companies);
-    } catch (err) {
-        console.error("[getCompanies] Error:", err.message);
-        res.status(500).json({ message: err.message });
-    }
+  try {
+    await getManagerDetails(req);
+    const companies = await Company.find({ active: "active" }).select("c_id cname");
+    res.json(companies);
+  } catch (err) {
+    console.error("[getCompanies] Error:", err.message);
+    res.status(500).json({ message: err.message });
+  }
 };
 
 exports.getProductsByCompany = async (req, res) => {
-    try {
-        await getManagerDetails(req);
-        const { companyId } = req.params;
-        const products = await Product.find({ Com_id: companyId });
-        res.json(products);
-    } catch (err) {
-        console.error("[getProductsByCompany] Error:", err.message);
-        res.status(500).json({ message: err.message });
-    }
+  try {
+    await getManagerDetails(req);
+    const { companyId } = req.params;
+    const products = await Product.find({ Com_id: companyId });
+    res.json(products);
+  } catch (err) {
+    console.error("[getProductsByCompany] Error:", err.message);
+    res.status(500).json({ message: err.message });
+  }
 };
