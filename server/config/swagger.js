@@ -752,6 +752,7 @@ const swaggerDefinition = {
         tags: ['Owner - Salaries'],
         summary: 'Get all employee salaries',
         security: [{ bearerAuth: [] }],
+        parameters: [{ in: 'query', name: 'monthYear', required: true, schema: { type: 'string' }, description: 'Format: Mon-YYYY (e.g. Mar-2026)', example: 'Mar-2026' }],
         responses: { 200: { description: 'Salaries list' } }
       }
     },
@@ -770,6 +771,7 @@ const swaggerDefinition = {
         tags: ['Owner - Profits'],
         summary: 'Get monthly profits',
         security: [{ bearerAuth: [] }],
+        parameters: [{ in: 'query', name: 'monthYear', required: true, schema: { type: 'string' }, description: 'Format: Mon-YYYY (e.g. Mar-2026)', example: 'Mar-2026' }],
         responses: { 200: { description: 'Monthly profits data' } }
       }
     },
@@ -859,11 +861,33 @@ const swaggerDefinition = {
             'application/json': {
               schema: {
                 type: 'object',
-                required: ['to', 'message'],
+                required: ['category', 'message'],
                 properties: {
-                  to: { type: 'string' },
-                  subject: { type: 'string' },
+                  category: {
+                    type: 'string',
+                    enum: ['all_salesman', 'all_sales_manager', 'all_companies', 'all_customers', 'specific_company', 'specific_sales_manager', 'specific_salesman'],
+                    description: 'Who to send to. Use specific_* when targeting one recipient — then also provide "to".'
+                  },
+                  to: {
+                    type: 'string',
+                    description: 'Recipient ID — required only for specific_company, specific_sales_manager, specific_salesman'
+                  },
+                  branch_id: {
+                    type: 'string',
+                    description: 'Optional — filter by branch when category is all_salesman'
+                  },
                   message: { type: 'string' }
+                }
+              },
+              examples: {
+                toAllSalesmen: {
+                  value: { category: 'all_salesman', message: 'Please update your daily reports.' }
+                },
+                toSpecificCompany: {
+                  value: { category: 'specific_company', to: 'C001', message: 'Your order has been processed.' }
+                },
+                toSpecificSalesman: {
+                  value: { category: 'specific_salesman', to: 'EMP005', message: 'Please check your targets.' }
                 }
               }
             }
@@ -1177,7 +1201,7 @@ const swaggerDefinition = {
         tags: ['Manager - Salary'],
         summary: 'Get salaries by selected month',
         security: [{ bearerAuth: [] }],
-        parameters: [{ in: 'query', name: 'month', schema: { type: 'string' }, description: 'Format: YYYY-MM' }],
+        parameters: [{ in: 'query', name: 'monthYear', schema: { type: 'string' }, description: 'Format: Mon-YYYY (e.g. Mar-2026)', example: 'Mar-2026' }],
         responses: { 200: { description: 'Salaries for month' } }
       }
     },
@@ -1197,14 +1221,6 @@ const swaggerDefinition = {
         summary: 'Get manager dashboard summary data',
         security: [{ bearerAuth: [] }],
         responses: { 200: { description: 'Dashboard data' } }
-      }
-    },
-    '/api/manager/analytics/profit-by-month': {
-      get: {
-        tags: ['Manager - Analytics'],
-        summary: 'Get branch profit by month',
-        security: [{ bearerAuth: [] }],
-        responses: { 200: { description: 'Monthly profit data' } }
       }
     },
     '/api/manager/analytics/overview': {
