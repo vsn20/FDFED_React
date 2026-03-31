@@ -1091,14 +1091,22 @@ const swaggerDefinition = {
             'application/json': {
               schema: {
                 type: 'object',
-                required: ['salesman_id', 'company_id', 'product_id', 'customer_name', 'customer_phone'],
+                required: ['salesman_id', 'company_id', 'product_id', 'customer_name', 'phone_number', 'sold_price', 'purchased_price', 'installation'],
                 properties: {
                   salesman_id: { type: 'string' },
                   company_id: { type: 'string' },
                   product_id: { type: 'string' },
                   customer_name: { type: 'string' },
-                  customer_phone: { type: 'string' },
-                  quantity: { type: 'integer', minimum: 1 }
+                  phone_number: { type: 'string', description: 'Customer phone number' },
+                  quantity: { type: 'integer', minimum: 1, default: 1 },
+                  sold_price: { type: 'number', description: 'Selling price per unit' },
+                  purchased_price: { type: 'number', description: 'Purchase/cost price per unit' },
+                  installation: { type: 'string', enum: ['Required', 'Not Required'], description: 'Whether installation is needed' },
+                  installationType: { type: 'string', enum: ['Paid', 'Free'], nullable: true },
+                  sales_date: { type: 'string', format: 'date', description: 'Date of sale (defaults to today if omitted)' },
+                  customer_email: { type: 'string', format: 'email', nullable: true },
+                  address: { type: 'string', nullable: true },
+                  payment_method: { type: 'string', enum: ['cash', 'scanner', 'online'], default: 'cash' }
                 }
               }
             }
@@ -1357,14 +1365,22 @@ const swaggerDefinition = {
             'application/json': {
               schema: {
                 type: 'object',
-                required: ['company_id', 'product_id', 'customer_name', 'customer_phone'],
+                required: ['company_id', 'product_id', 'customer_name', 'phone_number', 'sold_price', 'purchased_price', 'installation'],
                 properties: {
                   company_id: { type: 'string' },
                   product_id: { type: 'string' },
                   customer_name: { type: 'string' },
-                  customer_phone: { type: 'string' },
-                  unique_code: { type: 'string' },
-                  quantity: { type: 'integer', minimum: 1 }
+                  phone_number: { type: 'string', description: 'Customer phone number' },
+                  sold_price: { type: 'number', description: 'Selling price per unit' },
+                  purchased_price: { type: 'number', description: 'Purchase/cost price per unit' },
+                  installation: { type: 'string', enum: ['Required', 'Not Required'], description: 'Whether installation is needed' },
+                  installationType: { type: 'string', enum: ['Paid', 'Free'], nullable: true },
+                  quantity: { type: 'integer', minimum: 1, default: 1 },
+                  unique_code: { type: 'string', nullable: true, description: 'Unique product/serial code (if applicable)' },
+                  sales_date: { type: 'string', format: 'date', description: 'Date of sale (defaults to today if omitted)' },
+                  customer_email: { type: 'string', format: 'email', nullable: true },
+                  address: { type: 'string', nullable: true },
+                  payment_method: { type: 'string', enum: ['cash', 'scanner', 'online'], default: 'cash' }
                 }
               }
             }
