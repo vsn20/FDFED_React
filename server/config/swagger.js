@@ -1738,7 +1738,7 @@ const swaggerDefinition = {
     '/api/company/messages/send': {
       post: {
         tags: ['Company - Messaging'],
-        summary: 'Send company message to sales managers',
+        summary: 'Send company message to admin or sales managers',
         security: [{ bearerAuth: [] }],
         requestBody: {
           required: true,
@@ -1746,18 +1746,40 @@ const swaggerDefinition = {
             'application/json': {
               schema: {
                 type: 'object',
-                required: ['message'],
+                required: ['category', 'message'],
                 properties: {
-                  to: { type: 'string' },
-                  subject: { type: 'string' },
+                  category: {
+                    type: 'string',
+                    enum: ['admin', 'all_sales_manager', 'specific_sales_manager'],
+                    description: '"admin" → sends to admin | "all_sales_manager" → broadcasts to all managers | "specific_sales_manager" → requires "to" field with employee e_id'
+                  },
+                  to: {
+                    type: 'string',
+                    description: 'Required only when category is "specific_sales_manager". Provide the employee e_id.'
+                  },
                   message: { type: 'string' }
+                }
+              },
+              examples: {
+                toAdmin: {
+                  summary: 'Message to Admin',
+                  value: { category: 'admin', message: 'Hi, got a new product. Take a look.' }
+                },
+                toAllManagers: {
+                  summary: 'Broadcast to All Sales Managers',
+                  value: { category: 'all_sales_manager', message: 'Please review the new stock.' }
+                },
+                toSpecificManager: {
+                  summary: 'Message to a Specific Sales Manager',
+                  value: { category: 'specific_sales_manager', to: 'E001', message: 'Check your pending orders.' }
                 }
               }
             }
           }
         },
         responses: {
-          200: { description: 'Message sent' }
+          200: { description: 'Message sent successfully' },
+          400: { description: 'Bad Request - missing category, missing "to" for specific_sales_manager, or invalid category' }
         }
       }
     },
