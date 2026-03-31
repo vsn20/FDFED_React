@@ -32,24 +32,197 @@ const OwnerMessages = () => {
     message: ''
   });
 
-  // Styles (Kept as provided)
+  // ── UPDATED STYLES: White & Orange theme with strong text contrast ──
   const styles = {
-    container: { width: '100%', padding: '2rem', boxSizing: 'border-box', backgroundColor: '#f8fafc', minHeight: '100vh', fontFamily: "'Inter', sans-serif" },
-    contentArea: { backgroundColor: '#ffffff', borderRadius: '16px', padding: '2rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', minHeight: 'calc(100vh - 4rem)' },
-    headerContainer: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' },
-    heading: { color: '#1e293b', fontSize: '1.875rem', fontWeight: '700' },
-    headerButtons: { display: 'flex', gap: '10px' },
-    button: { padding: '0.75rem 1.5rem', backgroundColor: '#0f172a', color: 'white', border: 'none', borderRadius: '0.5rem', cursor: 'pointer' },
-    buttonInactive: { padding: '0.75rem 1.5rem', backgroundColor: '#fff', color: '#64748b', border: '1px solid #cbd5e1', borderRadius: '0.5rem', cursor: 'pointer' },
-    composeBtn: { padding: '0.75rem 1.5rem', backgroundColor: '#2ecc71', color: 'white', border: 'none', borderRadius: '0.5rem', cursor: 'pointer' },
-    backLink: { padding: '0.5rem 1rem', border: '1px solid #cbd5e1', borderRadius: '0.5rem', cursor: 'pointer', background: 'white' },
-    messageItem: { display: 'flex', justifyContent: 'space-between', padding: '1.25rem', border: '1px solid #e2e8f0', borderRadius: '12px', marginBottom: '10px', cursor: 'pointer', transition: 'transform 0.2s' },
-    formSection: { backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '2rem', maxWidth: '800px', margin: '0 auto' },
-    fieldGroup: { display: 'grid', gap: '1.5rem' },
-    fieldWrapper: { display: 'flex', flexDirection: 'column', gap: '0.5rem' },
-    fieldLabel: { fontSize: '0.875rem', fontWeight: '600', color: '#475569' },
-    fieldInput: { padding: '0.75rem', border: '1px solid #cbd5e1', borderRadius: '0.5rem', width: '100%' },
-    submitBtn: { width: '100%', padding: '1rem', backgroundColor: '#0f172a', color: 'white', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', marginTop: '2rem' }
+    container: {
+      width: '100%',
+      padding: '2rem',
+      boxSizing: 'border-box',
+      backgroundColor: '#fff7f0',      // very light orange tint background
+      minHeight: '100vh',
+      fontFamily: "'Inter', sans-serif"
+    },
+    contentArea: {
+      backgroundColor: '#ffffff',
+      borderRadius: '16px',
+      padding: '2rem',
+      boxShadow: '0 4px 6px -1px rgba(234,88,12,0.08)',
+      minHeight: 'calc(100vh - 4rem)'
+    },
+    headerContainer: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '2rem',
+      borderBottom: '2px solid #ffedd5',
+      paddingBottom: '1rem'
+    },
+    heading: {
+      color: '#f5a814',               // deep orange — visible on white
+      fontSize: '1.875rem',
+      fontWeight: '700',
+      margin: 0
+    },
+    headerButtons: {
+      display: 'flex',
+      gap: '10px'
+    },
+    // Active tab button — orange fill
+    button: {
+      padding: '0.75rem 1.5rem',
+      backgroundColor: ' #f5a814',
+      color: '#ffffff',
+      border: 'none',
+      borderRadius: '0.5rem',
+      cursor: 'pointer',
+      fontWeight: '600',
+      fontSize: '0.875rem'
+    },
+    // Inactive tab button — white with orange border/text
+    buttonInactive: {
+      padding: '0.75rem 1.5rem',
+      backgroundColor: '#ffffff',
+      color: ' #f5a814',
+      border: '1.5px solid #f5a814',
+      borderRadius: '0.5rem',
+      cursor: 'pointer',
+      fontWeight: '600',
+      fontSize: '0.875rem'
+    },
+    // Compose button — darker orange so it stands out
+    composeBtn: {
+      padding: '0.75rem 1.5rem',
+      backgroundColor: ' #f5a814',
+      color: '#ffffff',
+      border: 'none',
+      borderRadius: '0.5rem',
+      cursor: 'pointer',
+      fontWeight: '600',
+      fontSize: '0.875rem'
+    },
+    backLink: {
+      padding: '0.5rem 1rem',
+      border: '1.5px solid #f5a814',
+      borderRadius: '0.5rem',
+      cursor: 'pointer',
+      background: '#ffffff',
+      color: ' #f5a814',               // orange text on white
+      fontWeight: '600',
+      fontSize: '0.875rem'
+    },
+    // Message list card
+    messageItem: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      padding: '1.25rem',
+      border: '1px solid #fed7aa',    // light orange border
+      borderRadius: '12px',
+      marginBottom: '10px',
+      cursor: 'pointer',
+      backgroundColor: '#ffffff',
+      transition: 'background-color 0.2s, transform 0.2s',
+    },
+    messageItemHover: {
+      backgroundColor: '#fff7f0',
+    },
+    messageSender: {
+      fontWeight: '700',
+      color: '#1e293b',               // near-black — maximum readability on white
+      fontSize: '0.95rem',
+      marginBottom: '4px'
+    },
+    messagePreview: {
+      color: '#64748b',               // medium slate — visible on white
+      fontSize: '0.875rem'
+    },
+    messageDate: {
+      color: '#f5a814',               // orange date stamp
+      fontSize: '0.8rem',
+      fontWeight: '500',
+      whiteSpace: 'nowrap',
+      marginLeft: '1rem'
+    },
+    // Compose / Details card
+    formSection: {
+      backgroundColor: '#ffffff',
+      border: '1px solid #fed7aa',
+      borderRadius: '12px',
+      padding: '2rem',
+      maxWidth: '800px',
+      margin: '0 auto'
+    },
+    fieldGroup: {
+      display: 'grid',
+      gap: '1.5rem'
+    },
+    fieldWrapper: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.5rem'
+    },
+    fieldLabel: {
+      fontSize: '0.875rem',
+      fontWeight: '600',
+      color: '#f5a814',               // orange labels — visible on white
+    },
+    fieldInput: {
+      padding: '0.75rem',
+      border: '1.5px solid #fed7aa',
+      borderRadius: '0.5rem',
+      width: '100%',
+      boxSizing: 'border-box',
+      color: '#1e293b',               // dark text inside inputs
+      backgroundColor: '#ffffff',
+      fontSize: '0.9rem',
+      outline: 'none'
+    },
+    fieldInputDisabled: {
+      padding: '0.75rem',
+      border: '1.5px solid #fed7aa',
+      borderRadius: '0.5rem',
+      width: '100%',
+      boxSizing: 'border-box',
+      color: '#374151',               // slightly muted but still readable
+      backgroundColor: '#fff7f0',    // light orange tint for disabled/read-only
+      fontSize: '0.9rem'
+    },
+    searchInput: {
+      padding: '0.75rem 1rem',
+      border: '1.5px solid #fed7aa',
+      borderRadius: '0.5rem',
+      maxWidth: '300px',
+      marginBottom: '20px',
+      width: '100%',
+      boxSizing: 'border-box',
+      color: '#1e293b',
+      backgroundColor: '#ffffff',
+      fontSize: '0.9rem',
+      outline: 'none'
+    },
+    submitBtn: {
+      width: '100%',
+      padding: '1rem',
+      backgroundColor: '#f5a814',
+      color: '#ffffff',
+      border: 'none',
+      borderRadius: '0.5rem',
+      cursor: 'pointer',
+      marginTop: '2rem',
+      fontWeight: '700',
+      fontSize: '1rem',
+      letterSpacing: '0.02em'
+    },
+    loadingText: {
+      color: '#f5a814',
+      fontWeight: '500',
+      padding: '1rem 0'
+    },
+    errorText: {
+      color: ' #f5a814',
+      fontWeight: '500',
+      padding: '1rem 0'
+    }
   };
 
   // --- SOCKET.IO LOGIC ---
@@ -61,15 +234,11 @@ const OwnerMessages = () => {
     });
 
     socket.on('newMessage', (newMsg) => {
-      // 1. INBOX LOGIC
-      // If viewing inbox, and message is for Admin OR current user
       if (view === 'inbox') {
          if (newMsg.to === 'admin' || (user && newMsg.to === user.emp_id)) {
             setMessages(prev => [newMsg, ...prev]);
          }
       }
-      // 2. SENT LOGIC
-      // If viewing sent, and message is FROM current user
       if (view === 'sent') {
          if (user && newMsg.from === user.emp_id) {
             setMessages(prev => [newMsg, ...prev]);
@@ -80,7 +249,7 @@ const OwnerMessages = () => {
     return () => {
       socket.disconnect();
     };
-  }, [view, user]); // Dependencies ensure this updates when user/view changes
+  }, [view, user]);
 
   useEffect(() => {
     const timer = setTimeout(() => { setDebouncedSearch(searchTerm); setCurrentPage(1); }, 500);
@@ -95,7 +264,6 @@ const OwnerMessages = () => {
   const fetchMessages = async () => {
     setLoading(true);
     try {
-      // FIX: Changed /employees/messages to /owner/messages to match server.js
       const endpoint = view === 'inbox' ? '/owner/messages/inbox' : '/owner/messages/sent';
       const response = await fetch(`${API_BASE_URL}${endpoint}?page=${currentPage}&limit=10&search=${debouncedSearch}`, {
         headers: { 'x-auth-token': token, 'Authorization': `Bearer ${token}` }
@@ -110,7 +278,6 @@ const OwnerMessages = () => {
 
   const fetchComposeOptions = async () => {
     try {
-      // FIX: Changed /employees/messages to /owner/messages
       const response = await fetch(`${API_BASE_URL}/owner/messages/options`, {
         headers: { 'x-auth-token': token, 'Authorization': `Bearer ${token}` }
       });
@@ -129,7 +296,6 @@ const OwnerMessages = () => {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     try {
-      // FIX: Changed /employees/messages to /owner/messages
       const response = await fetch(`${API_BASE_URL}/owner/messages/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-auth-token': token, 'Authorization': `Bearer ${token}` },
@@ -147,6 +313,8 @@ const OwnerMessages = () => {
   return (
     <div style={styles.container}>
       <div style={styles.contentArea}>
+
+        {/* ── HEADER ── */}
         <div style={styles.headerContainer}>
           <h1 style={styles.heading}>{view.charAt(0).toUpperCase() + view.slice(1)}</h1>
           {view === 'inbox' || view === 'sent' ? (
@@ -155,52 +323,100 @@ const OwnerMessages = () => {
               <button style={view === 'sent' ? styles.button : styles.buttonInactive} onClick={() => setView('sent')}>Sent</button>
               <button style={styles.composeBtn} onClick={() => setView('compose')}>+ Compose</button>
             </div>
-          ) : <button style={styles.backLink} onClick={() => setView('inbox')}>&larr; Back</button>}
+          ) : (
+            <button style={styles.backLink} onClick={() => setView('inbox')}>&larr; Back</button>
+          )}
         </div>
 
+        {/* ── INBOX / SENT LIST ── */}
         {(view === 'inbox' || view === 'sent') && (
           <div>
-            <input type="text" style={{...styles.fieldInput, maxWidth: '300px', marginBottom: '20px'}} placeholder="Search..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
-            {loading ? <p>Loading...</p> : messages.map(msg => (
-              <div key={msg._id} style={styles.messageItem} onClick={() => {setSelectedMessage(msg); setView('details');}}>
-                <div>
-                  {/* Displaying enriched names immediately thanks to controller update */}
-                  <div style={{fontWeight: 'bold'}}>{view === 'inbox' ? `From: ${msg.fromDisplay || msg.from}` : `To: ${msg.toDisplay || msg.to}`}</div>
-                  <div style={{color: '#64748b'}}>{msg.message.substring(0, 100)}...</div>
+            <input
+              type="text"
+              style={styles.searchInput}
+              placeholder="Search messages..."
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+            {loading ? (
+              <p style={styles.loadingText}>Loading...</p>
+            ) : error ? (
+              <p style={styles.errorText}>{error}</p>
+            ) : messages.length === 0 ? (
+              <p style={{ color: '#94a3b8', padding: '1rem 0' }}>No messages found.</p>
+            ) : (
+              messages.map(msg => (
+                <div
+                  key={msg._id}
+                  style={styles.messageItem}
+                  onMouseEnter={e => e.currentTarget.style.backgroundColor = '#fff7f0'}
+                  onMouseLeave={e => e.currentTarget.style.backgroundColor = '#ffffff'}
+                  onClick={() => { setSelectedMessage(msg); setView('details'); }}
+                >
+                  <div>
+                    <div style={styles.messageSender}>
+                      {view === 'inbox'
+                        ? `From: ${msg.fromDisplay || msg.from}`
+                        : `To: ${msg.toDisplay || msg.to}`}
+                    </div>
+                    <div style={styles.messagePreview}>
+                      {msg.message.substring(0, 100)}...
+                    </div>
+                  </div>
+                  <div style={styles.messageDate}>
+                    {new Date(msg.timestamp).toLocaleDateString()}
+                  </div>
                 </div>
-                <div>{new Date(msg.timestamp).toLocaleDateString()}</div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
 
-        {/* ... (Details view and Compose view remain largely the same, logic above fixed the data flow) ... */}
+        {/* ── DETAILS VIEW ── */}
         {view === 'details' && selectedMessage && (
           <div style={styles.formSection}>
             <div style={styles.fieldGroup}>
               <div style={styles.fieldWrapper}>
                 <label style={styles.fieldLabel}>From</label>
-                <input value={selectedMessage.fromDisplay} style={{...styles.fieldInput, background: '#f8fafc'}} disabled />
+                <input
+                  value={selectedMessage.fromDisplay || selectedMessage.from}
+                  style={styles.fieldInputDisabled}
+                  disabled
+                />
               </div>
               <div style={styles.fieldWrapper}>
                 <label style={styles.fieldLabel}>To</label>
-                <input value={selectedMessage.toDisplay} style={{...styles.fieldInput, background: '#f8fafc'}} disabled />
+                <input
+                  value={selectedMessage.toDisplay || selectedMessage.to}
+                  style={styles.fieldInputDisabled}
+                  disabled
+                />
               </div>
               <div style={styles.fieldWrapper}>
                 <label style={styles.fieldLabel}>Message</label>
-                <textarea value={selectedMessage.message} style={{...styles.fieldInput, background: '#f8fafc', minHeight: '150px'}} disabled />
+                <textarea
+                  value={selectedMessage.message}
+                  style={{ ...styles.fieldInputDisabled, minHeight: '150px', resize: 'none' }}
+                  disabled
+                />
               </div>
             </div>
           </div>
         )}
 
+        {/* ── COMPOSE VIEW ── */}
         {view === 'compose' && (
           <div style={styles.formSection}>
             <form onSubmit={handleSendMessage}>
               <div style={styles.fieldGroup}>
+
                 <div style={styles.fieldWrapper}>
                   <label style={styles.fieldLabel}>Recipient Category</label>
-                  <select style={styles.fieldInput} value={composeData.category} onChange={e => setComposeData({...composeData, category: e.target.value, to: '', branch_id: ''})}>
+                  <select
+                    style={styles.fieldInput}
+                    value={composeData.category}
+                    onChange={e => setComposeData({ ...composeData, category: e.target.value, to: '', branch_id: '' })}
+                  >
                     <option value="all_salesman">All Salesmen</option>
                     <option value="all_sales_manager">All Sales Managers</option>
                     <option value="all_companies">All Companies</option>
@@ -214,9 +430,15 @@ const OwnerMessages = () => {
                 {composeData.category === 'all_salesman' && (
                   <div style={styles.fieldWrapper}>
                     <label style={styles.fieldLabel}>Filter by Branch</label>
-                    <select style={styles.fieldInput} value={composeData.branch_id} onChange={e => setComposeData({...composeData, branch_id: e.target.value})}>
+                    <select
+                      style={styles.fieldInput}
+                      value={composeData.branch_id}
+                      onChange={e => setComposeData({ ...composeData, branch_id: e.target.value })}
+                    >
                       <option value="">All Branches</option>
-                      {composeOptions.branches.map(b => <option key={b.bid} value={b.bid}>{b.b_name}</option>)}
+                      {composeOptions.branches.map(b => (
+                        <option key={b.bid} value={b.bid}>{b.b_name}</option>
+                      ))}
                     </select>
                   </div>
                 )}
@@ -224,9 +446,16 @@ const OwnerMessages = () => {
                 {composeData.category === 'specific_company' && (
                   <div style={styles.fieldWrapper}>
                     <label style={styles.fieldLabel}>Select Company</label>
-                    <select style={styles.fieldInput} required value={composeData.to} onChange={e => setComposeData({...composeData, to: e.target.value})}>
+                    <select
+                      style={styles.fieldInput}
+                      required
+                      value={composeData.to}
+                      onChange={e => setComposeData({ ...composeData, to: e.target.value })}
+                    >
                       <option value="">-- Select --</option>
-                      {composeOptions.companies.map(c => <option key={c.c_id} value={c.c_id}>{c.cname}</option>)}
+                      {composeOptions.companies.map(c => (
+                        <option key={c.c_id} value={c.c_id}>{c.cname}</option>
+                      ))}
                     </select>
                   </div>
                 )}
@@ -234,9 +463,16 @@ const OwnerMessages = () => {
                 {composeData.category === 'specific_sales_manager' && (
                   <div style={styles.fieldWrapper}>
                     <label style={styles.fieldLabel}>Select Manager</label>
-                    <select style={styles.fieldInput} required value={composeData.to} onChange={e => setComposeData({...composeData, to: e.target.value})}>
+                    <select
+                      style={styles.fieldInput}
+                      required
+                      value={composeData.to}
+                      onChange={e => setComposeData({ ...composeData, to: e.target.value })}
+                    >
                       <option value="">-- Select --</option>
-                      {composeOptions.salesManagers.map(m => <option key={m.e_id} value={m.e_id}>{m.f_name} {m.last_name}</option>)}
+                      {composeOptions.salesManagers.map(m => (
+                        <option key={m.e_id} value={m.e_id}>{m.f_name} {m.last_name}</option>
+                      ))}
                     </select>
                   </div>
                 )}
@@ -244,22 +480,36 @@ const OwnerMessages = () => {
                 {composeData.category === 'specific_salesman' && (
                   <div style={styles.fieldWrapper}>
                     <label style={styles.fieldLabel}>Select Salesman</label>
-                    <select style={styles.fieldInput} required value={composeData.to} onChange={e => setComposeData({...composeData, to: e.target.value})}>
+                    <select
+                      style={styles.fieldInput}
+                      required
+                      value={composeData.to}
+                      onChange={e => setComposeData({ ...composeData, to: e.target.value })}
+                    >
                       <option value="">-- Select --</option>
-                      {composeOptions.salesmen.map(s => <option key={s.e_id} value={s.e_id}>{s.f_name} {s.last_name}</option>)}
+                      {composeOptions.salesmen.map(s => (
+                        <option key={s.e_id} value={s.e_id}>{s.f_name} {s.last_name}</option>
+                      ))}
                     </select>
                   </div>
                 )}
 
                 <div style={styles.fieldWrapper}>
                   <label style={styles.fieldLabel}>Message</label>
-                  <textarea style={{...styles.fieldInput, minHeight: '150px'}} required value={composeData.message} onChange={e => setComposeData({...composeData, message: e.target.value})} />
+                  <textarea
+                    style={{ ...styles.fieldInput, minHeight: '150px', resize: 'vertical' }}
+                    required
+                    value={composeData.message}
+                    onChange={e => setComposeData({ ...composeData, message: e.target.value })}
+                  />
                 </div>
               </div>
+
               <button style={styles.submitBtn} type="submit">Send Message</button>
             </form>
           </div>
         )}
+
       </div>
     </div>
   );
