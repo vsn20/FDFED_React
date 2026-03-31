@@ -1,106 +1,295 @@
+/* ============================================
+   SalesmanMessages — Electroland Theme
+   Dark sidebar context, warm cream main bg
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@600&display=swap');
+
+/* ---- Container ---- */
 .container {
-    padding: 20px;
+    padding: 32px;
     width: 100%;
+    font-family: 'DM Sans', sans-serif;
 }
 
 .contentArea {
     background-color: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
 }
 
+/* ---- Header ---- */
 .headerContainer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 28px;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 16px;
 }
 
 .headerContainer h1 {
-    font-size: 24px;
-    color: #333;
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: #1a1a1a;
     margin: 0;
+    font-weight: 600;
+    letter-spacing: -0.3px;
 }
 
-.searchContainer input {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    width: 300px;
+/* ---- Nav Buttons ---- */
+.navButtons {
+    display: flex;
+    gap: 8px;
+}
+
+.navBtn {
+    padding: 9px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #2b2b2b;
+    color: #ffffff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.18s ease, transform 0.1s ease;
+    letter-spacing: 0.2px;
+}
+
+.navBtn:hover {
+    background-color: #444;
+    transform: translateY(-1px);
+}
+
+.navBtnActive {
+    background-color: #f5a623;
+    color: #1a1a1a;
+}
+
+.navBtnActive:hover {
+    background-color: #e8971a;
+}
+
+.navBtnCompose {
+    background-color: #1a73e8;
+    color: #fff;
+}
+
+.navBtnCompose:hover {
+    background-color: #1557b0;
+}
+
+/* ---- Alerts ---- */
+.errorMessage {
+    color: #c0392b;
+    background-color: #fdecea;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
     font-size: 14px;
 }
 
-.branchInfo {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    display: flex;
-    gap: 30px;
-    border: 1px solid #e9ecef;
+.loading {
+    text-align: center;
+    padding: 30px;
+    color: #888;
+    font-size: 14px;
 }
 
-.infoGroup {
-    display: flex;
-    flex-direction: column;
-}
-
-.infoLabel {
-    font-size: 12px;
-    color: #6c757d;
-    font-weight: 600;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-}
-
-.infoValue {
-    font-size: 16px;
-    color: #212529;
-    font-weight: 500;
-}
-
+/* ---- Table ---- */
 .tableWrapper {
     overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid #ececec;
 }
 
 .table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 600px;
+    min-width: 580px;
+}
+
+.table thead tr {
+    background-color: #1a1a1a;
 }
 
 .table th {
-    background-color: #333;
-    color: white;
-    padding: 12px 15px;
+    padding: 13px 18px;
     text-align: left;
-    font-weight: 500;
-    font-size: 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #f5a623;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
 }
 
 .table td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #eee;
+    padding: 14px 18px;
+    border-bottom: 1px solid #f2f2f2;
     color: #333;
+    font-size: 14px;
+    transition: background 0.12s;
+}
+
+.table tbody tr {
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.table tbody tr:hover td {
+    background-color: #fffbf2;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.noData td {
+    text-align: center;
+    color: #aaa;
+    padding: 40px;
     font-size: 14px;
 }
 
-.table tr:hover {
-    background-color: #f8f9fa;
+/* Unread dot indicator */
+.unread {
+    font-weight: 600;
+    color: #1a1a1a;
 }
 
-.loading, .errorMessage, .noData {
-    text-align: center;
-    padding: 20px;
-    font-size: 16px;
+/* ---- Compose Form ---- */
+.composeWrapper {
+    max-width: 560px;
 }
 
-.errorMessage {
-    color: #dc3545;
-    background-color: #f8d7da;
-    border-radius: 5px;
+.composeWrapper h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: #1a1a1a;
+    margin-bottom: 22px;
+    font-weight: 600;
+}
+
+.formGroup {
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.formGroup label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.formInput {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: #333;
+    box-sizing: border-box;
+    transition: border-color 0.15s;
+}
+
+.formInput:focus {
+    outline: none;
+    border-color: #f5a623;
+    background: #fff;
+}
+
+.formInput[readonly] {
+    color: #888;
+    cursor: default;
+}
+
+.textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.submitBtn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #1a1a1a;
+    color: #f5a623;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.4px;
+    transition: background 0.18s, transform 0.1s;
+}
+
+.submitBtn:hover:not(:disabled) {
+    background-color: #333;
+    transform: translateY(-1px);
+}
+
+.submitBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ---- Detail View ---- */
+.detailBox {
+    background: #fafafa;
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid #ececec;
+    margin-top: 20px;
+}
+
+.detailBox p {
+    margin: 0 0 10px;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+}
+
+.detailBox p strong {
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+.detailBox hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 16px 0;
+}
+
+.detailBody {
+    white-space: pre-wrap;
+    color: #333;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.backBtn {
+    padding: 9px 18px;
+    border: none;
+    border-radius: 8px;
+    background: #2b2b2b;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
     margin-bottom: 20px;
+    transition: background 0.15s;
+}
+
+.backBtn:hover {
+    background: #444;
 }

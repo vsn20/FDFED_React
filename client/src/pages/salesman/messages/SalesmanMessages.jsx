@@ -1,60 +1,46 @@
 import React, { useState, useEffect, useContext } from 'react';
-import api from '../../../api/api'; // Adjust path based on folder structure
+import api from '../../../api/api';
 import io from 'socket.io-client';
-import AuthContext from '../../../context/AuthContext'; // Assuming you have this
-import styles from './SalesmanMessages.module.css'; // You can reuse Inventory.module.css or create this
+import AuthContext from '../../../context/AuthContext';
+import styles from './SalesmanMessages.module.css';
 
-const SOCKET_URL = 'http://localhost:5001'; // Your backend URL
+const SOCKET_URL = 'http://localhost:5001';
 
 const SalesmanMessages = () => {
-    // Context for user info (optional, used if available)
     const { user } = useContext(AuthContext);
 
-    // State
-    const [view, setView] = useState('inbox'); // 'inbox', 'sent', 'compose', 'details'
+    const [view, setView] = useState('inbox');
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [selectedMessage, setSelectedMessage] = useState(null);
 
-    // Compose State
-    const [manager, setManager] = useState(null); // The branch manager
+    const [manager, setManager] = useState(null);
     const [composeMsg, setComposeMsg] = useState('');
     const [sending, setSending] = useState(false);
 
-    // Metadata for Socket filtering
     const [myEmpId, setMyEmpId] = useState('');
     const [myBranchId, setMyBranchId] = useState('');
 
-    // --- 1. Socket Connection ---
+    // --- 1. Socket ---
     useEffect(() => {
         const socket = io(SOCKET_URL);
 
         socket.on('newMessage', (newMsg) => {
-            // Logic to determine if this message belongs in our current view
-            
-            // INBOX: If to ME or to ALL SALESMEN in MY BRANCH
             if (view === 'inbox' && myEmpId) {
                 const isForMe = newMsg.to === myEmpId;
                 const isBroadcast = newMsg.to === 'all_salesman' && newMsg.branch_id === myBranchId;
-                
-                if (isForMe || isBroadcast) {
-                    setMessages(prev => [newMsg, ...prev]);
-                }
+                if (isForMe || isBroadcast) setMessages(prev => [newMsg, ...prev]);
             }
-
-            // SENT: If sent BY me
             if (view === 'sent' && myEmpId) {
-                if (newMsg.from === myEmpId) {
-                    setMessages(prev => [newMsg, ...prev]);
-                }
+                if (newMsg.from === myEmpId) setMessages(prev => [newMsg, ...prev]);
             }
         });
 
         return () => socket.disconnect();
     }, [view, myEmpId, myBranchId]);
 
-    // --- 2. Data Fetching ---
+    // --- 2. Fetching ---
     useEffect(() => {
         if (view === 'inbox') fetchInbox();
         if (view === 'sent') fetchSent();
@@ -63,35 +49,34 @@ const SalesmanMessages = () => {
 
     const fetchInbox = async () => {
         setLoading(true);
+        setError('');
         try {
             const res = await api.get('/salesman/messages/inbox');
             if (res.data.success) {
                 setMessages(res.data.messages);
-                // Store IDs for socket filtering
                 setMyEmpId(res.data.meta.emp_id);
                 setMyBranchId(res.data.meta.branch_id);
             }
         } catch (err) {
-            console.error(err);
             setError("Failed to load inbox.");
         } finally { setLoading(false); }
     };
 
     const fetchSent = async () => {
         setLoading(true);
+        setError('');
         try {
             const res = await api.get('/salesman/messages/sent');
             if (res.data.success) setMessages(res.data.messages);
-        } catch (err) { setError("Failed to load sent messages."); } 
+        } catch (err) { setError("Failed to load sent messages."); }
         finally { setLoading(false); }
     };
 
     const fetchManagerDetails = async () => {
+        setError('');
         try {
             const res = await api.get('/salesman/messages/manager');
-            if (res.data.success) {
-                setManager(res.data.manager);
-            }
+            if (res.data.success) setManager(res.data.manager);
         } catch (err) { setError("Could not find branch manager."); }
     };
 
@@ -114,109 +99,126 @@ const SalesmanMessages = () => {
         } finally { setSending(false); }
     };
 
-    // --- Styles (Inline for quick setup, move to CSS module preferably) ---
-    const s = {
-        container: { padding: '20px', background: '#fff', borderRadius: '10px', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' },
-        header: { display: 'flex', justifyContent: 'space-between', marginBottom: '20px' },
-        navBtn: { padding: '8px 15px', marginRight: '10px', cursor: 'pointer', border: 'none', borderRadius: '5px', background: '#333', color: '#fff' },
-        activeBtn: { background: '#555' },
-        table: { width: '100%', borderCollapse: 'collapse' },
-        th: { background: '#333', color: '#fff', padding: '10px', textAlign: 'left' },
-        td: { padding: '10px', borderBottom: '1px solid #eee', cursor: 'pointer' },
-        form: { maxWidth: '500px' },
-        input: { width: '100%', padding: '10px', marginBottom: '15px', borderRadius: '5px', border: '1px solid #ddd', background: '#f9f9f9' },
-        detailBox: { background: '#f8f9fa', padding: '20px', borderRadius: '10px', border: '1px solid #eee' }
-    };
-
-    // --- 4. Rendering ---
-    
-    // View: Details
+    // --- 4. Detail View ---
     if (view === 'details' && selectedMessage) {
         return (
-            <div style={s.container}>
-                <button onClick={() => setView('inbox')} style={s.navBtn}>← Back</button>
-                <h2>Message Details</h2>
-                <div style={s.detailBox}>
-                    <p><strong>From:</strong> {selectedMessage.fromDisplay}</p>
-                    <p><strong>To:</strong> {selectedMessage.toDisplay}</p>
-                    <p><strong>Date:</strong> {new Date(selectedMessage.timestamp).toLocaleString()}</p>
-                    <hr />
-                    <p style={{whiteSpace: 'pre-wrap'}}>{selectedMessage.message}</p>
+            <div className={styles.container}>
+                <div className={styles.contentArea}>
+                    <button className={styles.backBtn} onClick={() => setView('inbox')}>← Back</button>
+                    <h2 style={{ fontFamily: "'Playfair Display', serif", marginBottom: 4 }}>Message Details</h2>
+                    <div className={styles.detailBox}>
+                        <p><strong>From:</strong> {selectedMessage.fromDisplay}</p>
+                        <p><strong>To:</strong> {selectedMessage.toDisplay}</p>
+                        <p><strong>Date:</strong> {new Date(selectedMessage.timestamp).toLocaleString()}</p>
+                        <hr />
+                        <p className={styles.detailBody}>{selectedMessage.message}</p>
+                    </div>
                 </div>
             </div>
         );
     }
 
     return (
-        <div style={s.container}>
-            {/* Header Navigation */}
-            <div style={s.header}>
-                <h1>Salesman Messages</h1>
-                <div>
-                    <button onClick={() => setView('inbox')} style={{...s.navBtn, ...(view==='inbox'?s.activeBtn:{})}}>Inbox</button>
-                    <button onClick={() => setView('sent')} style={{...s.navBtn, ...(view==='sent'?s.activeBtn:{})}}>Sent</button>
-                    <button onClick={() => setView('compose')} style={{...s.navBtn, background: '#0984e3'}}>Compose</button>
+        <div className={styles.container}>
+            <div className={styles.contentArea}>
+                {/* Header */}
+                <div className={styles.headerContainer}>
+                    <h1>Salesman Messages</h1>
+                    <div className={styles.navButtons}>
+                        <button
+                            className={`${styles.navBtn} ${view === 'inbox' ? styles.navBtnActive : ''}`}
+                            onClick={() => setView('inbox')}
+                        >
+                            Inbox
+                        </button>
+                        <button
+                            className={`${styles.navBtn} ${view === 'sent' ? styles.navBtnActive : ''}`}
+                            onClick={() => setView('sent')}
+                        >
+                            Sent
+                        </button>
+                        <button
+                            className={`${styles.navBtn} ${styles.navBtnCompose}`}
+                            onClick={() => setView('compose')}
+                        >
+                            Compose
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            {error && <p style={{color: 'red'}}>{error}</p>}
-            {loading && <p>Loading...</p>}
+                {error && <div className={styles.errorMessage}>{error}</div>}
+                {loading && <div className={styles.loading}>Loading...</div>}
 
-            {/* View: Compose */}
-            {view === 'compose' && (
-                <div style={s.form}>
-                    <h3>Compose Message</h3>
-                    {manager ? (
-                        <form onSubmit={handleSendMessage}>
-                            <label>To (Branch Manager):</label>
-                            <input type="text" value={`${manager.e_id} - ${manager.name}`} readOnly style={s.input}/>
-                            
-                            <label>Message:</label>
-                            <textarea 
-                                required 
-                                value={composeMsg} 
-                                onChange={e => setComposeMsg(e.target.value)} 
-                                style={{...s.input, minHeight: '150px'}}
-                                placeholder="Write your message here..."
-                            ></textarea>
-                            
-                            <button type="submit" style={{...s.navBtn, width: '100%'}} disabled={sending}>
-                                {sending ? 'Sending...' : 'Send Message'}
-                            </button>
-                        </form>
-                    ) : (
-                        <p>Loading Manager details or No Manager assigned.</p>
-                    )}
-                </div>
-            )}
+                {/* Compose */}
+                {view === 'compose' && (
+                    <div className={styles.composeWrapper}>
+                        <h3>Compose Message</h3>
+                        {manager ? (
+                            <form onSubmit={handleSendMessage}>
+                                <div className={styles.formGroup}>
+                                    <label>To (Branch Manager)</label>
+                                    <input
+                                        type="text"
+                                        value={`${manager.e_id} — ${manager.name}`}
+                                        readOnly
+                                        className={styles.formInput}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Message</label>
+                                    <textarea
+                                        required
+                                        value={composeMsg}
+                                        onChange={e => setComposeMsg(e.target.value)}
+                                        className={`${styles.formInput} ${styles.textarea}`}
+                                        placeholder="Write your message here..."
+                                    />
+                                </div>
+                                <button type="submit" className={styles.submitBtn} disabled={sending}>
+                                    {sending ? 'Sending...' : 'Send Message'}
+                                </button>
+                            </form>
+                        ) : (
+                            <p style={{ color: '#888' }}>Loading manager details or no manager assigned.</p>
+                        )}
+                    </div>
+                )}
 
-            {/* View: Inbox & Sent Table */}
-            {(view === 'inbox' || view === 'sent') && (
-                <div style={{overflowX: 'auto'}}>
-                    <table style={s.table}>
-                        <thead>
-                            <tr>
-                                <th style={s.th}>{view === 'inbox' ? 'From' : 'To'}</th>
-                                <th style={s.th}>Message</th>
-                                <th style={s.th}>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {messages.length > 0 ? messages.map(msg => (
-                                <tr key={msg._id} onClick={() => { setSelectedMessage(msg); setView('details'); }} style={{cursor: 'pointer'}}>
-                                    <td style={s.td}>{view === 'inbox' ? msg.fromDisplay : msg.toDisplay}</td>
-                                    <td style={s.td}>
-                                        {msg.message.length > 50 ? msg.message.substring(0, 50) + '...' : msg.message}
-                                    </td>
-                                    <td style={s.td}>{new Date(msg.timestamp).toLocaleDateString()}</td>
+                {/* Inbox / Sent Table */}
+                {(view === 'inbox' || view === 'sent') && !loading && (
+                    <div className={styles.tableWrapper}>
+                        <table className={styles.table}>
+                            <thead>
+                                <tr>
+                                    <th>{view === 'inbox' ? 'From' : 'To'}</th>
+                                    <th>Message</th>
+                                    <th>Date</th>
                                 </tr>
-                            )) : (
-                                <tr><td colSpan="3" style={{...s.td, textAlign: 'center'}}>No messages found.</td></tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                            </thead>
+                            <tbody>
+                                {messages.length > 0 ? messages.map(msg => (
+                                    <tr
+                                        key={msg._id}
+                                        onClick={() => { setSelectedMessage(msg); setView('details'); }}
+                                    >
+                                        <td>{view === 'inbox' ? msg.fromDisplay : msg.toDisplay}</td>
+                                        <td>
+                                            {msg.message.length > 60
+                                                ? msg.message.substring(0, 60) + '…'
+                                                : msg.message}
+                                        </td>
+                                        <td>{new Date(msg.timestamp).toLocaleDateString()}</td>
+                                    </tr>
+                                )) : (
+                                    <tr className={styles.noData}>
+                                        <td colSpan="3">No messages found.</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
