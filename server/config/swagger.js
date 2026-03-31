@@ -3,7 +3,7 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerDefinition = {
   openapi: '3.0.3',
   info: {
-    title: 'FDFED Backend API',
+    title: 'ElectroLand Backend API',
     version: '1.0.0',
     description: 'Interactive API documentation for FDFED backend.'
   },
