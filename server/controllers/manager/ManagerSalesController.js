@@ -83,7 +83,7 @@ const resolveManagerSaleContext = async ({ payload, manager, session, validateUn
     purchased_price
   } = payload;
 
-  const salesmanDoc = await Employee.findById(salesman_id).session(session);
+  const salesmanDoc = await Employee.findOne({ e_id: salesman_id }).session(session);
   if (!salesmanDoc) throw new Error("Selected salesman not found");
   const actualSalesmanId = salesmanDoc.e_id;
 
@@ -142,7 +142,7 @@ const createManagerSaleFromContext = async ({ payload, manager, session, context
     company_id: payload.company_id,
     product_id: payload.product_id,
     customer_name: payload.customer_name,
-    sales_date: payload.saledate,
+    sales_date: payload.sales_date || new Date(),
     unique_code: generatedUniqueCode,
     purchased_price: parseFloat(payload.purchased_price),
     sold_price: parseFloat(payload.sold_price),
@@ -532,7 +532,7 @@ exports.verifyOnlinePaymentAndCreateSale = async (req, res) => {
           customer_email: payload.customer_email,
           phone_number: payload.phone_number,
           address: payload.address,
-          sales_date: payload.saledate,
+          sales_date: payload.sales_date,
           unique_code: created.generatedUniqueCode,
           product_name: context.product.Prod_name,
           model_number: context.product.Model_no,
