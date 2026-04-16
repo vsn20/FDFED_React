@@ -1,0 +1,33 @@
+# From server/ directory:
+cd server
+npm test                    # Show 48/48 tests pass
+npm run test:coverage       # Generate coverage HTML report
+
+# From root FDFED_React/ directory:
+docker-compose up --build   # Full Docker stack demo
+docker ps                   # Show running containers
+
+# In browser:
+http://localhost:5001/api-docs              # Swagger docs
+http://localhost:5001/api/performance-report # Redis benchmarks
+http://localhost:5001/api/search?q=Samsung  # Search
+
+
+
+
+# From server/ directory:
+cd server
+npm test                    # Show 48/48 tests pass
+npm run test:coverage       # Generate coverage HTML report
+
+# From root FDFED_React/ directory:
+docker-compose up -d        # Start all containers (background)
+docker-compose up --build -d # Rebuild & start (background)
+docker ps                   # Show running containers
+docker-compose down         # Stop all containers
+
+# In browser:
+http://localhost:5001/api-docs              # Swagger docs
+http://localhost:5001/api/performance-report # Redis benchmarks
+http://localhost:5001/api/search?q=Samsung  # Search
+http://localhost                            # Frontend (Docker)

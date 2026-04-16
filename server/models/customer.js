@@ -33,5 +33,10 @@ const CustomerSchema = new mongoose.Schema({
   }
 });
 
+// ============ DB OPTIMIZATION: INDEXES ============
+// B-Tree index for customer login by phone number
+CustomerSchema.index({ phno: 1 });
+// ===================================================
+
 const Customer = mongoose.model("Customer", CustomerSchema);
 module.exports = Customer;

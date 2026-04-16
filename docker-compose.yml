@@ -1,0 +1,80 @@
+# ============ DOCKER COMPOSE ============
+# Full-stack orchestration: MongoDB + Redis + Backend + Frontend
+# Usage: docker-compose up --build
+
+services:
+  # ============ DATABASE ============
+  mongodb:
+    image: mongo:7
+    container_name: electroland-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=electroland
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============ REDIS CACHE ============
+  redis:
+    image: redis:7-alpine
+    container_name: electroland-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============ BACKEND API ============
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: electroland-server
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+      - MONGO_URI=mongodb://mongodb:27017/electroland
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET:-your_super_secret_jwt_key}
+      - EMAIL_USER=${EMAIL_USER:-electroland2005@gmail.com}
+      - EMAIL_PASS=${EMAIL_PASS:-placeholder}
+      - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID:-rzp_test_placeholder}
+      - RAZORPAY_KEY_SECRET=${RAZORPAY_KEY_SECRET:-placeholder}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - uploads_data:/app/uploads
+
+  # ============ FRONTEND ============
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: electroland-client
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+
+volumes:
+  mongodb_data:
+  redis_data:
+  uploads_data:

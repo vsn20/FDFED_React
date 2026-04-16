@@ -35,4 +35,13 @@ const messageSchema = new mongoose.Schema({
   }
 });
 
+// ============ DB OPTIMIZATION: INDEXES ============
+// Compound index for inbox queries (sorted by time)
+messageSchema.index({ to: 1, timestamp: -1 });
+// Compound index for sent messages
+messageSchema.index({ from: 1, timestamp: -1 });
+// B-Tree index for branch-level message queries
+messageSchema.index({ branch_id: 1 });
+// ===================================================
+
 module.exports = mongoose.model('Message', messageSchema);

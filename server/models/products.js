@@ -33,4 +33,13 @@ const productSchema = new mongoose.Schema({
   approvedAt: { type: Date }
 });
 
+// ============ DB OPTIMIZATION: INDEXES ============
+// B-Tree index for filtering products by Status (used in getOurProducts, getTopProducts)
+productSchema.index({ Status: 1 });
+// Compound index for company product listings
+productSchema.index({ Com_id: 1, Status: 1 });
+// Text index for full-text search (Solr-like search experience)
+productSchema.index({ Prod_name: 'text', prod_description: 'text', com_name: 'text' });
+// ===================================================
+
 module.exports = mongoose.model("Product", productSchema);

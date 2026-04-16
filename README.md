@@ -14,6 +14,12 @@ A comprehensive, role-based e-commerce platform built with React and Node.js for
 - [Getting Started](#getting-started)
 - [User Roles & Capabilities](#user-roles--capabilities)
 - [API Documentation](#api-documentation)
+- [DB Optimization](#db-optimization)
+- [Redis Caching](#redis-caching)
+- [Search Optimization](#search-optimization)
+- [Testing](#testing)
+- [Docker](#docker-containerization)
+- [CI Pipeline](#continuous-integration)
 
 
 ## 🎯 Overview
@@ -85,35 +91,36 @@ Electroland is a multi-role e-commerce platform (academic project) that supports
 - **Node.js** - Runtime environment
 - **Express** 5.1.0 - Web framework
 - **MongoDB** with **Mongoose** 8.18.2 - Database
+- **Redis** with **ioredis** 5.6.1 - Caching layer
 - **JWT** 9.0.2 - Authentication
 - **Socket.io** 4.8.1 - Real-time events
 - **Multer** 2.0.2 - File uploads
 - **Nodemailer** 7.0.11 - Email service
-- **OTP Generator** 4.0.1 - One-time passwords
-- **CORS** 2.8.5 - Cross-origin requests
+- **Swagger UI** 5.0.1 - API documentation
+- **Jest** 29.7.0 - Unit testing framework
+
+### DevOps
+- **Docker** + **Docker Compose** - Containerization
+- **GitHub Actions** - CI/CD Pipeline
+- **Nginx** - Production web server
 
 ## 📁 Project Structure
 
 ```
 Electroland/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                   # GitHub Actions CI pipeline
 ├── client/                          # Frontend React application
 │   ├── src/
 │   │   ├── pages/                  # Page components organized by user role
-│   │   │   ├── company/            # Company dashboard pages
-│   │   │   ├── customer/           # Customer pages
-│   │   │   ├── manager/            # Manager pages
-│   │   │   ├── owner/              # Owner pages
-│   │   │   ├── salesman/           # Salesman pages
-│   │   │   └── *.jsx               # Public pages (Login, Home, etc.)
 │   │   ├── components/             # Reusable components
-│   │   │   ├── auth/               # Authentication components
-│   │   │   └── layout/             # Layout components
 │   │   ├── context/                # React Context (Auth)
 │   │   ├── redux/                  # Redux store & slices
 │   │   ├── api/                    # API service configuration
 │   │   └── App.jsx                 # Main app component
-│   ├── public/                     # Static assets
-│   │   └── uploads/                # User uploads directory
+│   ├── Dockerfile                  # Client container (multi-stage with Nginx)
+│   ├── nginx.conf                  # Nginx SPA routing + API proxy
 │   └── vite.config.js             # Vite configuration
 │
 ├── server/                          # Backend Node.js application
@@ -123,27 +130,42 @@ Electroland/
 │   │   ├── manager/                # Manager operations
 │   │   ├── owner/                  # Owner operations
 │   │   ├── salesman/               # Salesman operations
-│   │   └── *.js                    # Public operations
-│   ├── models/                     # MongoDB schemas
+│   │   └── searchController.js     # Full-text search (MongoDB Text Index)
+│   ├── models/                     # MongoDB schemas (with B-Tree & Compound indexes)
 │   ├── routes/                     # API routes organized by role
-│   │   ├── Customer/               # Customer routes
-│   │   ├── manager/                # Manager routes
-│   │   ├── owner/                  # Owner routes
-│   │   ├── salesman/               # Salesman routes
-│   │   └── *.js                    # Public routes
-│   ├── middleware/                 # Express middleware
-│   ├── config/                     # Database configuration
+│   ├── middleware/
+│   │   ├── authMiddleware.js       # JWT auth + role-based access control
+│   │   └── cacheMiddleware.js      # Redis cache layer + performance benchmarking
+│   ├── config/
+│   │   ├── db.js                   # MongoDB connection
+│   │   ├── redis.js                # Redis client configuration
+│   │   └── swagger.js              # OpenAPI 3.0 specification
+│   ├── tests/                      # Unit tests (Jest + MongoDB Memory Server)
+│   │   ├── setup.js                # Test environment setup
+│   │   ├── auth.test.js            # Authentication tests
+│   │   ├── products.test.js        # Product + search tests
+│   │   ├── employees.test.js       # Employee CRUD tests
+│   │   ├── sales.test.js           # Sales + orders tests
+│   │   └── cache.test.js           # Redis caching tests
+│   ├── Dockerfile                  # Server container
+│   ├── jest.config.js              # Jest configuration
 │   ├── server.js                   # Entry point
 │   └── .env                        # Environment variables
 │
+├── docker-compose.yml               # Full-stack orchestration
+├── .dockerignore                    # Docker build exclusions
+├── .env.example                     # Environment template
+├── REDIS_PERFORMANCE_REPORT.md      # Caching performance benchmarks
 └── README.md                        # This file
 ```
 
 ## 📦 Prerequisites
 
-- **Node.js** (v14 or higher)
-- **npm** or **yarn** package manager
+- **Node.js** (v18 or higher)
+- **npm** package manager
 - **MongoDB** (local or cloud instance)
+- **Redis** (local or cloud — optional, app works without it)
+- **Docker** & **Docker Compose** (for containerized deployment)
 - Git
 
 ## 🚀 Installation
@@ -164,15 +186,16 @@ npm install
 
 ### 3. Configure Server Environment
 
-Create a `.env` file in the server directory with the following variables:
+Create a `.env` file in the server directory (see `.env.example`):
 
 ```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/electroland
+NODE_ENV=development
+PORT=5001
+MONGO_URI=mongodb://localhost:27017/electroland
+REDIS_URL=redis://localhost:6379
 JWT_SECRET=your_jwt_secret_key
-NODEMAILER_USER=your_email@gmail.com
-NODEMAILER_PASSWORD=your_app_password
-CORS_ORIGIN=http://localhost:5173
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password
 RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxx
 RAZORPAY_KEY_SECRET=xxxxxxxxxxxxxxxx
 ```
@@ -205,7 +228,7 @@ From the `server` directory:
 npm start
 ```
 
-The server will run on `http://localhost:5000` (or your configured PORT)
+The server will run on `http://localhost:5001` (or your configured PORT)
 
 ### Start the Client
 
@@ -273,22 +296,206 @@ npm run build
 
 ## 🔌 API Documentation
 
-The backend provides RESTful APIs organized by user role:
+The backend provides RESTful APIs (OpenAPI 3.0 / Swagger) organized by user role.
 
-- **Public Routes**: Authentication, product browsing, contact
-- **Customer Routes**: Purchases, complaints, reviews
-- **Company Routes**: Product management, order handling
-- **Manager Routes**: Employee, inventory, salary management
-- **Owner Routes**: Branch, analytics, global management
-- **Salesman Routes**: Sales tracking, inventory view
+### Accessing Swagger UI
 
+Start the server and visit:
+```
+http://localhost:5001/api-docs
+```
 
-For detailed API documentation, refer to the route files in `server/routes/`
+### API Categories (B2B & B2C)
 
+**B2C (Business-to-Customer) APIs:**
+- Public Routes: Product browsing, branch locations, contact
+- Customer Routes: Purchases, complaints, reviews, blogs
 
-**Last Updated:** February 2026
+**B2B (Business-to-Business) APIs:**
+- Company Routes: Product management, order handling, messaging
+- Owner Routes: Branch, analytics, employee, salary management
+- Manager Routes: Inventory, orders, sales, salary management
+- Salesman Routes: Sales tracking, inventory view
+
+### Key Endpoints
+
+| Category | Base Path | Auth Required |
+|----------|-----------|---------------|
+| Auth | `/api/auth/*` | No |
+| Public Products | `/api/ourproducts`, `/api/topproducts` | No |
+| Search | `/api/search?q=<query>` | No |
+| Performance Report | `/api/performance-report` | No |
+| Owner Operations | `/api/owner/*` | Yes (Owner) |
+| Manager Operations | `/api/manager/*` | Yes (Manager) |
+| Company Operations | `/api/company/*` | Yes (Company) |
+| Customer Operations | `/api/customer/*` | Yes (Customer) |
+| Salesman Operations | `/api/salesman/*` | Yes (Salesman) |
+
+For detailed API documentation, visit `/api-docs` or refer to `server/README_SWAGGER.md`.
+
+## 🗄️ DB Optimization
+
+### Indexing Strategy
+
+All 12 Mongoose models have strategic **B-Tree** and **Compound indexes** for query optimization:
+
+| Model | Index | Purpose |
+|-------|-------|---------|
+| Product | `{ Status: 1 }` | Filter accepted/rejected products |
+| Product | `{ Com_id: 1, Status: 1 }` | Company product listings |
+| Product | `{ Prod_name: 'text', prod_description: 'text', com_name: 'text' }` | Full-text search |
+| Order | `{ ordered_date: 1 }` | Dashboard date-range queries |
+| Order | `{ company_id: 1, status: 1 }` | Company order filtering |
+| Sale | `{ sales_date: 1 }` | Date-range analytics |
+| Sale | `{ branch_id: 1, sales_date: 1 }` | Branch sales reports |
+| Sale | `{ salesman_id: 1, sales_date: 1 }` | Salesman performance |
+| Employee | `{ role: 1, status: 1 }` | Active employee by role |
+| Message | `{ to: 1, timestamp: -1 }` | Inbox sorted by time |
+
+### Query Planning Optimization
+
+The `TopProductsController` was refactored from an **N+1 query pattern** (individual `Sale.find()` per product) to a **single MongoDB aggregation pipeline** using `$group`, `$lookup`, and `$sort` — reducing response time from ~350ms to ~15ms.
+
+## 🔴 Redis Caching
+
+### Setup
+```bash
+# Install Redis locally (or use Docker)
+docker run -d --name redis -p 6379:6379 redis:7-alpine
+
+# Set in .env
+REDIS_URL=redis://localhost:6379
+```
+
+### Cached Endpoints
+
+| Endpoint | TTL | Improvement |
+|----------|-----|-------------|
+| `GET /api/ourproducts` | 5 min | ~97% faster |
+| `GET /api/topproducts` | 10 min | ~99% faster |
+| `GET /api/newproducts` | 5 min | ~97% faster |
+| `GET /api/search` | 2 min | ~97% faster |
+
+### Verifying Cache
+
+```bash
+# Check X-Cache header
+curl -v http://localhost:5001/api/ourproducts
+# X-Cache: MISS (first request)
+# X-Cache: HIT  (subsequent requests)
+
+# View performance report
+curl http://localhost:5001/api/performance-report
+```
+
+See full report: [REDIS_PERFORMANCE_REPORT.md](REDIS_PERFORMANCE_REPORT.md)
+
+## 🔍 Search Optimization
+
+MongoDB Text Search provides a **Solr-like** full-text search experience:
+
+```bash
+# Full-text search
+GET /api/search?q=Samsung&page=1&limit=10
+
+# Autocomplete
+GET /api/search/autocomplete?q=Sam
+```
+
+Uses MongoDB text indexes across `Prod_name`, `prod_description`, and `com_name` with relevance scoring.
+
+## 🧪 Testing
+
+### Running Tests
+
+```bash
+cd server
+
+# Run all tests
+npm test
+
+# Run with coverage report
+npm run test:coverage
+
+# Generate HTML test report
+npm run test:report
+```
+
+### Test Suites
+
+| File | Tests | Coverage |
+|------|-------|----------|
+| `auth.test.js` | Signup, Login, edge cases (11 tests) | Auth controller |
+| `products.test.js` | Listing, aggregation, search (9 tests) | Product + Search controllers |
+| `employees.test.js` | CRUD, validation, status (9 tests) | Employee model |
+| `sales.test.js` | Creation, analytics, orders (10 tests) | Sale + Order models |
+| `cache.test.js` | HIT/MISS, bypass, error handling (8 tests) | Cache middleware |
+
+### Test Reports
+
+- **Console**: `npm test`
+- **Coverage HTML**: `npm run test:coverage` → `server/coverage/index.html`
+- **HTML Report**: `npm run test:report` → generates `jest_html_reporters.html`
+
+## 🐳 Docker Containerization
+
+### Quick Start with Docker
+
+```bash
+# Build and run everything
+docker-compose up --build
+
+# Access the application
+# Frontend: http://localhost:80
+# Backend:  http://localhost:5001
+# API Docs: http://localhost:5001/api-docs
+```
+
+### Services
+
+| Service | Image | Port | Description |
+|---------|-------|------|-------------|
+| `mongodb` | mongo:7 | 27017 | Database |
+| `redis` | redis:7-alpine | 6379 | Cache |
+| `server` | Custom (Node 20) | 5001 | Backend API |
+| `client` | Custom (Nginx) | 80 | Frontend |
+
+### Individual Builds
+
+```bash
+# Build server only
+docker build -t electroland-server ./server
+
+# Build client only
+docker build -t electroland-client ./client
+```
+
+## 🔄 Continuous Integration
+
+### GitHub Actions Pipeline
+
+Located at `.github/workflows/ci.yml`, the CI pipeline runs on every push/PR to `main`:
+
+```
+Push to main → Install → Test → Coverage → Docker Build → ✅
+```
+
+### Pipeline Jobs
+
+1. **Test Job**: Runs Jest tests with MongoDB + Redis services, uploads coverage artifacts
+2. **Docker Job**: Verifies Docker Compose builds and containers start successfully
+
+### CI Badge
+
+Add to your repo:
+```markdown
+![CI](https://github.com/<your-username>/FDFED_React/actions/workflows/ci.yml/badge.svg)
+```
+
+---
+
+**Last Updated:** April 2026
 
 ---
 
 Thank you for exploring Electroland!
-

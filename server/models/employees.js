@@ -81,5 +81,12 @@ const EmployeeSchema = new mongoose.Schema({
   }
 });
 
+// ============ DB OPTIMIZATION: INDEXES ============
+// Compound index for role + status filtering (salesman performance queries)
+EmployeeSchema.index({ role: 1, status: 1 });
+// B-Tree index for branch employee lookups
+EmployeeSchema.index({ bid: 1 });
+// ===================================================
+
 const Employee = mongoose.model("Employee", EmployeeSchema);
 module.exports = Employee;

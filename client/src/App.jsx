@@ -12,7 +12,7 @@ import PreviousPurchases from './pages/customer/PreviousPurchases';
 import ForgotPassword from './pages/ForgotPassword';
 
 import HomePage from './pages/HomePage';
-import ContactUs from './pages/contactus';
+import ContactUs from './pages/ContactUs';
 import LoginPage from './pages/LoginPage';
 import AboutUs from './pages/AboutUs'
 import OwnerAnalyticsPage from './pages/owner/OwnerAnalyticsPage';

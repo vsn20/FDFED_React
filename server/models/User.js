@@ -30,4 +30,11 @@ const UserSchema = new mongoose.Schema({
     },
 });
 
+// ============ DB OPTIMIZATION: INDEXES ============
+// B-Tree index for signup duplicate check
+UserSchema.index({ emp_id: 1 });
+// B-Tree index for company user lookups
+UserSchema.index({ c_id: 1 });
+// ===================================================
+
 module.exports = mongoose.model('User', UserSchema);

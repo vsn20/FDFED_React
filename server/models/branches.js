@@ -46,5 +46,10 @@ const BranchSchema = new mongoose.Schema({
     } // Status: active or inactive
 });
 
+// ============ DB OPTIMIZATION: INDEXES ============
+// B-Tree index for active branch filtering
+BranchSchema.index({ active: 1 });
+// ===================================================
+
 const Branch = mongoose.model("Branch", BranchSchema);
 module.exports = Branch;

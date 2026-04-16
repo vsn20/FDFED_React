@@ -1,6 +1,6 @@
 // path: client/src/components/SplashScreen.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import './SplashScreen.css';
+import './Splashscreen.css';
 
 const WORD = 'ELECTROLAND';
 

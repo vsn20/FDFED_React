@@ -135,6 +135,18 @@ const SaleSchema = new mongoose.Schema({
 
 SaleSchema.index({ payment_reference_id: 1 }, { sparse: true });
 SaleSchema.index({ payment_status: 1 });
+// ============ DB OPTIMIZATION: INDEXES ============
+// B-Tree index for dashboard date-range queries
+SaleSchema.index({ sales_date: 1 });
+// Compound index for branch sales analytics
+SaleSchema.index({ branch_id: 1, sales_date: 1 });
+// Compound index for company sales analytics
+SaleSchema.index({ company_id: 1, sales_date: 1 });
+// Compound index for salesman performance reporting
+SaleSchema.index({ salesman_id: 1, sales_date: 1 });
+// B-Tree index for top products aggregation
+SaleSchema.index({ product_id: 1 });
+// ===================================================
 
 const Sale = mongoose.models.Sale || mongoose.model("Sale", SaleSchema);
 module.exports = Sale;

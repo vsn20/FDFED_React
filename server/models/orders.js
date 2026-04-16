@@ -27,5 +27,14 @@ OrderSchema.pre('save', function(next) {
   next();
 });
 
+// ============ DB OPTIMIZATION: INDEXES ============
+// B-Tree index for dashboard date-range queries
+OrderSchema.index({ ordered_date: 1 });
+// Compound index for company order filtering
+OrderSchema.index({ company_id: 1, status: 1 });
+// Compound index for branch order filtering
+OrderSchema.index({ branch_id: 1, status: 1 });
+// ===================================================
+
 // This was missing from your files
 module.exports = mongoose.models.Order || mongoose.model("Order", OrderSchema);

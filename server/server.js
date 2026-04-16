@@ -13,11 +13,18 @@ const { swaggerSpec } = require('./config/swagger');
 const http = require('http');
 const { Server } = require("socket.io");
 
+// ============ REDIS + CACHING ============
+const { initRedis } = require('./config/redis');
+const { cacheMiddleware, getPerformanceReport } = require('./middleware/cacheMiddleware');
+
 // Load env vars
 dotenv.config();
 
 // Connect to database
 connectDB();
+
+// Initialize Redis caching layer
+initRedis();
 
 const app = express();
 
@@ -248,11 +255,17 @@ app.use('/api/customer/complaints', require('./routes/Customer/Complaint_Routes'
 app.use('/api/customer/reviews', require('./routes/Customer/ReviewRoute'));
 app.use('/api/customer/blogs', require('./routes/Customer/blogsRoutes'));
 
-// Public Routes
-app.use('/api/newproducts', require('./routes/newProductsRoutes'));
-app.use('/api/ourproducts', require('./routes/OurProductsRoutes'));
-app.use('/api/topproducts', require('./routes/TopPoductsRoutes'));
+// Public Routes (with Redis caching for performance)
+app.use('/api/newproducts', cacheMiddleware(300), require('./routes/newProductsRoutes'));       // Cache 5 min
+app.use('/api/ourproducts', cacheMiddleware(300), require('./routes/OurProductsRoutes'));       // Cache 5 min
+app.use('/api/topproducts', cacheMiddleware(600), require('./routes/TopPoductsRoutes'));        // Cache 10 min
 app.use('/api/contact', require('./routes/ContactUsRoute'));
+
+// ============ SEARCH ROUTES (DB Optimization) ============
+app.use('/api/search', cacheMiddleware(120), require('./routes/searchRoutes'));                 // Cache 2 min
+
+// ============ PERFORMANCE REPORT ============
+app.get('/api/performance-report', getPerformanceReport);
 
 // 5. Socket.io Connection Logic (Debug logs)
 io.on("connection", (socket) => {

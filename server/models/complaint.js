@@ -45,5 +45,12 @@ const ComplaintSchema = new mongoose.Schema({
   }
 });
 
+// ============ DB OPTIMIZATION: INDEXES ============
+// Compound index for company complaint filtering
+ComplaintSchema.index({ company_id: 1, status: 1 });
+// B-Tree index for customer complaint lookup by phone
+ComplaintSchema.index({ phone_number: 1 });
+// ===================================================
+
 const Complaint = mongoose.model("Complaint", ComplaintSchema);
 module.exports = Complaint;
