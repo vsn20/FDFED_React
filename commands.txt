@@ -31,3 +31,6 @@ http://localhost:5001/api-docs              # Swagger docs
 http://localhost:5001/api/performance-report # Redis benchmarks
 http://localhost:5001/api/search?q=Samsung  # Search
 http://localhost                            # Frontend (Docker)
+
+
+Key tip: Always use -d flag so containers run in the background. Use docker-compose down to stop them.
