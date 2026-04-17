@@ -3902,3 +3902,21 @@
 [16/Apr/2026:14:55:19 +0000] GET /api/search?q=Samsung 200 116.713 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0
 [16/Apr/2026:14:55:28 +0000] GET /api/search?q=company 200 193.980 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0
 [16/Apr/2026:14:55:38 +0000] GET /api/search?q=Samsung 304 27.145 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0
+[16/Apr/2026:16:15:37 +0000] POST /api/auth/login 200 384.056 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:15:37 +0000] GET /api/owner/analytics/data 304 225.182 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:15:38 +0000] GET /api/owner/analytics/salesman-performance 304 222.790 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:15:38 +0000] GET /api/owner/analytics/data 304 193.323 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:15:38 +0000] GET /api/owner/analytics/salesman-performance 304 186.657 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:15:38 +0000] GET /api/owner/analytics/salesman-performance?month=2026-03 304 82.715 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:15:38 +0000] GET /api/owner/analytics/branch-sales 304 1173.318 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:15:39 +0000] GET /api/owner/analytics/branch-sales 304 110.535 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:15:39 +0000] GET /api/owner/analytics/branch-sales?month=2026-03 304 102.567 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:15:43 +0000] GET /api/owner/sales 304 3378.356 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:15:45 +0000] GET /api/owner/orders/branches 304 194.221 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:15:46 +0000] GET /api/owner/orders 304 354.482 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:15:46 +0000] GET /api/owner/orders/branches 304 177.430 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:15:46 +0000] GET /api/owner/orders 304 198.776 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:15:48 +0000] GET /api/owner/sales 304 5133.836 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:29:31 +0000] GET /api/performance-report 200 6.574 ms - anonymous - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:54:18 +0000] GET /api/owner/sales 304 5388.025 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
+[16/Apr/2026:16:54:19 +0000] GET /api/owner/sales 304 1049.886 ms - admin - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36
