@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import AuthContext from '../../../context/AuthContext';
 import io from 'socket.io-client';
 
-const API_BASE_URL = 'http://localhost:5001/api';
-const SOCKET_URL = 'http://localhost:5001';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5001';
 
 const OwnerMessages = () => {
   const { token, user } = useContext(AuthContext);

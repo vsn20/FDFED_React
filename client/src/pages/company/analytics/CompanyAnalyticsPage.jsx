@@ -8,7 +8,7 @@ import styles from './Analytics.module.css'; // Using a CSS module for styling
 // Register Chart.js components needed for Line charts (crucial)
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
-const API_BASE_URL = 'http://localhost:5001/api'; // Update if your backend runs on a different port/URL
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
 
 const CompanyAnalyticsPage = () => {
   const [data, setData] = useState(null);

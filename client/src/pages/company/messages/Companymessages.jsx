@@ -3,8 +3,8 @@ import AuthContext from '../../../context/AuthContext';
 // IMPORT SOCKET
 import io from 'socket.io-client';
 
-const API_BASE_URL = 'http://localhost:5001/api';
-const SOCKET_URL = 'http://localhost:5001';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5001';
 
 const Companymessages = () => {
   // FIX: Get 'user' from context so we know our own ID (c_id)

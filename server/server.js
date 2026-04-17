@@ -40,10 +40,13 @@ const server = http.createServer(app);
 
 // 2. Initialize Socket.io with Robust CORS
 // This fixes the connection issues for real-time messaging
+// Use environment variable for CORS origin in production
+const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
+
 const io = new Server(server, {
   cors: {
-    // Allow both with and without trailing slash to prevent connection errors
-    origin: ["http://localhost:5173", "http://localhost:5173/"], 
+    // Allow frontend origin (with and without trailing slash)
+    origin: [corsOrigin, corsOrigin + '/'], 
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
   }
@@ -51,7 +54,7 @@ const io = new Server(server, {
 
 // 3. Enable CORS for Express (Standard HTTP requests)
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5173/"],
+  origin: [corsOrigin, corsOrigin + '/'],
   credentials: true
 }));
 
@@ -67,7 +70,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:", "blob:"],
-      connectSrc: ["'self'", "http://localhost:5173", "ws://localhost:5173"], // API & WebSocket
+      connectSrc: ["'self'", corsOrigin], // API & WebSocket
     }
   },
   // Allow cross-origin for React frontend

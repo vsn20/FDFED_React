@@ -23,7 +23,8 @@ const getImageUrl = (path) => {
     if (path.startsWith('http')) return path;
     let clean = path.replace(/\\/g, '/').replace(/^public\//, '');
     if (clean.startsWith('/')) clean = clean.substring(1);
-    return `http://localhost:5001/${clean}`;
+    const socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5001';
+    return `${socketUrl}/${clean}`;
 };
 
 const SkeletonCard = ({ delay = 0 }) => (
