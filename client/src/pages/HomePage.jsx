@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import './Homepage.css';
 import SplashScreen from './Splashscreen.jsx';
 
@@ -136,15 +137,15 @@ function Home() {
                     <span /><span /><span />
                 </button>
                 <div className="el-sidenav__links">
-                    <a href="/newproducts" className="el-sidenav__link">
+                    <Link to="/newproducts" className="el-sidenav__link">
                         <span className="el-sidenav__num">01</span>New Products
-                    </a>
-                    <a href="/ourproducts" className="el-sidenav__link">
+                    </Link>
+                    <Link to="/ourproducts" className="el-sidenav__link">
                         <span className="el-sidenav__num">02</span>Our Products
-                    </a>
-                    <a href="/topproducts" className="el-sidenav__link">
+                    </Link>
+                    <Link to="/topproducts" className="el-sidenav__link">
                         <span className="el-sidenav__num">03</span>Top Products
-                    </a>
+                    </Link>
                 </div>
             </nav>
 
@@ -181,8 +182,8 @@ function Home() {
                     </h1>
                     <p className="el-hero__sub">{SLIDES[slide].sub}</p>
                     <div className="el-hero__ctas">
-                        <a href="/ourproducts" className="el-btn el-btn--primary">Explore Products</a>
-                        <a href="/newproducts" className="el-btn el-btn--ghost">New Arrivals →</a>
+                        <Link to="/ourproducts" className="el-btn el-btn--primary">Explore Products</Link>
+                        <Link to="/newproducts" className="el-btn el-btn--ghost">New Arrivals →</Link>
                     </div>
                 </div>
 
@@ -272,7 +273,7 @@ function Home() {
                     <p className="el-about__text">
                         Our curated selection blends cutting-edge functionality with modern design, ensuring that every purchase delivers exceptional performance and lasting value.
                     </p>
-                    <a href="/ourproducts" className="el-btn el-btn--amber">View All Products →</a>
+                    <Link to="/ourproducts" className="el-btn el-btn--amber">View All Products →</Link>
                 </div>
             </section>
 
@@ -290,7 +291,7 @@ function Home() {
                     <div className="el-banner__tag">Premium Living</div>
                     <h2 className="el-banner__title">Transform<br />Your Home</h2>
                     <p className="el-banner__sub">Upgrade your living space with premium appliances.<br />Unmatched quality. Timeless style.</p>
-                    <a href="/ourproducts" className="el-btn el-btn--primary el-btn--lg">Shop Now</a>
+                    <Link to="/ourproducts" className="el-btn el-btn--primary el-btn--lg">Shop Now</Link>
                 </div>
             </section>
 
@@ -388,8 +389,8 @@ function Home() {
                     <h2 className="el-cta__title">Ready to Upgrade<br />Your Home?</h2>
                     <p className="el-cta__sub">Browse our full catalogue and find the perfect appliance for every room in your house.</p>
                     <div className="el-cta__actions">
-                        <a href="/ourproducts" className="el-btn el-btn--primary el-btn--lg">Browse Products</a>
-                        <a href="/newproducts" className="el-btn el-btn--ghost el-btn--lg">New Arrivals</a>
+                        <Link to="/ourproducts" className="el-btn el-btn--primary el-btn--lg">Browse Products</Link>
+                        <Link to="/newproducts" className="el-btn el-btn--ghost el-btn--lg">New Arrivals</Link>
                     </div>
                 </div>
             </section>
