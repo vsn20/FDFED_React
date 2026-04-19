@@ -75,15 +75,30 @@ async function updateInventoryForOrder(order, branch) {
   }
 }
 
+const { getRedisClient } = require('../../config/redis');
+
 // GET /manager/orders
 exports.getOrders = async (req, res) => {
   try {
     const { branch } = await getManagerAuth(req.user.id);
+    const redisClient = getRedisClient();
+    const cacheKey = `orders:branch:${branch.bid}`;
+
+    if (redisClient) {
+        const cachedOrders = await redisClient.get(cacheKey);
+        if (cachedOrders) {
+            return res.json(JSON.parse(cachedOrders));
+        }
+    }
 
     const orders = await Order.find({ branch_name: branch.b_name })
       .sort({ createdAt: -1 })
       .lean();
       
+    if (redisClient) {
+        await redisClient.set(cacheKey, JSON.stringify(orders), 'EX', 3600); // Cache for 1 hour
+    }
+
     res.json(orders);
   } catch (err) {
     console.error('Error in getOrders:', err);
@@ -180,6 +195,13 @@ exports.addOrder = async (req, res) => {
         });
     
         await order.save();
+
+        const redisClient = getRedisClient();
+        if (redisClient) {
+            const cacheKey = `orders:branch:${branch.bid}`;
+            await redisClient.del(cacheKey);
+        }
+
         res.status(201).json({ success: true, message: "Order added successfully", order });
 
     } catch (err) {
@@ -229,6 +251,12 @@ exports.updateOrder = async (req, res) => {
     
     order.status = newStatus;
     await order.save();
+
+    const redisClient = getRedisClient();
+    if (redisClient) {
+        const cacheKey = `orders:branch:${branch.bid}`;
+        await redisClient.del(cacheKey);
+    }
 
     res.json({
       success: true,
