@@ -15,7 +15,7 @@ exports.submitContact = async (req, res) => {
       return res.status(400).json({ success: false, message: "Please enter a valid phone number." });
     }
 
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailPattern = /^[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
       return res.status(400).json({ success: false, message: "Please enter a valid email address." });
     }
