@@ -97,7 +97,7 @@ const ContactUs = () => {
 
             <form onSubmit={handleSubmit} noValidate>
               <div className="form-group">
-                <label htmlFor="phone">jjjjjjjjjjjjjjjjjjjjjjjj</label>
+                <label htmlFor="phone">Phone Number</label>
                 <input
                   type="tel"
                   id="phone"
